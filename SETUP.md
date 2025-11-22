@@ -1,4 +1,4 @@
-# Finomic Budget Manager - Setup Guide
+# Tiki Budget Manager - Setup Guide
 
 ## Quick Start
 

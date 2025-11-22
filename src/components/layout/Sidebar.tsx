@@ -14,8 +14,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ navigation, supportNav }) => {
       <div className="sidebar__brand">
         <div className="sidebar__logo">💰</div>
         <div className="sidebar__brand-text">
-          <div className="sidebar__brand-name">Finomic</div>
-          <div className="sidebar__brand-subtitle">Financial Assistant</div>
+          <div className="sidebar__brand-name">Tiki</div>
+          <div className="sidebar__brand-subtitle">Budget Manager</div>
         </div>
       </div>
 

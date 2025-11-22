@@ -1,4 +1,4 @@
-# Finomic - Financial Assistant
+# Tiki - Budget Manager
 
 A modern, dark-themed budget manager application built with React, TypeScript, and Vite. This application provides a comprehensive dashboard for managing personal finances, tracking transactions, setting goals, and monitoring spending habits.
 

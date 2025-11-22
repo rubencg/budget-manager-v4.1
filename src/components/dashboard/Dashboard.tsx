@@ -2,10 +2,8 @@ import React from 'react';
 import './Dashboard.css';
 import { OverviewCard } from './OverviewCard';
 import { BalanceCard } from './BalanceCard';
-import { QuickActionsCard } from './QuickActionsCard';
 import { GoalsCard } from './GoalsCard';
 import { TransactionsCard } from './TransactionsCard';
-import { PremiumCard } from './PremiumCard';
 import {
   mockOverview,
   mockBalance,
@@ -25,10 +23,6 @@ export const Dashboard: React.FC = () => {
           <BalanceCard balance={mockBalance} />
         </div>
 
-        <div className="dashboard__item dashboard__item--quick-actions">
-          <QuickActionsCard />
-        </div>
-
         <div className="dashboard__item dashboard__item--goals">
           <GoalsCard goals={mockGoals} />
         </div>
@@ -37,9 +31,6 @@ export const Dashboard: React.FC = () => {
           <TransactionsCard transactions={mockTransactions} />
         </div>
 
-        <div className="dashboard__item dashboard__item--premium">
-          <PremiumCard />
-        </div>
       </div>
     </div>
   );

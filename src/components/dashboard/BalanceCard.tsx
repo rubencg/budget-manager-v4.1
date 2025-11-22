@@ -19,10 +19,7 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({ balance }) => {
   return (
     <Card className="balance-card">
       <div className="balance-card__header">
-        <h3 className="card__title">Your Balance</h3>
-        <select className="balance-card__currency-select">
-          <option>{balance.currency}</option>
-        </select>
+        <h3 className="card__title">Balance mensual</h3>
       </div>
 
       <MetricDisplay
@@ -38,7 +35,7 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({ balance }) => {
         <span className="balance-card__period">{balance.comparisonPeriod}</span>
       </div>
 
-      <div className="balance-card__health">
+      {/* <div className="balance-card__health">
         <div className="balance-card__health-header">
           <span className="balance-card__health-title">Finance Health</span>
           <div className="balance-card__health-globe">🌍</div>
@@ -52,7 +49,7 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({ balance }) => {
           </div>
           <span className="balance-card__health-score">{balance.financeHealthScore}%</span>
         </div>
-      </div>
+      </div> */}
     </Card>
   );
 };

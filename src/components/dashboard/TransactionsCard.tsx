@@ -1,7 +1,6 @@
 import React from 'react';
 import './TransactionsCard.css';
 import { Card } from '../ui/Card';
-import { StatusBadge } from '../ui/StatusBadge';
 import { Button } from '../ui/Button';
 import { Transaction } from '../../types';
 
@@ -28,10 +27,6 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions
     return method.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
-  const getStatusLabel = (status: string) => {
-    return status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
-  };
-
   return (
     <Card className="transactions-card">
       <div className="transactions-card__header">
@@ -45,7 +40,6 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions
             <tr>
               <th>TYPE</th>
               <th>AMOUNT</th>
-              <th>STATUS</th>
               <th>METHOD</th>
             </tr>
           </thead>
@@ -65,11 +59,6 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions
                   <div className="transactions-card__amount">
                     {formatAmount(transaction.amount, transaction.currency)}
                   </div>
-                </td>
-                <td>
-                  <StatusBadge variant={transaction.status}>
-                    {getStatusLabel(transaction.status)}
-                  </StatusBadge>
                 </td>
                 <td>
                   <div className="transactions-card__method">

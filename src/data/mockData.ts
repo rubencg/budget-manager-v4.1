@@ -9,7 +9,6 @@ export const mockTransactions: Transaction[] = [
     date: 'Oct 14, 2024',
     amount: 120.50,
     currency: 'USD',
-    status: 'waiting',
     paymentMethod: 'credit_card',
     cardLast4: '4012',
     icon: '🏢'
@@ -21,7 +20,6 @@ export const mockTransactions: Transaction[] = [
     date: 'Oct 12, 2024',
     amount: 850.00,
     currency: 'EUR',
-    status: 'success',
     paymentMethod: 'bank_transfer',
     icon: '👤'
   },
@@ -32,7 +30,6 @@ export const mockTransactions: Transaction[] = [
     date: 'Oct 10, 2024',
     amount: 45.99,
     currency: 'USD',
-    status: 'due_date',
     paymentMethod: 'credit_card',
     cardLast4: '4012',
     icon: '🎁'
@@ -45,7 +42,6 @@ export const mockTransactions: Transaction[] = [
     date: 'Oct 08, 2024',
     amount: 15.99,
     currency: 'USD',
-    status: 'success',
     paymentMethod: 'credit_card',
     cardLast4: '4012',
     icon: '🏢'
@@ -57,7 +53,6 @@ export const mockTransactions: Transaction[] = [
     date: 'Oct 05, 2024',
     amount: 500.00,
     currency: 'USD',
-    status: 'disabled',
     paymentMethod: 'bank_transfer',
     icon: '💰'
   }
@@ -66,21 +61,33 @@ export const mockTransactions: Transaction[] = [
 export const mockGoals: Goal[] = [
   {
     id: '1',
-    name: 'Married',
-    icon: '💍',
-    targetAmount: 12500.00,
-    currentAmount: 8750.00,
-    achievementDate: '2025-06',
+    name: 'Renta',
+    icon: '🏡',
+    targetAmount: 234000.00,
+    currentAmount: 97500.00,
+    amountPerMonth: 19500.00,
+    wasAppliedThisMonth: true,
     gradient: 'linear-gradient(135deg, #FF8C00 0%, #FFD700 100%)'
   },
   {
     id: '2',
-    name: 'Basketball',
-    icon: '🏀',
-    targetAmount: 4800.00,
-    currentAmount: 3360.00,
-    achievementDate: '2025-03',
-    gradient: 'linear-gradient(135deg, #FF1493 0%, #FFB6C1 100%)'
+    name: 'Aguacates',
+    icon: '🥑',
+    targetAmount: 540000.00,
+    currentAmount: 135000.00,
+    amountPerMonth: 45000.00,
+    wasAppliedThisMonth: false,
+    gradient: 'linear-gradient(135deg, #33771eff 0%, #b6ffc2ff 100%)'
+  },
+  {
+    id: '3',
+    name: 'Carro',
+    icon: '🚗',
+    targetAmount: 200000.00,
+    currentAmount: 20000.00,
+    amountPerMonth: 10000.00,
+    wasAppliedThisMonth: false,
+    gradient: 'linear-gradient(135deg, #ff1414ff 0%, #ffb6b6ff 100%)'
   }
 ];
 
@@ -94,9 +101,8 @@ export const mockOverview: OverviewMetrics = {
 
 export const mockBalance: BalanceData = {
   balance: 20088.38,
-  currency: 'US Dollar',
   changePercent: 24.17,
-  comparisonPeriod: 'vs last month',
+  comparisonPeriod: 'vs mes anterior',
   financeHealthScore: 85
 };
 

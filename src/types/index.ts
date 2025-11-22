@@ -1,6 +1,5 @@
 // Transaction types
 export type TransactionType = 'expense' | 'income' | 'transfer';
-export type TransactionStatus = 'waiting' | 'success' | 'due_date' | 'disabled';
 export type PaymentMethod = 'credit_card' | 'bank_transfer' | 'cash' | 'debit_card';
 
 export interface Transaction {
@@ -11,7 +10,6 @@ export interface Transaction {
   date: string;
   amount: number;
   currency: string;
-  status: TransactionStatus;
   paymentMethod: PaymentMethod;
   cardLast4?: string;
   icon?: string;
@@ -24,7 +22,8 @@ export interface Goal {
   icon: string;
   targetAmount: number;
   currentAmount: number;
-  achievementDate?: string;
+  amountPerMonth: number;
+  wasAppliedThisMonth: boolean;
   gradient: string;
 }
 
@@ -40,7 +39,6 @@ export interface OverviewMetrics {
 // Balance data
 export interface BalanceData {
   balance: number;
-  currency: string;
   changePercent: number;
   comparisonPeriod: string;
   financeHealthScore?: number;
