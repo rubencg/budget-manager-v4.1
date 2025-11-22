@@ -1,0 +1,43 @@
+.overview-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-base);
+}
+
+.overview-card__metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+  padding-bottom: var(--space-base);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.overview-card__metric {
+  text-align: center;
+}
+
+.overview-card__metric-value {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.overview-card__metric-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.overview-card__metric--income .overview-card__metric-value {
+  color: var(--color-success);
+}
+
+.overview-card__metric--outcome .overview-card__metric-value {
+  color: var(--color-error);
+}
+
+.overview-card__calendar {
+  margin-top: var(--space-sm);
+}

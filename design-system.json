@@ -1,0 +1,630 @@
+{
+  "designSystem": {
+    "name": "Dark Dashboard Design System",
+    "version": "1.0.0",
+    "description": "A modern dark-themed dashboard design system with vibrant gradient visualizations and card-based layouts",
+
+    "colorPalette": {
+      "background": {
+        "primary": "#000000",
+        "secondary": "#0A0A0A",
+        "tertiary": "#1A1A1A",
+        "card": "#1C1C1C",
+        "cardHover": "#252525"
+      },
+      "text": {
+        "primary": "#FFFFFF",
+        "secondary": "#A0A0A0",
+        "tertiary": "#6B6B6B",
+        "muted": "#4A4A4A"
+      },
+      "gradients": {
+        "pink": {
+          "start": "#FF1493",
+          "middle": "#FF69B4",
+          "end": "#FFB6C1",
+          "usage": "Charts, progress indicators, accent elements"
+        },
+        "purple": {
+          "start": "#6A0DAD",
+          "middle": "#9370DB",
+          "end": "#DDA0DD",
+          "usage": "Charts, data visualization"
+        },
+        "cyan": {
+          "start": "#00CED1",
+          "middle": "#40E0D0",
+          "end": "#7FFFD4",
+          "usage": "Progress rings, interactive elements"
+        },
+        "orange": {
+          "start": "#FF8C00",
+          "middle": "#FFA500",
+          "end": "#FFD700",
+          "usage": "Alerts, highlights, warm accents"
+        },
+        "green": {
+          "start": "#00FA9A",
+          "middle": "#3CB371",
+          "end": "#90EE90",
+          "usage": "Success states, positive metrics"
+        },
+        "blue": {
+          "start": "#1E90FF",
+          "middle": "#4169E1",
+          "end": "#6495ED",
+          "usage": "Information, cool accents"
+        },
+        "multiColor": {
+          "type": "conic or area",
+          "colors": ["#FF1493", "#9370DB", "#00CED1", "#FFA500"],
+          "usage": "Multi-segment progress rings, layered area charts"
+        }
+      },
+      "semantic": {
+        "success": "#00FA9A",
+        "warning": "#FFA500",
+        "error": "#FF4444",
+        "info": "#00CED1"
+      }
+    },
+
+    "typography": {
+      "fontFamily": {
+        "primary": "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif",
+        "display": "Inter, SF Pro Display, system-ui, sans-serif",
+        "mono": "'SF Mono', 'Roboto Mono', Consolas, monospace"
+      },
+      "fontSizes": {
+        "display1": "72px",
+        "display2": "56px",
+        "h1": "48px",
+        "h2": "36px",
+        "h3": "28px",
+        "h4": "24px",
+        "h5": "20px",
+        "h6": "18px",
+        "body": "14px",
+        "bodySmall": "12px",
+        "caption": "11px",
+        "tiny": "10px"
+      },
+      "fontWeights": {
+        "light": 300,
+        "regular": 400,
+        "medium": 500,
+        "semibold": 600,
+        "bold": 700,
+        "black": 900
+      },
+      "lineHeights": {
+        "tight": 1.2,
+        "normal": 1.5,
+        "relaxed": 1.8
+      }
+    },
+
+    "spacing": {
+      "scale": "4px base unit",
+      "values": {
+        "xs": "4px",
+        "sm": "8px",
+        "md": "12px",
+        "base": "16px",
+        "lg": "20px",
+        "xl": "24px",
+        "2xl": "32px",
+        "3xl": "48px",
+        "4xl": "64px"
+      },
+      "cardPadding": {
+        "small": "12px",
+        "medium": "16px",
+        "large": "20px"
+      },
+      "gridGap": "16px"
+    },
+
+    "borderRadius": {
+      "none": "0px",
+      "sm": "4px",
+      "md": "8px",
+      "lg": "12px",
+      "xl": "16px",
+      "2xl": "20px",
+      "full": "9999px"
+    },
+
+    "shadows": {
+      "none": "none",
+      "sm": "0 1px 2px rgba(0, 0, 0, 0.5)",
+      "md": "0 4px 6px rgba(0, 0, 0, 0.7)",
+      "lg": "0 10px 15px rgba(0, 0, 0, 0.8)",
+      "xl": "0 20px 25px rgba(0, 0, 0, 0.9)",
+      "glow": "0 0 20px rgba(255, 20, 147, 0.3)",
+      "glowCyan": "0 0 20px rgba(0, 206, 209, 0.3)"
+    },
+
+    "components": {
+      "card": {
+        "description": "Primary container for content modules",
+        "variants": {
+          "default": {
+            "background": "#1C1C1C",
+            "borderRadius": "16px",
+            "padding": "16px-20px",
+            "border": "none",
+            "shadow": "0 4px 6px rgba(0, 0, 0, 0.7)"
+          },
+          "interactive": {
+            "background": "#1C1C1C",
+            "borderRadius": "16px",
+            "padding": "16px-20px",
+            "border": "none",
+            "shadow": "0 4px 6px rgba(0, 0, 0, 0.7)",
+            "hover": {
+              "background": "#252525",
+              "transform": "translateY(-2px)",
+              "shadow": "0 6px 12px rgba(0, 0, 0, 0.8)"
+            }
+          },
+          "elevated": {
+            "background": "#1C1C1C",
+            "borderRadius": "16px",
+            "padding": "20px-24px",
+            "border": "1px solid rgba(255, 255, 255, 0.05)",
+            "shadow": "0 10px 15px rgba(0, 0, 0, 0.8)"
+          }
+        }
+      },
+
+      "chartCard": {
+        "description": "Cards specifically designed to contain data visualizations",
+        "structure": {
+          "header": {
+            "display": "flex",
+            "justifyContent": "space-between",
+            "alignItems": "center",
+            "marginBottom": "16px"
+          },
+          "title": {
+            "fontSize": "14px",
+            "fontWeight": 500,
+            "color": "#FFFFFF"
+          },
+          "subtitle": {
+            "fontSize": "11px",
+            "color": "#6B6B6B"
+          },
+          "chartArea": {
+            "minHeight": "120px",
+            "position": "relative"
+          }
+        }
+      },
+
+      "metricDisplay": {
+        "description": "Large numerical displays for key metrics",
+        "variants": {
+          "primary": {
+            "fontSize": "36px-56px",
+            "fontWeight": 700,
+            "color": "#FFFFFF",
+            "label": {
+              "fontSize": "11px",
+              "color": "#6B6B6B",
+              "textTransform": "uppercase",
+              "letterSpacing": "0.5px"
+            }
+          },
+          "withIcon": {
+            "display": "flex",
+            "alignItems": "center",
+            "gap": "8px",
+            "icon": {
+              "size": "20px-24px",
+              "color": "gradient or accent"
+            }
+          }
+        }
+      },
+
+      "progressRing": {
+        "description": "Circular progress indicators with percentage display",
+        "structure": {
+          "outerDiameter": "80px-120px",
+          "strokeWidth": "8px-12px",
+          "backgroundRing": {
+            "color": "rgba(255, 255, 255, 0.1)",
+            "strokeWidth": "8px-12px"
+          },
+          "progressRing": {
+            "stroke": "gradient (conic or linear)",
+            "strokeLinecap": "round",
+            "strokeWidth": "8px-12px"
+          },
+          "centerText": {
+            "percentage": {
+              "fontSize": "24px-32px",
+              "fontWeight": 700,
+              "color": "#FFFFFF"
+            },
+            "label": {
+              "fontSize": "10px",
+              "color": "#6B6B6B"
+            }
+          }
+        }
+      },
+
+      "areaChart": {
+        "description": "Layered area charts with gradient fills",
+        "style": {
+          "layering": "Multiple overlapping areas",
+          "gradientFill": "Top to bottom fade (opacity 0.8 to 0.2)",
+          "strokeWidth": "2px-3px",
+          "strokeColor": "Bright accent matching gradient",
+          "smoothing": "Curved (bezier or catmull-rom)",
+          "markers": {
+            "enabled": true,
+            "size": "6px-8px",
+            "color": "Matching stroke color",
+            "glow": "Optional subtle glow effect"
+          }
+        }
+      },
+
+      "lineChart": {
+        "description": "Single or multi-line charts with smooth curves",
+        "style": {
+          "strokeWidth": "2px-3px",
+          "strokeColor": "Vibrant gradient or solid accent",
+          "smoothing": "Curved",
+          "fill": "Optional gradient underneath (opacity 0.3-0.6)",
+          "grid": {
+            "enabled": false,
+            "or": "Very subtle (rgba(255,255,255,0.05))"
+          },
+          "axes": {
+            "display": "Minimal or hidden",
+            "color": "rgba(255,255,255,0.2)"
+          }
+        }
+      },
+
+      "barChart": {
+        "description": "Vertical bar charts with rounded tops",
+        "style": {
+          "barBorderRadius": "4px 4px 0 0",
+          "barWidth": "8px-16px",
+          "barSpacing": "4px-8px",
+          "barColor": "Gradient or solid with opacity variations",
+          "groupSpacing": "12px-16px",
+          "axes": {
+            "display": "Minimal",
+            "color": "rgba(255,255,255,0.2)"
+          }
+        }
+      },
+
+      "radialGauge": {
+        "description": "Semi-circular or full-circle gauges for single metrics",
+        "structure": {
+          "diameter": "100px-160px",
+          "trackWidth": "8px-12px",
+          "trackColor": "rgba(255,255,255,0.1)",
+          "fillColor": "Gradient",
+          "fillStyle": "Rounded caps",
+          "centerDisplay": {
+            "metric": {
+              "fontSize": "28px-36px",
+              "fontWeight": 700
+            },
+            "label": {
+              "fontSize": "11px",
+              "color": "#6B6B6B",
+              "textTransform": "uppercase"
+            }
+          },
+          "tickMarks": {
+            "enabled": true,
+            "count": "20-40",
+            "color": "rgba(255,255,255,0.3)",
+            "width": "1px",
+            "length": "4px-6px"
+          }
+        }
+      },
+
+      "slider": {
+        "description": "Horizontal slider controls for adjustable values",
+        "style": {
+          "trackHeight": "4px",
+          "trackBackground": "rgba(255,255,255,0.1)",
+          "trackFilled": "Gradient or accent color",
+          "trackBorderRadius": "full",
+          "thumb": {
+            "size": "16px",
+            "background": "Gradient or solid accent",
+            "border": "2px solid #1C1C1C",
+            "shadow": "0 2px 4px rgba(0,0,0,0.5)"
+          }
+        }
+      },
+
+      "badge": {
+        "description": "Small labeled indicators",
+        "variants": {
+          "default": {
+            "padding": "4px 12px",
+            "borderRadius": "12px",
+            "fontSize": "11px",
+            "fontWeight": 500,
+            "background": "rgba(255,255,255,0.1)",
+            "color": "#FFFFFF"
+          },
+          "gradient": {
+            "padding": "4px 12px",
+            "borderRadius": "12px",
+            "fontSize": "11px",
+            "fontWeight": 500,
+            "background": "linear-gradient",
+            "color": "#FFFFFF"
+          }
+        }
+      },
+
+      "button": {
+        "description": "Interactive buttons with hover states",
+        "variants": {
+          "primary": {
+            "padding": "12px 24px",
+            "borderRadius": "12px",
+            "background": "linear-gradient or solid accent",
+            "color": "#FFFFFF",
+            "fontSize": "14px",
+            "fontWeight": 600,
+            "border": "none",
+            "hover": {
+              "transform": "translateY(-1px)",
+              "shadow": "0 4px 8px rgba(0,0,0,0.6)"
+            }
+          },
+          "secondary": {
+            "padding": "12px 24px",
+            "borderRadius": "12px",
+            "background": "rgba(255,255,255,0.05)",
+            "color": "#FFFFFF",
+            "fontSize": "14px",
+            "fontWeight": 600,
+            "border": "1px solid rgba(255,255,255,0.1)",
+            "hover": {
+              "background": "rgba(255,255,255,0.1)"
+            }
+          },
+          "icon": {
+            "size": "32px-40px",
+            "borderRadius": "8px-12px",
+            "background": "rgba(255,255,255,0.05)",
+            "iconSize": "18px-20px",
+            "iconColor": "#FFFFFF",
+            "hover": {
+              "background": "rgba(255,255,255,0.1)"
+            }
+          }
+        }
+      },
+
+      "avatar": {
+        "description": "User profile images",
+        "sizes": {
+          "small": "24px",
+          "medium": "32px",
+          "large": "48px",
+          "xlarge": "64px"
+        },
+        "style": {
+          "borderRadius": "full",
+          "border": "2px solid rgba(255,255,255,0.1)",
+          "background": "Gradient if no image"
+        }
+      },
+
+      "3dVisualization": {
+        "description": "3D rendered objects like cubes, spheres",
+        "style": {
+          "perspective": "Isometric or perspective projection",
+          "lighting": "Top-right light source with soft shadows",
+          "colors": "Gradient faces with varying opacity",
+          "edges": "Subtle glow or outline",
+          "shadow": "Soft drop shadow beneath object"
+        }
+      },
+
+      "bubbleChart": {
+        "description": "Overlapping circles for multi-dimensional data",
+        "style": {
+          "bubbleSize": "Variable by data value",
+          "bubbleColor": "Semi-transparent gradients (opacity 0.6-0.8)",
+          "bubbleBorder": "Optional thin stroke",
+          "overlap": "Allowed with blend mode",
+          "labels": "Inside or adjacent to bubbles"
+        }
+      }
+    },
+
+    "layouts": {
+      "dashboardGrid": {
+        "description": "Primary dashboard layout pattern",
+        "structure": {
+          "display": "grid",
+          "gridTemplateColumns": "repeat(auto-fit, minmax(280px, 1fr))",
+          "gap": "16px",
+          "padding": "16px-24px",
+          "responsive": {
+            "mobile": "1 column",
+            "tablet": "2 columns",
+            "desktop": "3-4 columns",
+            "wide": "4-5 columns"
+          }
+        },
+        "cardSizes": {
+          "small": "1 column, aspect-ratio: 1/1 or auto",
+          "medium": "1 column, aspect-ratio: 4/3 or taller",
+          "large": "2 columns, aspect-ratio: 16/9",
+          "wide": "2-3 columns, aspect-ratio: 21/9",
+          "tall": "1 column, spanning 2 rows"
+        }
+      },
+
+      "header": {
+        "description": "Page and section headers",
+        "structure": {
+          "display": "flex",
+          "justifyContent": "space-between",
+          "alignItems": "center",
+          "padding": "16px 24px",
+          "marginBottom": "16px",
+          "title": {
+            "fontSize": "24px-28px",
+            "fontWeight": 600,
+            "color": "#FFFFFF"
+          },
+          "actions": {
+            "display": "flex",
+            "gap": "8px"
+          }
+        }
+      },
+
+      "cardHeader": {
+        "description": "Header within cards",
+        "structure": {
+          "display": "flex",
+          "justifyContent": "space-between",
+          "alignItems": "flex-start",
+          "marginBottom": "12px-16px",
+          "title": {
+            "fontSize": "14px",
+            "fontWeight": 500,
+            "color": "#FFFFFF"
+          },
+          "action": {
+            "iconButton or menu"
+          }
+        }
+      }
+    },
+
+    "animations": {
+      "hover": {
+        "duration": "200ms",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "properties": ["transform", "box-shadow", "background-color"]
+      },
+      "chartAppear": {
+        "duration": "800ms",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "delay": "Stagger by 100ms per element"
+      },
+      "progressRing": {
+        "duration": "1200ms",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "strokeDasharray": "Animated from 0 to target value"
+      },
+      "numberCount": {
+        "duration": "1000ms",
+        "easing": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "effect": "Count up from 0 to target value"
+      }
+    },
+
+    "dataVisualizationPrinciples": {
+      "colorUsage": {
+        "categorical": "Use distinct gradient ranges for different categories",
+        "sequential": "Use single gradient from light to dark for ordered data",
+        "diverging": "Use two complementary gradients meeting at midpoint",
+        "emphasis": "Brighten or desaturate to emphasize specific data points"
+      },
+      "chartTypes": {
+        "trends": "Line or area charts with smooth curves",
+        "comparisons": "Bar charts with grouped or stacked variations",
+        "proportions": "Donut/pie charts or progress rings",
+        "distribution": "Area charts with multiple layers",
+        "relationships": "Bubble charts with size/color encoding",
+        "progress": "Radial gauges or linear progress bars"
+      },
+      "accessibility": {
+        "contrast": "Ensure 4.5:1 minimum for text",
+        "colorBlindness": "Don't rely solely on color; use labels/patterns",
+        "interactivity": "Provide tooltips and hover states",
+        "responsiveness": "Scale charts appropriately for viewport"
+      }
+    },
+
+    "designPatterns": {
+      "metricCard": {
+        "description": "Card displaying single key metric",
+        "elements": ["Large number", "Label", "Optional sparkline/mini-chart", "Optional trend indicator"]
+      },
+      "comparisonCard": {
+        "description": "Card comparing multiple metrics",
+        "elements": ["Multiple metrics side-by-side", "Comparative visualization", "Labels and units"]
+      },
+      "chartCard": {
+        "description": "Card focused on data visualization",
+        "elements": ["Chart title", "Legend (if multi-series)", "Chart area", "Optional summary stats"]
+      },
+      "listCard": {
+        "description": "Card containing list of items",
+        "elements": ["Header", "Scrollable list", "List items with icons/avatars", "Optional actions per item"]
+      },
+      "controlCard": {
+        "description": "Card with interactive controls",
+        "elements": ["Control label", "Slider/toggle/input", "Current value display", "Optional min/max labels"]
+      }
+    },
+
+    "iconography": {
+      "style": "Outline or minimal filled",
+      "sizes": {
+        "small": "16px",
+        "medium": "20px",
+        "large": "24px",
+        "xlarge": "32px"
+      },
+      "strokeWidth": "1.5px-2px",
+      "color": "Inherit from parent or accent gradient",
+      "usage": "Navigation, actions, data labels, status indicators"
+    },
+
+    "responsiveBreakpoints": {
+      "mobile": "< 640px",
+      "tablet": "640px - 1024px",
+      "desktop": "1024px - 1440px",
+      "wide": "> 1440px",
+      "adaptations": {
+        "mobile": "Single column, larger touch targets, simplified charts",
+        "tablet": "2 columns, responsive charts",
+        "desktop": "3-4 columns, full features",
+        "wide": "4-5 columns, expanded visualizations"
+      }
+    },
+
+    "usageGuidelines": {
+      "when": {
+        "darkTheme": "Primary interface style",
+        "gradients": "Use for emphasis, progress, and data visualization",
+        "cards": "Group related information and create visual hierarchy",
+        "charts": "Present complex data in digestible visual formats",
+        "whitespace": "Generous spacing between cards for breathing room"
+      },
+      "avoid": {
+        "overuseGradients": "Too many gradients can overwhelm",
+        "tinyText": "Maintain 11px minimum for readability on dark backgrounds",
+        "flatCharts": "Add depth with gradients and shadows",
+        "inconsistentSpacing": "Use spacing scale consistently"
+      }
+    }
+  }
+}

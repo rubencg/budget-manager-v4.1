@@ -1,0 +1,118 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-xl);
+  background: var(--bg-primary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  gap: var(--space-xl);
+}
+
+.header__search {
+  flex: 1;
+  max-width: 500px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md) var(--space-base);
+}
+
+.header__search-icon {
+  font-size: 16px;
+  color: var(--text-secondary);
+}
+
+.header__search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.header__search-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.header__search-kbd {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-family: var(--font-mono);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+.header__notification {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.header__notification-icon {
+  font-size: 18px;
+}
+
+.header__notification-badge {
+  background: var(--gradient-pink);
+  color: var(--text-primary);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: var(--radius-full);
+}
+
+.header__user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  cursor: pointer;
+}
+
+.header__user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.header__user-greeting {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.header__user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header__search {
+    max-width: none;
+  }
+
+  .header__actions {
+    justify-content: space-between;
+  }
+
+  .header__user-info {
+    align-items: flex-start;
+  }
+}

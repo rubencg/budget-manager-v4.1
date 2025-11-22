@@ -1,0 +1,103 @@
+.balance-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.balance-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.balance-card__currency-select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: var(--space-xs) var(--space-md);
+  color: var(--text-primary);
+  font-size: 12px;
+  cursor: pointer;
+  outline: none;
+}
+
+.balance-card__comparison {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: calc(var(--space-base) * -1);
+}
+
+.balance-card__change {
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.balance-card__change--positive {
+  color: var(--color-success);
+}
+
+.balance-card__change--negative {
+  color: var(--color-error);
+}
+
+.balance-card__period {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.balance-card__health {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-lg);
+  padding: var(--space-base);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.balance-card__health-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-md);
+}
+
+.balance-card__health-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.balance-card__health-globe {
+  font-size: 20px;
+}
+
+.balance-card__health-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.balance-card__health-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.balance-card__health-fill {
+  height: 100%;
+  background: var(--gradient-green);
+  border-radius: var(--radius-full);
+  transition: width var(--transition-normal);
+}
+
+.balance-card__health-score {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-success);
+  min-width: 40px;
+  text-align: right;
+}

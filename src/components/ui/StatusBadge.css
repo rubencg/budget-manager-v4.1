@@ -1,0 +1,28 @@
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--radius-lg);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-badge--waiting {
+  background: rgba(255, 165, 0, 0.2);
+  color: var(--color-warning);
+}
+
+.status-badge--success {
+  background: rgba(0, 250, 154, 0.2);
+  color: var(--color-success);
+}
+
+.status-badge--due_date {
+  background: rgba(255, 68, 68, 0.2);
+  color: var(--color-error);
+}
+
+.status-badge--disabled {
+  background: rgba(107, 107, 107, 0.2);
+  color: var(--text-tertiary);
+}
