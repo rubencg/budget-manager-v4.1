@@ -6,7 +6,7 @@
 
 .dashboard__grid {
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: var(--space-base);
   padding: var(--space-xl);
   max-width: 1920px;
@@ -14,28 +14,20 @@
 }
 
 /* Grid layout for desktop */
-.dashboard__item--overview {
-  grid-column: span 3;
-}
 
 .dashboard__item--balance {
-  grid-column: span 4;
-}
-
-.dashboard__item--quick-actions {
   grid-column: span 2;
 }
 
 .dashboard__item--goals {
-  grid-column: span 3;
-  grid-row: span 2;
+  grid-column: span 4;
 }
 
 .dashboard__item--transactions {
-  grid-column: span 7;
+  grid-column: span 4;
 }
 
-.dashboard__item--premium {
+.dashboard__item--overview {
   grid-column: span 2;
 }
 
@@ -46,24 +38,26 @@
   }
 
   .dashboard__item--overview {
-    grid-column: span 3;
+    grid-column: span 4;
+    
   }
 
   .dashboard__item--balance {
-    grid-column: span 3;
+    grid-column: span 4;
+    grid-row: span 2;
   }
 
   .dashboard__item--quick-actions {
-    grid-column: span 2;
+    grid-column: span 4;
   }
 
   .dashboard__item--goals {
-    grid-column: span 3;
+    grid-column: span 4;
     grid-row: span 2;
   }
 
   .dashboard__item--transactions {
-    grid-column: span 5;
+    grid-column: span 8;
   }
 
   .dashboard__item--premium {
