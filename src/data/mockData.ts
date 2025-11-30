@@ -109,20 +109,17 @@ export const mockBalance: BalanceData = {
 export const mockNavigation: NavItem[] = [
   { id: '1', label: 'Panel', icon: '📊', path: '/', active: true },
   { id: '2', label: 'Transacciones', icon: '💳', path: '/transactions', active: false },
-  { id: '3', label: 'Mis Metas', icon: '🎯', path: '/goals', active: false },
-  { id: '4', label: 'Inversiones', icon: '📈', path: '/investment', active: false },
-  { id: '5', label: 'Facturas y Pagos', icon: '🧾', path: '/bills', active: false },
-  { id: '6', label: 'Análisis y Reportes', icon: '📉', path: '/analytics', active: false }
+  { id: '3', label: 'Plan de gastos', icon: '🎯', path: '/spending-plan', active: false }
 ];
 
 export const mockSupportNav: NavItem[] = [
-  { id: 's1', label: 'Ayuda', icon: '❓', path: '/help', active: false },
-  { id: 's2', label: 'Integración', icon: '🔗', path: '/integration', active: false },
-  { id: 's3', label: 'Configuración', icon: '⚙️', path: '/settings', active: false }
+  { id: 's1', label: 'Configuración', icon: '⚙️', path: '/settings', active: false },
+  { id: 's2', label: 'Cuentas', icon: '💰', path: '/accounts', active: false },
+  { id: 's3', label: 'Categorias', icon: '🏰', path: '/categorias', active: false }
 ];
 
 export const mockUserProfile: UserProfile = {
-  name: 'Syarah Adela',
+  name: 'Tikis',
   avatar: 'https://i.pravatar.cc/150?img=47',
-  greeting: 'Hola, ¡Bienvenido de nuevo!'
+  greeting: 'Hola, ¡Bienvenidos de nuevo!'
 };
