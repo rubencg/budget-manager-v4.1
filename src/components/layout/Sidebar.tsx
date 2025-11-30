@@ -1,6 +1,7 @@
 import React from 'react';
 import './Sidebar.css';
 import { NavItem } from '../../types';
+import calculatorIcon from '../../assets/images/calculator.png';
 
 interface SidebarProps {
   navigation: NavItem[];
@@ -11,7 +12,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ navigation, supportNav }) => {
   return (
     <aside className="sidebar">
       <div className="sidebar__brand">
-        <div className="sidebar__logo">💰</div>
+        <div className="sidebar__logo">
+          <img src={calculatorIcon} alt="Calculator" style={{ width: '24px', height: '24px' }} />
+        </div>
         <div className="sidebar__brand-text">
           <div className="sidebar__brand-name">Tiki</div>
           <div className="sidebar__brand-subtitle">Budget Manager</div>
