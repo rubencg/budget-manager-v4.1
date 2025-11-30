@@ -107,15 +107,15 @@ export const mockBalance: BalanceData = {
 };
 
 export const mockNavigation: NavItem[] = [
-  { id: '1', label: 'Panel', icon: '📊', path: '/', active: true },
-  { id: '2', label: 'Transacciones', icon: '💳', path: '/transactions', active: false },
-  { id: '3', label: 'Plan de gastos', icon: '🎯', path: '/spending-plan', active: false }
+  { id: '1', label: 'Panel', icon: '📊', path: '/' },
+  { id: '2', label: 'Transacciones', icon: '💳', path: '/transactions' },
+  { id: '3', label: 'Plan de gastos', icon: '🎯', path: '/budget' }
 ];
 
 export const mockSupportNav: NavItem[] = [
-  { id: 's1', label: 'Configuración', icon: '⚙️', path: '/settings', active: false },
-  { id: 's2', label: 'Cuentas', icon: '💰', path: '/accounts', active: false },
-  { id: 's3', label: 'Categorias', icon: '🏰', path: '/categorias', active: false }
+  { id: 's1', label: 'Configuración', icon: '⚙️', path: '/settings' },
+  { id: 's2', label: 'Cuentas', icon: '💰', path: '/accounts' },
+  { id: 's3', label: 'Categorias', icon: '🏰', path: '/categories' }
 ];
 
 export const mockUserProfile: UserProfile = {
