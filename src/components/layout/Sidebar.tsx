@@ -1,7 +1,6 @@
 import React from 'react';
 import './Sidebar.css';
 import { NavItem } from '../../types';
-import { Card } from '../ui/Card';
 
 interface SidebarProps {
   navigation: NavItem[];
@@ -15,7 +14,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ navigation, supportNav }) => {
         <div className="sidebar__logo">💰</div>
         <div className="sidebar__brand-text">
           <div className="sidebar__brand-name">Tiki</div>
-          <div className="sidebar__brand-subtitle">Gestor de Presupuesto</div>
+          <div className="sidebar__brand-subtitle">Budget Manager</div>
         </div>
       </div>
 
@@ -36,7 +35,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ navigation, supportNav }) => {
       </nav>
 
       <div className="sidebar__support">
-        <div className="sidebar__support-title">SOPORTE</div>
         <ul className="sidebar__nav-list">
           {supportNav.map((item) => (
             <li key={item.id}>
@@ -48,16 +46,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ navigation, supportNav }) => {
           ))}
         </ul>
       </div>
-
-      <Card className="sidebar__upgrade" variant="elevated">
-        <div className="sidebar__upgrade-content">
-          <div className="sidebar__upgrade-icon">👑</div>
-          <h4 className="sidebar__upgrade-title">Obtén Acceso Pro</h4>
-          <p className="sidebar__upgrade-description">
-            Desbloquea funciones premium y análisis avanzados
-          </p>
-        </div>
-      </Card>
     </aside>
   );
 };
