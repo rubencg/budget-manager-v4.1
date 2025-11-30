@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
 import { NavItem } from '../../types';
 import calculatorIcon from '../../assets/images/calculator.png';
@@ -25,13 +26,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ navigation, supportNav }) => {
         <ul className="sidebar__nav-list">
           {navigation.map((item) => (
             <li key={item.id}>
-              <a
-                href={item.path}
-                className={`sidebar__nav-item ${item.active ? 'sidebar__nav-item--active' : ''}`}
+              <NavLink
+                to={item.path}
+                className={({ isActive }) =>
+                  `sidebar__nav-item ${isActive ? 'sidebar__nav-item--active' : ''}`
+                }
               >
                 <span className="sidebar__nav-icon">{item.icon}</span>
                 <span className="sidebar__nav-label">{item.label}</span>
-              </a>
+              </NavLink>
             </li>
           ))}
         </ul>
@@ -41,10 +44,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ navigation, supportNav }) => {
         <ul className="sidebar__nav-list">
           {supportNav.map((item) => (
             <li key={item.id}>
-              <a href={item.path} className="sidebar__nav-item">
+              <NavLink
+                to={item.path}
+                className={({ isActive }) =>
+                  `sidebar__nav-item ${isActive ? 'sidebar__nav-item--active' : ''}`
+                }
+              >
                 <span className="sidebar__nav-icon">{item.icon}</span>
                 <span className="sidebar__nav-label">{item.label}</span>
-              </a>
+              </NavLink>
             </li>
           ))}
         </ul>
