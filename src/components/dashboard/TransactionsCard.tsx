@@ -19,10 +19,10 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions
 
   const getPaymentMethodDisplay = (method: string, cardLast4?: string) => {
     if (method === 'credit_card' && cardLast4) {
-      return `Credit Card ****${cardLast4}`;
+      return `Tarjeta de Crédito ****${cardLast4}`;
     }
     if (method === 'bank_transfer') {
-      return 'Bank Transfer ****';
+      return 'Transferencia Bancaria ****';
     }
     return method.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
@@ -30,7 +30,7 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions
   return (
     <Card className="transactions-card">
       <div className="transactions-card__header">
-        <h3 className="card__title">Recent Transactions</h3>
+        <h3 className="card__title">Transacciones Recientes</h3>
         <Button variant="icon">⚙️</Button>
       </div>
 
@@ -38,9 +38,9 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions
         <table className="transactions-card__table">
           <thead>
             <tr>
-              <th>TYPE</th>
-              <th>AMOUNT</th>
-              <th>METHOD</th>
+              <th>TIPO</th>
+              <th>CANTIDAD</th>
+              <th>MÉTODO</th>
             </tr>
           </thead>
           <tbody>

@@ -107,22 +107,22 @@ export const mockBalance: BalanceData = {
 };
 
 export const mockNavigation: NavItem[] = [
-  { id: '1', label: 'Dashboard', icon: '📊', path: '/', active: true },
-  { id: '2', label: 'Transactions', icon: '💳', path: '/transactions', active: false },
-  { id: '3', label: 'My Goals', icon: '🎯', path: '/goals', active: false },
-  { id: '4', label: 'Investment', icon: '📈', path: '/investment', active: false },
-  { id: '5', label: 'Bills and Payment', icon: '🧾', path: '/bills', active: false },
-  { id: '6', label: 'Analytics and Reports', icon: '📉', path: '/analytics', active: false }
+  { id: '1', label: 'Panel', icon: '📊', path: '/', active: true },
+  { id: '2', label: 'Transacciones', icon: '💳', path: '/transactions', active: false },
+  { id: '3', label: 'Mis Metas', icon: '🎯', path: '/goals', active: false },
+  { id: '4', label: 'Inversiones', icon: '📈', path: '/investment', active: false },
+  { id: '5', label: 'Facturas y Pagos', icon: '🧾', path: '/bills', active: false },
+  { id: '6', label: 'Análisis y Reportes', icon: '📉', path: '/analytics', active: false }
 ];
 
 export const mockSupportNav: NavItem[] = [
-  { id: 's1', label: 'Helps', icon: '❓', path: '/help', active: false },
-  { id: 's2', label: 'Integration', icon: '🔗', path: '/integration', active: false },
-  { id: 's3', label: 'Settings', icon: '⚙️', path: '/settings', active: false }
+  { id: 's1', label: 'Ayuda', icon: '❓', path: '/help', active: false },
+  { id: 's2', label: 'Integración', icon: '🔗', path: '/integration', active: false },
+  { id: 's3', label: 'Configuración', icon: '⚙️', path: '/settings', active: false }
 ];
 
 export const mockUserProfile: UserProfile = {
   name: 'Syarah Adela',
   avatar: 'https://i.pravatar.cc/150?img=47',
-  greeting: 'Hello, Welcome back!'
+  greeting: 'Hola, ¡Bienvenido de nuevo!'
 };

@@ -12,21 +12,21 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({ metrics }) => {
   return (
     <Card className="overview-card">
       <div className="overview-card__header">
-        <h3 className="card__title">Overview</h3>
+        <h3 className="card__title">Resumen</h3>
       </div>
 
       <div className="overview-card__metrics">
         <div className="overview-card__metric">
           <div className="overview-card__metric-value">{metrics.totalTransactions}</div>
-          <div className="overview-card__metric-label">Transactions</div>
+          <div className="overview-card__metric-label">Transacciones</div>
         </div>
         <div className="overview-card__metric overview-card__metric--income">
           <div className="overview-card__metric-value">{metrics.incomeCount}</div>
-          <div className="overview-card__metric-label">Income</div>
+          <div className="overview-card__metric-label">Ingresos</div>
         </div>
         <div className="overview-card__metric overview-card__metric--outcome">
           <div className="overview-card__metric-value">{metrics.outcomeCount}</div>
-          <div className="overview-card__metric-label">Outcome</div>
+          <div className="overview-card__metric-label">Gastos</div>
         </div>
       </div>
 

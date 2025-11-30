@@ -7,26 +7,26 @@ export const QuickActionsCard: React.FC = () => {
   return (
     <Card className="quick-actions-card">
       <div className="quick-actions-card__header">
-        <h3 className="card__title">Quick Action</h3>
+        <h3 className="card__title">Acciones Rápidas</h3>
       </div>
 
       <div className="quick-actions-card__buttons">
         <div className="quick-actions-card__action">
           <Button variant="primary" fullWidth>
-            Send Money
+            Enviar Dinero
           </Button>
           <kbd className="quick-actions-card__kbd">N</kbd>
         </div>
         <div className="quick-actions-card__action">
           <Button variant="secondary" fullWidth>
-            Request Money
+            Solicitar Dinero
           </Button>
           <kbd className="quick-actions-card__kbd">R</kbd>
         </div>
       </div>
 
       <a href="#" className="quick-actions-card__manage">
-        Manage →
+        Gestionar →
       </a>
     </Card>
   );
