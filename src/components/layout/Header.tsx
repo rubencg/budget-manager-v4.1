@@ -15,7 +15,7 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
         <span className="header__search-icon">🔍</span>
         <input
           type="text"
-          placeholder="Search or type command"
+          placeholder="Buscar o escribir comando"
           className="header__search-input"
         />
         <kbd className="header__search-kbd">F</kbd>
@@ -26,7 +26,7 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
           <Button variant="icon">
             <span className="header__notification-icon">🔔</span>
           </Button>
-          <span className="header__notification-badge">2 New</span>
+          <span className="header__notification-badge">2 Nuevo</span>
         </div>
 
         <div className="header__user">
