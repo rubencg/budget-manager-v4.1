@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import './Header.css';
 import { UserProfile } from '../../types';
 import { Avatar } from '../ui/Avatar';
@@ -8,6 +9,8 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ user }) => {
+  const { logout } = useAuth0();
+
   return (
     <header className="header">
       <div className="header__actions">
@@ -16,6 +19,12 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
           <div className="header__user-info">
             <div className="header__user-greeting">{user.greeting}</div>
             <div className="header__user-name">{user.name}</div>
+            <button
+              className="header__logout-btn"
+              onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+            >
+              Cerrar sesión
+            </button>
           </div>
         </div>
       </div>
