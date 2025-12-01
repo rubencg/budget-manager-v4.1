@@ -1,0 +1,95 @@
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-page__blob {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    filter: blur(150px);
+    opacity: 0.2;
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.login-page__blob--top {
+    top: -20%;
+    left: -10%;
+    background: var(--gradient-purple);
+}
+
+.login-page__blob--bottom {
+    bottom: -20%;
+    right: -10%;
+    background: var(--gradient-cyan);
+}
+
+.login-card {
+    background: var(--bg-card);
+    padding: var(--space-3xl);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.login-card__logo-container {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-xl);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--space-xl);
+}
+
+.login-card__logo {
+    width: 48px;
+    height: 48px;
+}
+
+.login-card__title {
+    font-size: 24px;
+    margin-bottom: var(--space-xs);
+    color: var(--text-primary);
+}
+
+.login-card__subtitle {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-2xl);
+    font-size: 14px;
+}
+
+.login-card__button {
+    width: 100%;
+    padding: var(--space-base);
+    background: var(--gradient-purple);
+    color: white;
+    border: none;
+    border-radius: var(--radius-lg);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    box-shadow: var(--shadow-glow);
+}
+
+.login-card__button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    /* Enhanced shadow on hover if desired, or keep glow */
+}
+
+.login-card__button:active {
+    transform: translateY(0);
+}
