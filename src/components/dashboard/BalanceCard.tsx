@@ -28,27 +28,12 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({ balance }) => {
         size="large"
       />
 
-      <div className="balance-card__comparison">
+        {/* TODO: Get last month's balance and compare (probably better done in BE) */}
+      {/* <div className="balance-card__comparison">
         <span className={`balance-card__change ${balance.changePercent >= 0 ? 'balance-card__change--positive' : 'balance-card__change--negative'}`}>
           {balance.changePercent >= 0 ? '↑' : '↓'} {Math.abs(balance.changePercent)}%
         </span>
         <span className="balance-card__period">{balance.comparisonPeriod}</span>
-      </div>
-
-      {/* <div className="balance-card__health">
-        <div className="balance-card__health-header">
-          <span className="balance-card__health-title">Finance Health</span>
-          <div className="balance-card__health-globe">🌍</div>
-        </div>
-        <div className="balance-card__health-progress">
-          <div className="balance-card__health-bar">
-            <div
-              className="balance-card__health-fill"
-              style={{ width: `${balance.financeHealthScore}%` }}
-            />
-          </div>
-          <span className="balance-card__health-score">{balance.financeHealthScore}%</span>
-        </div>
       </div> */}
     </Card>
   );
