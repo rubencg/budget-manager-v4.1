@@ -1,20 +1,23 @@
 import React from 'react';
 import './TransactionsCard.css';
+import '../../fontAwesome'; // Initialize the Font Awesome library
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { Transaction } from '../../types';
+import { Transaction } from '../../api-client';
+import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
+import { IconProp, findIconDefinition, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 
 interface TransactionsCardProps {
   transactions: Transaction[];
 }
 
 export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions }) => {
-  const formatAmount = (amount: number, currency: string) => {
+  const formatAmount = (amount: number | undefined) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency === 'EUR' ? 'EUR' : 'USD',
+      currency: 'USD',
       minimumFractionDigits: 2
-    }).format(amount);
+    }).format(amount || 0);
   };
 
   const getPaymentMethodDisplay = (method: string, cardLast4?: string) => {
@@ -25,6 +28,13 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions
       return 'Transferencia Bancaria ****';
     }
     return method.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+
+  const getIcon = (iconName: string | null | undefined): FontAwesomeIconProps['icon'] => {
+    const prefix: IconPrefix = 'fas'; // Assuming all are solid icons for now
+    const icon = iconName ? findIconDefinition({ prefix, iconName: iconName as any }) : null;
+    // Return the found icon, or a fallback 'question-circle' icon
+    return icon || ['fas', 'question-circle'];
   };
 
   return (
@@ -48,21 +58,23 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions
               <tr key={transaction.id} className="transactions-card__row">
                 <td>
                   <div className="transactions-card__type">
-                    <span className="transactions-card__icon">{transaction.icon}</span>
+                    <span className="transactions-card__icon" style={{ backgroundColor: transaction.categoryColor || '#cccccc' }}>
+                      <FontAwesomeIcon icon={getIcon(transaction.categoryImage)} />
+                    </span>
                     <div className="transactions-card__info">
-                      <div className="transactions-card__name">{transaction.name}</div>
-                      <div className="transactions-card__date">{transaction.date}</div>
+                      <div className="transactions-card__name">{transaction.categoryName}/{transaction.subcategory}</div>
+                      <div className="transactions-card__date">{transaction.date ? transaction.date.toLocaleDateString() : ''}</div>
                     </div>
                   </div>
                 </td>
                 <td>
                   <div className="transactions-card__amount">
-                    {formatAmount(transaction.amount, transaction.currency)}
+                    {formatAmount(transaction.amount)}
                   </div>
                 </td>
                 <td>
                   <div className="transactions-card__method">
-                    {getPaymentMethodDisplay(transaction.paymentMethod, transaction.cardLast4)}
+                    {transaction.accountName}
                   </div>
                 </td>
               </tr>
