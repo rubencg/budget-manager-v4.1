@@ -3,7 +3,7 @@ import './TransactionsCard.css';
 import '../../fontAwesome'; // Initialize the Font Awesome library
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { Transaction } from '../../api-client';
+import { Transaction, TransactionType } from '../../api-client';
 import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
 import { IconProp, findIconDefinition, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 
@@ -20,14 +20,21 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions
     }).format(amount || 0);
   };
 
-  const getPaymentMethodDisplay = (method: string, cardLast4?: string) => {
-    if (method === 'credit_card' && cardLast4) {
-      return `Tarjeta de Crédito ****${cardLast4}`;
+  const getTransactionColor = (type: TransactionType | undefined) => {
+    switch (type) {
+      case TransactionType.NUMBER_0: // Expense
+        return 'var(--color-error)';
+      case TransactionType.NUMBER_1: // Income
+        return 'var(--color-success)';
+      case TransactionType.NUMBER_2: // Transfer
+        return '#1E90FF';
+      case TransactionType.NUMBER_3: // MonthlyExpense
+        return '#FFD700';
+      case TransactionType.NUMBER_4: // MonthlyIncome
+        return '#006400';
+      default:
+        return 'inherit';
     }
-    if (method === 'bank_transfer') {
-      return 'Transferencia Bancaria ****';
-    }
-    return method.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
   const getIcon = (iconName: string | null | undefined): FontAwesomeIconProps['icon'] => {
@@ -48,7 +55,7 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions
         <table className="transactions-card__table">
           <thead>
             <tr>
-              <th>TIPO</th>
+              <th>NOMBRE</th>
               <th>CANTIDAD</th>
               <th>MÉTODO</th>
             </tr>
@@ -62,13 +69,16 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions
                       <FontAwesomeIcon icon={getIcon(transaction.categoryImage)} />
                     </span>
                     <div className="transactions-card__info">
-                      <div className="transactions-card__name">{transaction.categoryName}/{transaction.subcategory}</div>
+                      <div className="transactions-card__name">
+                        {transaction.categoryName}
+                        {transaction.subcategory ? `/${transaction.subcategory}` : ''}
+                      </div>
                       <div className="transactions-card__date">{transaction.date ? transaction.date.toLocaleDateString() : ''}</div>
                     </div>
                   </div>
                 </td>
                 <td>
-                  <div className="transactions-card__amount">
+                  <div className="transactions-card__amount" style={{ color: getTransactionColor(transaction.transactionType) }}>
                     {formatAmount(transaction.amount)}
                   </div>
                 </td>
