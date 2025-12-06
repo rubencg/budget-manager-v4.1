@@ -19,18 +19,19 @@ export const Dashboard: React.FC = () => {
     <div className="dashboard">
       <div className="dashboard__grid">
 
-        <div className="dashboard__item dashboard__item--goals">
-          <GoalsCard goals={mockGoals} />
+        <div className="dashboard__item dashboard__item--transactions">
+          {isLoading && <p>Loading transactions...</p>}
+          {isError && <p>Failed to fetch dashboard data.</p>}
+          {!isLoading && !isError && <TransactionsCard transactions={transactions} />}
         </div>
         <div className="dashboard__item dashboard__item--balance">
           <BalanceCard balance={{
             balance: dashboardData?.balance?.total || 0
           }} />
         </div>
-        <div className="dashboard__item dashboard__item--transactions">
-          {isLoading && <p>Loading transactions...</p>}
-          {isError && <p>Failed to fetch dashboard data.</p>}
-          {!isLoading && !isError && <TransactionsCard transactions={transactions} />}
+
+        <div className="dashboard__item dashboard__item--goals">
+          <GoalsCard goals={mockGoals} />
         </div>
 
         <div className="dashboard__item dashboard__item--overview">
