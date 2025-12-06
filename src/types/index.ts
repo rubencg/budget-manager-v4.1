@@ -39,8 +39,8 @@ export interface OverviewMetrics {
 // Balance data
 export interface BalanceData {
   balance: number;
-  changePercent: number;
-  comparisonPeriod: string;
+  changePercent?: number;
+  comparisonPeriod?: string;
   financeHealthScore?: number;
 }
 
