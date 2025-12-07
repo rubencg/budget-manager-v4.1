@@ -1,0 +1,88 @@
+.category-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.category-list__title {
+    color: var(--text-secondary);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: var(--space-xs);
+    padding-left: var(--space-xs);
+}
+
+.category-list__items {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    padding: var(--space-md);
+    background-color: var(--bg-card);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-fast);
+    border: 1px solid transparent;
+}
+
+.category-item:hover {
+    background-color: var(--bg-card-hover);
+    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(4px);
+}
+
+.category-item__icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-xl);
+    /* Squircle-ish */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: #fff;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-sm);
+}
+
+.category-item__content {
+    flex: 1;
+    margin-left: var(--space-base);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.category-item__name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.category-item__meta {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-top: 2px;
+}
+
+.category-item__actions {
+    display: flex;
+    gap: var(--space-xs);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.category-item:hover .category-item__actions {
+    opacity: 1;
+}
+
+/* Mobile: always show actions or use a menu, for now typically hidden but we'll show them for simplicity or keep hidden until tap */
+@media (max-width: 768px) {
+    .category-item__actions {
+        opacity: 1;
+    }
+}

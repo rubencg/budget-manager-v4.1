@@ -1,6 +1,6 @@
-import { Configuration, DashboardApi } from ".";
+import { Configuration, DashboardApi, CategoriesApi } from ".";
 
-const getApiBasePath = () => {
+export const getApiBasePath = () => {
     const basePath = import.meta.env.VITE_API_URL;
     if (!basePath) {
         console.warn('API base path not found in environment variables. Using default.');
@@ -15,4 +15,12 @@ export const createDashboardApi = (accessToken: string) => {
         accessToken: accessToken,
     });
     return new DashboardApi(config);
+};
+
+export const createCategoriesApi = (accessToken: string) => {
+    const config = new Configuration({
+        basePath: getApiBasePath(),
+        accessToken: accessToken,
+    });
+    return new CategoriesApi(config);
 };
