@@ -34,8 +34,20 @@ export const useCategoryMutations = () => {
         }
     });
 
+    const deleteCategory = useMutation<void, Error, string>({
+        mutationFn: async (id) => {
+            const token = await getAccessTokenSilently();
+            const api = createCategoriesApi(token);
+            await api.apiCategoriesIdDelete({ id });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['categories'] });
+        }
+    });
+
     return {
         createCategory,
-        updateCategory
+        updateCategory,
+        deleteCategory
     };
 };
