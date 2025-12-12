@@ -72,8 +72,44 @@ export const useAccountMutations = () => {
         }
     });
 
+    const archiveAccount = useMutation({
+        mutationFn: async (account: Account) => {
+            const token = await getAccessTokenSilently();
+            const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+            const accountData = {
+                name: account.name,
+                currentBalance: account.currentBalance,
+                accountType: account.accountType,
+                color: account.color,
+                isArchived: true,
+                image: account.image,
+                sumsToMonthlyBudget: account.sumsToMonthlyBudget
+            };
+
+            const response = await fetch(`${baseUrl}/api/Accounts/${account.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(accountData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to archive account');
+            }
+
+            return response.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['accounts'] });
+        }
+    });
+
     return {
         createAccount,
-        updateAccount
+        updateAccount,
+        archiveAccount
     };
 };
