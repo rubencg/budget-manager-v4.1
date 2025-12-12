@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAccountsQuery } from '../hooks/useAccountsQuery';
 import { useAccountMutations } from '../hooks/useAccountMutations';
 import { AccountGroupCard } from '../components/accounts/AccountGroupCard';
@@ -11,6 +12,7 @@ import { faPlus, faRightLeft, faBoxArchive } from '@fortawesome/free-solid-svg-i
 import './Accounts.css';
 
 export const Accounts: React.FC = () => {
+    const navigate = useNavigate();
     const { data: accountGroups, isLoading, error } = useAccountsQuery();
     const { archiveAccount } = useAccountMutations();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -70,7 +72,11 @@ export const Accounts: React.FC = () => {
                     <button className="accounts-page__action-btn" title="Transfer">
                         <FontAwesomeIcon icon={faRightLeft} size="sm" />
                     </button>
-                    <button className="accounts-page__action-btn" title="View Archive">
+                    <button
+                        className="accounts-page__action-btn"
+                        title="View Archive"
+                        onClick={() => navigate('/accounts/archived')}
+                    >
                         <FontAwesomeIcon icon={faBoxArchive} size="sm" />
                     </button>
                 </div>
