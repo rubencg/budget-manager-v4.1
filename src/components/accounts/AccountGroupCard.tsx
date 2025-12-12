@@ -6,9 +6,10 @@ import './Accounts.css';
 interface AccountGroupCardProps {
     group: AccountGroup;
     onEdit: (account: Account) => void;
+    onArchive: (account: Account) => void;
 }
 
-export const AccountGroupCard: React.FC<AccountGroupCardProps> = ({ group, onEdit }) => {
+export const AccountGroupCard: React.FC<AccountGroupCardProps> = ({ group, onEdit, onArchive }) => {
     const formattedTotal = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -23,7 +24,7 @@ export const AccountGroupCard: React.FC<AccountGroupCardProps> = ({ group, onEdi
 
             <div className="account-group-card__list">
                 {group.accounts.map(account => (
-                    <AccountItem key={account.id} account={account} onEdit={onEdit} />
+                    <AccountItem key={account.id} account={account} onEdit={onEdit} onArchive={onArchive} />
                 ))}
             </div>
         </div>
