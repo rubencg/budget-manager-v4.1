@@ -5,6 +5,8 @@ import { CategoryList } from '../components/categories/CategoryList';
 import './Categories.css';
 import { useCategoriesQuery } from '../hooks/useCategoriesQuery';
 import { CategoryModal } from '../components/categories/CategoryModal';
+import { useCategoryMutations } from '../hooks/useCategoryMutations';
+import { Modal } from '../components/ui/Modal';
 
 type TabType = 'expense' | 'income';
 
@@ -34,6 +36,28 @@ export const Categories: React.FC = () => {
     };
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    // Delete logic
+    const { deleteCategory } = useCategoryMutations();
+    const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+    const handleDeleteClick = (category: Category) => {
+        setCategoryToDelete(category);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (categoryToDelete && categoryToDelete.id) {
+            try {
+                await deleteCategory.mutateAsync(categoryToDelete.id);
+                setIsDeleteModalOpen(false);
+                setCategoryToDelete(null);
+            } catch (error) {
+                console.error("Failed to delete category", error);
+            }
+        }
+    };
 
     return (
         <div className="categories-page">
@@ -68,6 +92,7 @@ export const Categories: React.FC = () => {
                     <CategoryList
                         title={activeTab === 'expense' ? 'Gastos' : 'Ingresos'}
                         categories={paginatedList}
+                        onDelete={handleDeleteClick}
                     />
                 )}
             </div>
@@ -99,6 +124,30 @@ export const Categories: React.FC = () => {
                 onClose={() => setIsModalOpen(false)}
                 type={activeTab}
             />
+
+            {/* Delete Confirmation Modal */}
+            <Modal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                title="Eliminar Categoría"
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p>¿Estás seguro de eliminar <strong>{categoryToDelete?.name}</strong>?</p>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1.5rem' }}>
+                        <Button variant="secondary" onClick={() => setIsDeleteModalOpen(false)}>
+                            Cancelar
+                        </Button>
+                        <Button
+                            variant="primary"
+                            style={{ backgroundColor: 'var(--color-error)', borderColor: 'var(--color-error)' }}
+                            onClick={confirmDelete}
+                            disabled={deleteCategory.isPending}
+                        >
+                            {deleteCategory.isPending ? 'Eliminando...' : 'Eliminar'}
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };

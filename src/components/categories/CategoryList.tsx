@@ -8,9 +8,10 @@ import './CategoryList.css';
 interface CategoryListProps {
     title: string;
     categories: Category[];
+    onDelete?: (category: Category) => void;
 }
 
-export const CategoryList: React.FC<CategoryListProps> = ({ title, categories }) => {
+export const CategoryList: React.FC<CategoryListProps> = ({ title, categories, onDelete }) => {
 
     const getIcon = (iconName: string | null | undefined): IconProp => {
         const prefix: IconPrefix = 'fas';
@@ -41,7 +42,14 @@ export const CategoryList: React.FC<CategoryListProps> = ({ title, categories })
                         <div className="category-item__actions">
                             <Button variant="icon" title="Edit">✏️</Button>
                             <Button variant="icon" title="Add Subcategory">➕</Button>
-                            <Button variant="icon" title="Delete" style={{ color: 'var(--color-error)' }}>🗑️</Button>
+                            <Button
+                                variant="icon"
+                                title="Delete"
+                                style={{ color: 'var(--color-error)' }}
+                                onClick={() => onDelete && onDelete(category)}
+                            >
+                                🗑️
+                            </Button>
                         </div>
                     </div>
                 ))}
