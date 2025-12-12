@@ -1,0 +1,49 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAuth0 } from '@auth0/auth0-react';
+
+interface CreateTransferCommand {
+    transactionType: number;
+    amount: number;
+    date: string;
+    fromAccountId: string;
+    fromAccountName: string;
+    toAccountId: string;
+    toAccountName: string;
+    notes: string;
+    isApplied: boolean;
+}
+
+export const useTransactionMutations = () => {
+    const { getAccessTokenSilently } = useAuth0();
+    const queryClient = useQueryClient();
+
+    const createTransfer = useMutation({
+        mutationFn: async (command: CreateTransferCommand) => {
+            const token = await getAccessTokenSilently();
+            const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+            const response = await fetch(`${baseUrl}/api/Transactions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(command)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create transfer');
+            }
+
+            return response.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['accounts'] });
+            queryClient.invalidateQueries({ queryKey: ['transactions'] });
+        }
+    });
+
+    return {
+        createTransfer
+    };
+};

@@ -4,6 +4,7 @@ import { useAccountsQuery } from '../hooks/useAccountsQuery';
 import { useAccountMutations } from '../hooks/useAccountMutations';
 import { AccountGroupCard } from '../components/accounts/AccountGroupCard';
 import { AccountModal } from '../components/accounts/AccountModal';
+import { TransferModal } from '../components/accounts/TransferModal';
 import { Modal } from '../components/ui/Modal';
 import { Button } from '../components/ui/Button';
 import { Account } from '../types';
@@ -19,6 +20,7 @@ export const Accounts: React.FC = () => {
     const [editingAccount, setEditingAccount] = useState<Account | undefined>(undefined);
     const [archivingAccount, setArchivingAccount] = useState<Account | null>(null);
     const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
+    const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
 
     const handleEdit = (account: Account) => {
         setEditingAccount(account);
@@ -69,7 +71,11 @@ export const Accounts: React.FC = () => {
                     >
                         <FontAwesomeIcon icon={faPlus} size="sm" />
                     </button>
-                    <button className="accounts-page__action-btn" title="Transfer">
+                    <button
+                        className="accounts-page__action-btn"
+                        title="Transfer"
+                        onClick={() => setIsTransferModalOpen(true)}
+                    >
                         <FontAwesomeIcon icon={faRightLeft} size="sm" />
                     </button>
                     <button
@@ -133,6 +139,13 @@ export const Accounts: React.FC = () => {
                     </div>
                 </div>
             </Modal>
+
+            {/* Transfer Modal */}
+            <TransferModal
+                isOpen={isTransferModalOpen}
+                onClose={() => setIsTransferModalOpen(false)}
+                accounts={accountGroups?.flatMap(group => group.accounts) || []}
+            />
         </div>
     );
 };
