@@ -5,6 +5,7 @@ import { CategoryList } from '../components/categories/CategoryList';
 import './Categories.css';
 import { useCategoriesQuery } from '../hooks/useCategoriesQuery';
 import { CategoryModal } from '../components/categories/CategoryModal';
+import { SubcategoryModal } from '../components/categories/SubcategoryModal';
 import { useCategoryMutations } from '../hooks/useCategoryMutations';
 import { Modal } from '../components/ui/Modal';
 
@@ -59,6 +60,15 @@ export const Categories: React.FC = () => {
         }
     };
 
+    // Subcategory logic
+    const [subcategoryCategory, setSubcategoryCategory] = useState<Category | null>(null);
+    const [isSubcategoryModalOpen, setIsSubcategoryModalOpen] = useState(false);
+
+    const handleAddSubcategoryClick = (category: Category) => {
+        setSubcategoryCategory(category);
+        setIsSubcategoryModalOpen(true);
+    };
+
     return (
         <div className="categories-page">
             <div className="categories-page__header">
@@ -93,6 +103,7 @@ export const Categories: React.FC = () => {
                         title={activeTab === 'expense' ? 'Gastos' : 'Ingresos'}
                         categories={paginatedList}
                         onDelete={handleDeleteClick}
+                        onAddSubcategory={handleAddSubcategoryClick}
                     />
                 )}
             </div>
@@ -124,6 +135,17 @@ export const Categories: React.FC = () => {
                 onClose={() => setIsModalOpen(false)}
                 type={activeTab}
             />
+
+            {subcategoryCategory && (
+                <SubcategoryModal
+                    isOpen={isSubcategoryModalOpen}
+                    onClose={() => {
+                        setIsSubcategoryModalOpen(false);
+                        setSubcategoryCategory(null);
+                    }}
+                    category={subcategoryCategory}
+                />
+            )}
 
             {/* Delete Confirmation Modal */}
             <Modal
