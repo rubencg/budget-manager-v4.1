@@ -4,6 +4,7 @@ import { Button } from '../components/ui/Button';
 import { CategoryList } from '../components/categories/CategoryList';
 import './Categories.css';
 import { useCategoriesQuery } from '../hooks/useCategoriesQuery';
+import { CategoryModal } from '../components/categories/CategoryModal';
 
 type TabType = 'expense' | 'income';
 
@@ -32,12 +33,16 @@ export const Categories: React.FC = () => {
         setCurrentPage(1); // Reset page on tab switch
     };
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     return (
         <div className="categories-page">
             <div className="categories-page__header">
                 <div className="categories-page__title-row">
                     <h1>Categorías</h1>
-                    <Button variant="primary">Agregar Categoría</Button>
+                    <Button variant="primary" onClick={() => setIsModalOpen(true)}>
+                        Agregar Categoría
+                    </Button>
                 </div>
 
                 <div className="categories-page__tabs">
@@ -88,6 +93,12 @@ export const Categories: React.FC = () => {
                     </Button>
                 </div>
             )}
+
+            <CategoryModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                type={activeTab}
+            />
         </div>
     );
 };

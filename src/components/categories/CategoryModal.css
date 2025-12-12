@@ -1,0 +1,158 @@
+.category-modal__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.category-modal__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.category-modal__label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.category-modal__input {
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.05);
+    /* Slightly lighter than background */
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.category-modal__input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.category-modal__icons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 0.5rem;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.category-modal__icon-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: var(--bg-background);
+    color: var(--text-secondary);
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.category-modal__icon-option:hover {
+    background-color: var(--bg-hover);
+}
+
+.category-modal__icon-option.selected {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.category-modal__subcategories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.category-modal__badge {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    background-color: var(--bg-secondary);
+    border-radius: 16px;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+}
+
+.category-modal__badge-remove {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.1);
+    font-size: 0.7rem;
+    line-height: 1;
+}
+
+.category-modal__badge-remove:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.category-modal__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.category-modal__color-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.category-modal__color-picker-wrapper {
+    position: relative;
+}
+
+.category-modal__color-preview {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: white;
+    /* Ensure text is visible on dark/light colors if needed, but simplest is just color swatch */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Customizing react-colorful if needed, but default is usually fine. 
+   Just ensure it sits correctly. */
+.category-modal__color-popover {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    z-index: 10;
+    padding: 10px;
+    background: var(--bg-card);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.category-modal__color-cover {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
