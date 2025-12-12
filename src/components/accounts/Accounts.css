@@ -1,0 +1,129 @@
+/* Group Card */
+.account-group-card {
+    background-color: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-xl);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-base);
+    box-shadow: var(--shadow-md);
+    min-height: 200px;
+    height: 100%;
+}
+
+.account-group-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.account-group-card__title {
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 700;
+}
+
+.account-group-card__total {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+}
+
+.account-group-card__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+/* Account Item */
+.account-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md);
+    border-radius: var(--radius-lg);
+    transition: background-color var(--transition-fast);
+}
+
+.account-item:hover {
+    background-color: var(--bg-card-hover);
+}
+
+.account-item__main {
+    display: flex;
+    align-items: center;
+    gap: var(--space-base);
+}
+
+.account-item__icon-wrapper {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.account-item__info {
+    display: flex;
+    flex-direction: column;
+}
+
+.account-item__name {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.account-item__amount {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.account-item__amount--positive {
+    color: var(--color-success);
+}
+
+.account-item__amount--negative {
+    color: var(--color-error);
+}
+
+.account-item__actions {
+    display: flex;
+    gap: var(--space-xs);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.account-item:hover .account-item__actions {
+    opacity: 1;
+}
+
+.account-item__action-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-tertiary);
+    padding: var(--space-sm);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.account-item__action-btn:hover {
+    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.1);
+}
