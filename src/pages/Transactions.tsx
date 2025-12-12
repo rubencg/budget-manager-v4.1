@@ -26,6 +26,7 @@ export const Transactions: React.FC = () => {
     const [pageSize, setPageSize] = useState(50);
     const [currentPage, setCurrentPage] = useState(1);
     const [showUnapplied, setShowUnapplied] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
 
     const { data, isLoading, error } = useTransactionsQuery(currentYear, currentMonth);
 
@@ -90,15 +91,41 @@ export const Transactions: React.FC = () => {
         return `${dayName}\n${day}/${month}/${year}`;
     };
 
+    const filteredTransactions = useMemo(() => {
+        const transactions = data?.data || [];
+        if (!searchTerm) {
+            return transactions;
+        }
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
+
+        return transactions.filter(transaction => {
+            const searchFields = [
+                transaction.amount,
+                transaction.toAccountName,
+                transaction.fromAccountName,
+                transaction.accountName,
+                transaction.categoryName,
+                transaction.subcategory,
+                transaction.notes
+            ];
+
+            return searchFields.some(value => {
+                if (value === null || typeof value === 'undefined') {
+                    return false;
+                }
+                return String(value).toLowerCase().includes(lowerCaseSearchTerm);
+            });
+        });
+    }, [data?.data, searchTerm]);
+
     // Paginate transactions
     const paginatedTransactions = useMemo(() => {
-        const transactions = data?.data || [];
         const startIndex = (currentPage - 1) * pageSize;
         const endIndex = startIndex + pageSize;
-        return transactions.slice(startIndex, endIndex);
-    }, [data?.data, currentPage, pageSize]);
+        return filteredTransactions.slice(startIndex, endIndex);
+    }, [filteredTransactions, currentPage, pageSize]);
 
-    const totalPages = Math.ceil((data?.data?.length || 0) / pageSize);
+    const totalPages = Math.ceil((filteredTransactions.length || 0) / pageSize);
 
     const renderAccountInfo = (transaction: Transaction) => {
         if (transaction.transactionType === TransactionType.NUMBER_2) {
@@ -148,9 +175,19 @@ export const Transactions: React.FC = () => {
                 </div>
 
                 <div className="transactions-page__actions">
-                    <button className="transactions-page__action-btn" title="Search">
-                        <FontAwesomeIcon icon={faSearch} />
-                    </button>
+                    <div className="transactions-page__search-container">
+                        <FontAwesomeIcon icon={faSearch} className="transactions-page__search-icon" />
+                        <input
+                            type="text"
+                            placeholder="Buscar..."
+                            className="transactions-page__search-input"
+                            value={searchTerm}
+                            onChange={(e) => {
+                                setSearchTerm(e.target.value);
+                                setCurrentPage(1);
+                            }}
+                        />
+                    </div>
                     <button className="transactions-page__action-btn" title="Add Transaction">
                         <FontAwesomeIcon icon={faPlus} />
                         Agregar
