@@ -4,11 +4,74 @@ All URIs are relative to *http://localhost*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
+| [**apiCategoriesExpenseGet**](CategoriesApi.md#apicategoriesexpenseget) | **GET** /api/Categories/expense |  |
 | [**apiCategoriesIdDelete**](CategoriesApi.md#apicategoriesiddelete) | **DELETE** /api/Categories/{id} |  |
 | [**apiCategoriesIdGet**](CategoriesApi.md#apicategoriesidget) | **GET** /api/Categories/{id} |  |
 | [**apiCategoriesIdPut**](CategoriesApi.md#apicategoriesidput) | **PUT** /api/Categories/{id} |  |
+| [**apiCategoriesIncomeGet**](CategoriesApi.md#apicategoriesincomeget) | **GET** /api/Categories/income |  |
 | [**apiCategoriesPost**](CategoriesApi.md#apicategoriespost) | **POST** /api/Categories |  |
 
+
+
+## apiCategoriesExpenseGet
+
+> Array&lt;Category&gt; apiCategoriesExpenseGet()
+
+
+
+### Example
+
+```ts
+import {
+  Configuration,
+  CategoriesApi,
+} from '';
+import type { ApiCategoriesExpenseGetRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: Bearer
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new CategoriesApi(config);
+
+  try {
+    const data = await api.apiCategoriesExpenseGet();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+[**Array&lt;Category&gt;**](Category.md)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `text/plain`, `application/json`, `text/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Success |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 
 
 ## apiCategoriesIdDelete
@@ -221,6 +284,67 @@ example().catch(console.error);
 | **200** | Success |  -  |
 | **404** | Not Found |  -  |
 | **400** | Bad Request |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## apiCategoriesIncomeGet
+
+> Array&lt;Category&gt; apiCategoriesIncomeGet()
+
+
+
+### Example
+
+```ts
+import {
+  Configuration,
+  CategoriesApi,
+} from '';
+import type { ApiCategoriesIncomeGetRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: Bearer
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new CategoriesApi(config);
+
+  try {
+    const data = await api.apiCategoriesIncomeGet();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+This endpoint does not need any parameter.
+
+### Return type
+
+[**Array&lt;Category&gt;**](Category.md)
+
+### Authorization
+
+[Bearer](../README.md#Bearer)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `text/plain`, `application/json`, `text/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Success |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
 

@@ -16,21 +16,21 @@
 import * as runtime from '../runtime';
 import type {
   CreateTransactionCommand,
-  GetTransactionsByMonthQueryResult,
   ProblemDetails,
   Transaction,
+  TransactionPagedResult,
   TransactionType,
   UpdateTransactionCommand,
 } from '../models/index';
 import {
     CreateTransactionCommandFromJSON,
     CreateTransactionCommandToJSON,
-    GetTransactionsByMonthQueryResultFromJSON,
-    GetTransactionsByMonthQueryResultToJSON,
     ProblemDetailsFromJSON,
     ProblemDetailsToJSON,
     TransactionFromJSON,
     TransactionToJSON,
+    TransactionPagedResultFromJSON,
+    TransactionPagedResultToJSON,
     TransactionTypeFromJSON,
     TransactionTypeToJSON,
     UpdateTransactionCommandFromJSON,
@@ -55,6 +55,10 @@ export interface ApiTransactionsMonthYearMonthGetRequest {
     month: number;
     type?: TransactionType;
     categoryId?: string;
+    pageNumber?: number;
+    pageSize?: number;
+    sortBy?: string;
+    sortDirection?: string;
 }
 
 export interface ApiTransactionsPostRequest {
@@ -199,7 +203,7 @@ export class TransactionsApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiTransactionsMonthYearMonthGetRaw(requestParameters: ApiTransactionsMonthYearMonthGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetTransactionsByMonthQueryResult>> {
+    async apiTransactionsMonthYearMonthGetRaw(requestParameters: ApiTransactionsMonthYearMonthGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TransactionPagedResult>> {
         if (requestParameters['year'] == null) {
             throw new runtime.RequiredError(
                 'year',
@@ -224,6 +228,22 @@ export class TransactionsApi extends runtime.BaseAPI {
             queryParameters['categoryId'] = requestParameters['categoryId'];
         }
 
+        if (requestParameters['pageNumber'] != null) {
+            queryParameters['pageNumber'] = requestParameters['pageNumber'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['pageSize'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['sortBy'] != null) {
+            queryParameters['sortBy'] = requestParameters['sortBy'];
+        }
+
+        if (requestParameters['sortDirection'] != null) {
+            queryParameters['sortDirection'] = requestParameters['sortDirection'];
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.accessToken) {
@@ -246,12 +266,12 @@ export class TransactionsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => GetTransactionsByMonthQueryResultFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => TransactionPagedResultFromJSON(jsonValue));
     }
 
     /**
      */
-    async apiTransactionsMonthYearMonthGet(requestParameters: ApiTransactionsMonthYearMonthGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetTransactionsByMonthQueryResult> {
+    async apiTransactionsMonthYearMonthGet(requestParameters: ApiTransactionsMonthYearMonthGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TransactionPagedResult> {
         const response = await this.apiTransactionsMonthYearMonthGetRaw(requestParameters, initOverrides);
         return await response.value();
     }

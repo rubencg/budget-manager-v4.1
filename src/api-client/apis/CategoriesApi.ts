@@ -15,10 +15,10 @@
 
 import * as runtime from '../runtime';
 import type {
-    Category,
-    CreateCategoryCommand,
-    ProblemDetails,
-    UpdateCategoryCommand,
+  Category,
+  CreateCategoryCommand,
+  ProblemDetails,
+  UpdateCategoryCommand,
 } from '../models/index';
 import {
     CategoryFromJSON,
@@ -52,6 +52,41 @@ export interface ApiCategoriesPostRequest {
  * 
  */
 export class CategoriesApi extends runtime.BaseAPI {
+
+    /**
+     */
+    async apiCategoriesExpenseGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Category>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/Categories/expense`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CategoryFromJSON));
+    }
+
+    /**
+     */
+    async apiCategoriesExpenseGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Category>> {
+        const response = await this.apiCategoriesExpenseGetRaw(initOverrides);
+        return await response.value();
+    }
 
     /**
      */
@@ -186,6 +221,41 @@ export class CategoriesApi extends runtime.BaseAPI {
 
     /**
      */
+    async apiCategoriesIncomeGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Category>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/Categories/income`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CategoryFromJSON));
+    }
+
+    /**
+     */
+    async apiCategoriesIncomeGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Category>> {
+        const response = await this.apiCategoriesIncomeGetRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
     async apiCategoriesPostRaw(requestParameters: ApiCategoriesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Category>> {
         const queryParameters: any = {};
 
@@ -219,72 +289,6 @@ export class CategoriesApi extends runtime.BaseAPI {
      */
     async apiCategoriesPost(requestParameters: ApiCategoriesPostRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Category> {
         const response = await this.apiCategoriesPostRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Get expense categories
-     */
-    async apiCategoriesExpenseGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Category>>> {
-        const queryParameters: any = {};
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("Bearer", []);
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        const response = await this.request({
-            path: `/api/Categories/expense`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CategoryFromJSON));
-    }
-
-    /**
-     * Get expense categories
-     */
-    async apiCategoriesExpenseGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Category>> {
-        const response = await this.apiCategoriesExpenseGetRaw(initOverrides);
-        return await response.value();
-    }
-
-    /**
-     * Get income categories
-     */
-    async apiCategoriesIncomeGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Category>>> {
-        const queryParameters: any = {};
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        if (this.configuration && this.configuration.accessToken) {
-            const token = this.configuration.accessToken;
-            const tokenString = await token("Bearer", []);
-            if (tokenString) {
-                headerParameters["Authorization"] = `Bearer ${tokenString}`;
-            }
-        }
-
-        const response = await this.request({
-            path: `/api/Categories/income`,
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(CategoryFromJSON));
-    }
-
-    /**
-     * Get income categories
-     */
-    async apiCategoriesIncomeGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Category>> {
-        const response = await this.apiCategoriesIncomeGetRaw(initOverrides);
         return await response.value();
     }
 

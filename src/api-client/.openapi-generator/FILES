@@ -1,4 +1,3 @@
-.openapi-generator-ignore
 apis/AccountsApi.ts
 apis/CategoriesApi.ts
 apis/DashboardApi.ts
@@ -7,6 +6,8 @@ apis/SavingsApi.ts
 apis/TransactionsApi.ts
 apis/index.ts
 docs/Account.md
+docs/AccountDashboardGroupDto.md
+docs/AccountPagedResult.md
 docs/AccountType.md
 docs/AccountsApi.md
 docs/CalendarView.md
@@ -22,13 +23,13 @@ docs/DashboardApi.md
 docs/DashboardBalance.md
 docs/DayActivitySummary.md
 docs/GetDashboardQueryResult.md
-docs/GetTransactionsByMonthQueryResult.md
 docs/PlannedExpense.md
 docs/PlannedExpensesApi.md
 docs/ProblemDetails.md
 docs/Saving.md
 docs/SavingsApi.md
 docs/Transaction.md
+docs/TransactionPagedResult.md
 docs/TransactionType.md
 docs/TransactionsApi.md
 docs/UpdateAccountCommand.md
@@ -38,6 +39,8 @@ docs/UpdateSavingCommand.md
 docs/UpdateTransactionCommand.md
 index.ts
 models/Account.ts
+models/AccountDashboardGroupDto.ts
+models/AccountPagedResult.ts
 models/AccountType.ts
 models/CalendarView.ts
 models/Category.ts
@@ -50,11 +53,11 @@ models/CreateTransactionCommand.ts
 models/DashboardBalance.ts
 models/DayActivitySummary.ts
 models/GetDashboardQueryResult.ts
-models/GetTransactionsByMonthQueryResult.ts
 models/PlannedExpense.ts
 models/ProblemDetails.ts
 models/Saving.ts
 models/Transaction.ts
+models/TransactionPagedResult.ts
 models/TransactionType.ts
 models/UpdateAccountCommand.ts
 models/UpdateCategoryCommand.ts
