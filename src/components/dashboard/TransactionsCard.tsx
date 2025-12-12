@@ -57,7 +57,7 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions
             <tr>
               <th>NOMBRE</th>
               <th>CANTIDAD</th>
-              <th>MÉTODO</th>
+              <th>CUENTA</th>
             </tr>
           </thead>
           <tbody>

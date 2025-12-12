@@ -228,7 +228,7 @@ example().catch(console.error);
 
 ## apiTransactionsMonthYearMonthGet
 
-> GetTransactionsByMonthQueryResult apiTransactionsMonthYearMonthGet(year, month, type, categoryId)
+> TransactionPagedResult apiTransactionsMonthYearMonthGet(year, month, type, categoryId, pageNumber, pageSize, sortBy, sortDirection)
 
 
 
@@ -258,6 +258,14 @@ async function example() {
     type: ...,
     // string (optional)
     categoryId: categoryId_example,
+    // number (optional)
+    pageNumber: 56,
+    // number (optional)
+    pageSize: 56,
+    // string (optional)
+    sortBy: sortBy_example,
+    // string (optional)
+    sortDirection: sortDirection_example,
   } satisfies ApiTransactionsMonthYearMonthGetRequest;
 
   try {
@@ -281,10 +289,14 @@ example().catch(console.error);
 | **month** | `number` |  | [Defaults to `undefined`] |
 | **type** | `TransactionType` |  | [Optional] [Defaults to `undefined`] [Enum: 0, 1, 2, 3, 4] |
 | **categoryId** | `string` |  | [Optional] [Defaults to `undefined`] |
+| **pageNumber** | `number` |  | [Optional] [Defaults to `1`] |
+| **pageSize** | `number` |  | [Optional] [Defaults to `20`] |
+| **sortBy** | `string` |  | [Optional] [Defaults to `&#39;date&#39;`] |
+| **sortDirection** | `string` |  | [Optional] [Defaults to `&#39;desc&#39;`] |
 
 ### Return type
 
-[**GetTransactionsByMonthQueryResult**](GetTransactionsByMonthQueryResult.md)
+[**TransactionPagedResult**](TransactionPagedResult.md)
 
 ### Authorization
 

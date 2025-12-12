@@ -1,6 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 export * from './Account';
+export * from './AccountDashboardGroupDto';
+export * from './AccountPagedResult';
 export * from './AccountType';
 export * from './CalendarView';
 export * from './Category';
@@ -13,11 +15,11 @@ export * from './CreateTransactionCommand';
 export * from './DashboardBalance';
 export * from './DayActivitySummary';
 export * from './GetDashboardQueryResult';
-export * from './GetTransactionsByMonthQueryResult';
 export * from './PlannedExpense';
 export * from './ProblemDetails';
 export * from './Saving';
 export * from './Transaction';
+export * from './TransactionPagedResult';
 export * from './TransactionType';
 export * from './UpdateAccountCommand';
 export * from './UpdateCategoryCommand';

@@ -1,10 +1,299 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faChevronLeft,
+    faChevronRight,
+    faPlus,
+    faFilter,
+    faSearch,
+    faPenToSquare,
+    faTrash
+} from '@fortawesome/free-solid-svg-icons';
+import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
+import { useTransactionsQuery } from '../hooks/useTransactionsQuery';
+import { Transaction, TransactionType } from '../api-client';
+import './Transactions.css';
+
+const MONTHS = [
+    'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+    'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+];
 
 export const Transactions: React.FC = () => {
+    const now = new Date();
+    const [currentYear, setCurrentYear] = useState(now.getFullYear());
+    const [currentMonth, setCurrentMonth] = useState(now.getMonth() + 1); // 1-based
+    const [pageSize, setPageSize] = useState(50);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [showUnapplied, setShowUnapplied] = useState(false);
+
+    const { data, isLoading, error } = useTransactionsQuery(currentYear, currentMonth);
+
+    const handlePreviousMonth = () => {
+        if (currentMonth === 1) {
+            setCurrentMonth(12);
+            setCurrentYear(currentYear - 1);
+        } else {
+            setCurrentMonth(currentMonth - 1);
+        }
+        setCurrentPage(1);
+    };
+
+    const handleNextMonth = () => {
+        if (currentMonth === 12) {
+            setCurrentMonth(1);
+            setCurrentYear(currentYear + 1);
+        } else {
+            setCurrentMonth(currentMonth + 1);
+        }
+        setCurrentPage(1);
+    };
+
+    const getIcon = (iconName: string | null | undefined) => {
+        const prefix: IconPrefix = 'fas';
+        const icon = iconName ? findIconDefinition({ prefix, iconName: iconName as any }) : null;
+        return icon || ['fas', 'question-circle'] as [IconPrefix, IconName];
+    };
+
+    const getTransactionColor = (type: TransactionType | undefined) => {
+        switch (type) {
+            case TransactionType.NUMBER_0: // Expense
+                return 'var(--color-error)';
+            case TransactionType.NUMBER_1: // Income
+                return 'var(--color-success)';
+            case TransactionType.NUMBER_2: // Transfer
+                return '#1E90FF';
+            case TransactionType.NUMBER_3: // MonthlyExpense
+                return '#FFD700';
+            case TransactionType.NUMBER_4: // MonthlyIncome
+                return '#006400';
+            default:
+                return 'inherit';
+        }
+    };
+
+    const formatAmount = (amount: number | undefined) => {
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2
+        }).format(amount || 0);
+    };
+
+    const formatDate = (date: Date | undefined) => {
+        if (!date) return '';
+        const d = new Date(date);
+        const dayName = d.toLocaleDateString('es-ES', { weekday: 'long' });
+        const day = d.getDate();
+        const month = d.getMonth() + 1;
+        const year = d.getFullYear();
+        return `${dayName}\n${day}/${month}/${year}`;
+    };
+
+    // Paginate transactions
+    const paginatedTransactions = useMemo(() => {
+        const transactions = data?.data || [];
+        const startIndex = (currentPage - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        return transactions.slice(startIndex, endIndex);
+    }, [data?.data, currentPage, pageSize]);
+
+    const totalPages = Math.ceil((data?.data?.length || 0) / pageSize);
+
+    const renderAccountInfo = (transaction: Transaction) => {
+        if (transaction.transactionType === TransactionType.NUMBER_2) {
+            // Transfer
+            return (
+                <div className="transactions-table__transfer">
+                    <span>{transaction.fromAccountName}</span>
+                    <FontAwesomeIcon icon={faChevronRight} className="transactions-table__transfer-arrow" />
+                    <span>{transaction.toAccountName}</span>
+                </div>
+            );
+        }
+        return transaction.accountName;
+    };
+
+    if (error) {
+        return (
+            <div className="transactions-page">
+                <div className="transactions-page__error">
+                    Error loading transactions: {error.message}
+                </div>
+            </div>
+        );
+    }
+
     return (
-        <div className="p-6">
-            <h1 className="text-2xl font-bold mb-4">Transactions</h1>
-            <p>Transactions page content goes here.</p>
+        <div className="transactions-page">
+            <div className="transactions-page__header">
+                <div className="transactions-page__month-nav">
+                    <button
+                        className="transactions-page__month-btn"
+                        onClick={handlePreviousMonth}
+                        title="Previous Month"
+                    >
+                        <FontAwesomeIcon icon={faChevronLeft} />
+                    </button>
+                    <div className="transactions-page__month-display">
+                        {MONTHS[currentMonth - 1]} {currentYear}
+                    </div>
+                    <button
+                        className="transactions-page__month-btn"
+                        onClick={handleNextMonth}
+                        title="Next Month"
+                    >
+                        <FontAwesomeIcon icon={faChevronRight} />
+                    </button>
+                </div>
+
+                <div className="transactions-page__actions">
+                    <button className="transactions-page__action-btn" title="Search">
+                        <FontAwesomeIcon icon={faSearch} />
+                    </button>
+                    <button className="transactions-page__action-btn" title="Add Transaction">
+                        <FontAwesomeIcon icon={faPlus} />
+                        Agregar
+                    </button>
+                    <button className="transactions-page__action-btn" title="Filter">
+                        <FontAwesomeIcon icon={faFilter} />
+                        Filtrar
+                    </button>
+                    <label className="transactions-page__toggle">
+                        <input
+                            type="checkbox"
+                            checked={showUnapplied}
+                            onChange={(e) => setShowUnapplied(e.target.checked)}
+                        />
+                        Mostrar transacciones no aplicadas
+                    </label>
+                </div>
+            </div>
+
+            <div className="transactions-page__controls">
+                <div className="transactions-page__page-size">
+                    <label>Mostrar:</label>
+                    <select
+                        value={pageSize}
+                        onChange={(e) => {
+                            setPageSize(Number(e.target.value));
+                            setCurrentPage(1);
+                        }}
+                    >
+                        <option value={20}>20</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                    </select>
+                </div>
+            </div>
+
+            {isLoading ? (
+                <div className="transactions-page__loading">
+                    Cargando transacciones...
+                </div>
+            ) : (
+                <>
+                    <div className="transactions-table">
+                        <div className="transactions-table__header">
+                            <div className="transactions-table__header-cell">Fecha</div>
+                            <div className="transactions-table__header-cell">Categoría</div>
+                            <div className="transactions-table__header-cell">Cuenta</div>
+                            <div className="transactions-table__header-cell">Cantidad</div>
+                            <div className="transactions-table__header-cell">Notas</div>
+                            <div className="transactions-table__header-cell">Acciones</div>
+                        </div>
+
+                        <div className="transactions-table__body">
+                            {paginatedTransactions.length === 0 ? (
+                                <div className="transactions-page__empty">
+                                    No hay transacciones para este mes
+                                </div>
+                            ) : (
+                                paginatedTransactions.map((transaction) => (
+                                    <div key={transaction.id} className="transactions-table__row">
+                                        <div className="transactions-table__cell transactions-table__cell--date">
+                                            {formatDate(transaction.date)}
+                                        </div>
+                                        <div className="transactions-table__cell transactions-table__cell--category">
+                                            {transaction.categoryName && (
+                                                <>
+                                                    <div
+                                                        className="transactions-table__category-icon"
+                                                        style={{ backgroundColor: transaction.categoryColor || '#cccccc' }}
+                                                    >
+                                                        <FontAwesomeIcon icon={getIcon(transaction.categoryImage)} />
+                                                    </div>
+                                                    <div className="transactions-table__category-text">
+                                                        <div className="transactions-table__category-name">
+                                                            {transaction.categoryName}
+                                                        </div>
+                                                        {transaction.subcategory && (
+                                                            <div className="transactions-table__category-subcategory">
+                                                                {transaction.subcategory}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </>
+                                            )}
+                                            {!transaction.categoryName && transaction.transactionType === TransactionType.NUMBER_2 && (
+                                                <div className="transactions-table__category-name">Transferencia</div>
+                                            )}
+                                        </div>
+                                        <div className="transactions-table__cell transactions-table__cell--account">
+                                            {renderAccountInfo(transaction)}
+                                        </div>
+                                        <div
+                                            className="transactions-table__cell transactions-table__cell--amount"
+                                            style={{ color: getTransactionColor(transaction.transactionType) }}
+                                        >
+                                            {formatAmount(transaction.amount)}
+                                        </div>
+                                        <div className="transactions-table__cell transactions-table__cell--notes">
+                                            {transaction.notes}
+                                        </div>
+                                        <div className="transactions-table__cell transactions-table__cell--actions">
+                                            <button
+                                                className="transactions-table__action-btn"
+                                                title="Edit"
+                                            >
+                                                <FontAwesomeIcon icon={faPenToSquare} />
+                                            </button>
+                                            <button
+                                                className="transactions-table__action-btn"
+                                                title="Delete"
+                                            >
+                                                <FontAwesomeIcon icon={faTrash} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </div>
+
+                    {totalPages > 1 && (
+                        <div className="transactions-page__pagination">
+                            <button
+                                className="transactions-page__month-btn"
+                                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                                disabled={currentPage === 1}
+                            >
+                                <FontAwesomeIcon icon={faChevronLeft} />
+                            </button>
+                            <div className="transactions-page__pagination-info">
+                                Página {currentPage} de {totalPages}
+                            </div>
+                            <button
+                                className="transactions-page__month-btn"
+                                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                                disabled={currentPage === totalPages}
+                            >
+                                <FontAwesomeIcon icon={faChevronRight} />
+                            </button>
+                        </div>
+                    )}
+                </>
+            )}
         </div>
     );
 };

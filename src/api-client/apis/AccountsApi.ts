@@ -16,6 +16,8 @@
 import * as runtime from '../runtime';
 import type {
   Account,
+  AccountDashboardGroupDto,
+  AccountPagedResult,
   CreateAccountCommand,
   ProblemDetails,
   UpdateAccountCommand,
@@ -23,6 +25,10 @@ import type {
 import {
     AccountFromJSON,
     AccountToJSON,
+    AccountDashboardGroupDtoFromJSON,
+    AccountDashboardGroupDtoToJSON,
+    AccountPagedResultFromJSON,
+    AccountPagedResultToJSON,
     CreateAccountCommandFromJSON,
     CreateAccountCommandToJSON,
     ProblemDetailsFromJSON,
@@ -30,6 +36,13 @@ import {
     UpdateAccountCommandFromJSON,
     UpdateAccountCommandToJSON,
 } from '../models/index';
+
+export interface ApiAccountsArchivedGetRequest {
+    pageNumber?: number;
+    pageSize?: number;
+    sortBy?: string;
+    sortDirection?: string;
+}
 
 export interface ApiAccountsIdDeleteRequest {
     id: string;
@@ -52,6 +65,92 @@ export interface ApiAccountsPostRequest {
  * 
  */
 export class AccountsApi extends runtime.BaseAPI {
+
+    /**
+     */
+    async apiAccountsArchivedGetRaw(requestParameters: ApiAccountsArchivedGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AccountPagedResult>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['pageNumber'] != null) {
+            queryParameters['pageNumber'] = requestParameters['pageNumber'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['pageSize'] = requestParameters['pageSize'];
+        }
+
+        if (requestParameters['sortBy'] != null) {
+            queryParameters['sortBy'] = requestParameters['sortBy'];
+        }
+
+        if (requestParameters['sortDirection'] != null) {
+            queryParameters['sortDirection'] = requestParameters['sortDirection'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/Accounts/archived`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => AccountPagedResultFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiAccountsArchivedGet(requestParameters: ApiAccountsArchivedGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AccountPagedResult> {
+        const response = await this.apiAccountsArchivedGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiAccountsDashboardGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<AccountDashboardGroupDto>>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/Accounts/dashboard`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(AccountDashboardGroupDtoFromJSON));
+    }
+
+    /**
+     */
+    async apiAccountsDashboardGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<AccountDashboardGroupDto>> {
+        const response = await this.apiAccountsDashboardGetRaw(initOverrides);
+        return await response.value();
+    }
 
     /**
      */
