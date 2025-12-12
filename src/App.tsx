@@ -8,6 +8,7 @@ import { Transactions } from './pages/Transactions';
 import { Budget } from './pages/Budget';
 import { Settings } from './pages/Settings';
 import { Accounts } from './pages/Accounts';
+import { ArchivedAccounts } from './pages/ArchivedAccounts';
 import { Categories } from './pages/Categories';
 import { Login } from './pages/Login';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
@@ -42,6 +43,7 @@ function App() {
                       <Route path="/budget" element={<Budget />} />
                       <Route path="/settings" element={<Settings />} />
                       <Route path="/accounts" element={<Accounts />} />
+                      <Route path="/accounts/archived" element={<ArchivedAccounts />} />
                       <Route path="/categories" element={<Categories />} />
                     </Routes>
                   </main>

@@ -107,9 +107,67 @@ export const useAccountMutations = () => {
         }
     });
 
+    const restoreAccount = useMutation({
+        mutationFn: async (account: Account) => {
+            const token = await getAccessTokenSilently();
+            const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+            const accountData = {
+                name: account.name,
+                currentBalance: account.currentBalance,
+                accountType: account.accountType,
+                color: account.color,
+                isArchived: false,
+                image: account.image,
+                sumsToMonthlyBudget: account.sumsToMonthlyBudget
+            };
+
+            const response = await fetch(`${baseUrl}/api/Accounts/${account.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(accountData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to restore account');
+            }
+
+            return response.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['accounts'] });
+        }
+    });
+
+    const deleteAccount = useMutation({
+        mutationFn: async (accountId: string) => {
+            const token = await getAccessTokenSilently();
+            const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+            const response = await fetch(`${baseUrl}/api/Accounts/${accountId}`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete account');
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['accounts'] });
+        }
+    });
+
     return {
         createAccount,
         updateAccount,
-        archiveAccount
+        archiveAccount,
+        restoreAccount,
+        deleteAccount
     };
 };
