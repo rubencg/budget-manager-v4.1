@@ -68,3 +68,35 @@ export type ButtonVariant = 'primary' | 'secondary' | 'icon';
 
 // Status badge variant
 export type StatusBadgeVariant = 'waiting' | 'success' | 'due_date' | 'disabled';
+
+// Account types
+export interface AccountMetadata {
+  firebaseKey?: string;
+  lastBalanceUpdate?: string;
+}
+
+export interface AccountType {
+  name: string;
+}
+
+export interface Account {
+  id: string;
+  userId: string;
+  name: string;
+  currentBalance: number;
+  accountType: AccountType;
+  isArchived: boolean;
+  color: string;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+  metadata?: AccountMetadata;
+  type: string;
+  sumsToMonthlyBudget: boolean;
+}
+
+export interface AccountGroup {
+  groupName: string;
+  total: number;
+  accounts: Account[];
+}
