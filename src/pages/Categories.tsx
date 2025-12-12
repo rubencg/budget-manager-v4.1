@@ -16,6 +16,19 @@ export const Categories: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 20;
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingCategory, setEditingCategory] = useState<Category | undefined>(undefined);
+
+    const handleEditClick = (category: Category) => {
+        setEditingCategory(category);
+        setIsModalOpen(true);
+    };
+
+    const handleCreateClick = () => {
+        setEditingCategory(undefined);
+        setIsModalOpen(true);
+    };
+
     const { data: expenses = [], isLoading: isLoadingExpenses } = useCategoriesQuery('expense');
     const { data: incomes = [], isLoading: isLoadingIncomes } = useCategoriesQuery('income');
 
@@ -35,8 +48,6 @@ export const Categories: React.FC = () => {
         setActiveTab(tab);
         setCurrentPage(1); // Reset page on tab switch
     };
-
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Delete logic
     const { deleteCategory } = useCategoryMutations();
@@ -74,7 +85,7 @@ export const Categories: React.FC = () => {
             <div className="categories-page__header">
                 <div className="categories-page__title-row">
                     <h1>Categorías</h1>
-                    <Button variant="primary" onClick={() => setIsModalOpen(true)}>
+                    <Button variant="primary" onClick={handleCreateClick}>
                         Agregar Categoría
                     </Button>
                 </div>
@@ -104,6 +115,7 @@ export const Categories: React.FC = () => {
                         categories={paginatedList}
                         onDelete={handleDeleteClick}
                         onAddSubcategory={handleAddSubcategoryClick}
+                        onEdit={handleEditClick}
                     />
                 )}
             </div>
@@ -132,8 +144,12 @@ export const Categories: React.FC = () => {
 
             <CategoryModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                onClose={() => {
+                    setIsModalOpen(false);
+                    setEditingCategory(undefined);
+                }}
                 type={activeTab}
+                category={editingCategory}
             />
 
             {subcategoryCategory && (
