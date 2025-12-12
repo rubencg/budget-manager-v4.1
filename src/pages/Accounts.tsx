@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAccountsQuery } from '../hooks/useAccountsQuery';
 import { AccountGroupCard } from '../components/accounts/AccountGroupCard';
+import { AccountModal } from '../components/accounts/AccountModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faRightLeft, faBoxArchive } from '@fortawesome/free-solid-svg-icons';
 import './Accounts.css';
 
 export const Accounts: React.FC = () => {
     const { data: accountGroups, isLoading, error } = useAccountsQuery();
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     if (error) {
         return <div className="accounts-page__error">Error loading accounts: {error.message}</div>;
@@ -18,7 +20,11 @@ export const Accounts: React.FC = () => {
                 <h1 className="accounts-page__title">Cuentas</h1>
 
                 <div className="accounts-page__actions">
-                    <button className="accounts-page__action-btn" title="Add Account">
+                    <button
+                        className="accounts-page__action-btn"
+                        title="Add Account"
+                        onClick={() => setIsModalOpen(true)}
+                    >
                         <FontAwesomeIcon icon={faPlus} size="sm" />
                     </button>
                     <button className="accounts-page__action-btn" title="Transfer">
@@ -41,6 +47,11 @@ export const Accounts: React.FC = () => {
                     ))}
                 </div>
             )}
+
+            <AccountModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
         </div>
     );
 };
