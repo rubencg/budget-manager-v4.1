@@ -1,13 +1,14 @@
 import React from 'react';
-import { AccountGroup } from '../../types';
+import { AccountGroup, Account } from '../../types';
 import { AccountItem } from './AccountItem';
 import './Accounts.css';
 
 interface AccountGroupCardProps {
     group: AccountGroup;
+    onEdit: (account: Account) => void;
 }
 
-export const AccountGroupCard: React.FC<AccountGroupCardProps> = ({ group }) => {
+export const AccountGroupCard: React.FC<AccountGroupCardProps> = ({ group, onEdit }) => {
     const formattedTotal = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -22,7 +23,7 @@ export const AccountGroupCard: React.FC<AccountGroupCardProps> = ({ group }) => 
 
             <div className="account-group-card__list">
                 {group.accounts.map(account => (
-                    <AccountItem key={account.id} account={account} />
+                    <AccountItem key={account.id} account={account} onEdit={onEdit} />
                 ))}
             </div>
         </div>

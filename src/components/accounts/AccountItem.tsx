@@ -6,6 +6,7 @@ import './Accounts.css';
 
 interface AccountItemProps {
     account: Account;
+    onEdit: (account: Account) => void;
 }
 
 const iconMap: { [key: string]: any } = {
@@ -19,7 +20,7 @@ const iconMap: { [key: string]: any } = {
     'default': faWallet
 };
 
-export const AccountItem: React.FC<AccountItemProps> = ({ account }) => {
+export const AccountItem: React.FC<AccountItemProps> = ({ account, onEdit }) => {
     const icon = iconMap[account.image] || iconMap['default'];
 
     // Formatting currency
@@ -49,7 +50,7 @@ export const AccountItem: React.FC<AccountItemProps> = ({ account }) => {
             </div>
 
             <div className="account-item__actions">
-                <button className="account-item__action-btn" title="Edit">
+                <button className="account-item__action-btn" title="Edit" onClick={() => onEdit(account)}>
                     <FontAwesomeIcon icon={faPen} size="sm" />
                 </button>
                 <button className="account-item__action-btn" title="Archive">

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useAccountsQuery } from '../hooks/useAccountsQuery';
 import { AccountGroupCard } from '../components/accounts/AccountGroupCard';
 import { AccountModal } from '../components/accounts/AccountModal';
+import { Account } from '../types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faRightLeft, faBoxArchive } from '@fortawesome/free-solid-svg-icons';
 import './Accounts.css';
@@ -9,6 +10,22 @@ import './Accounts.css';
 export const Accounts: React.FC = () => {
     const { data: accountGroups, isLoading, error } = useAccountsQuery();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingAccount, setEditingAccount] = useState<Account | undefined>(undefined);
+
+    const handleEdit = (account: Account) => {
+        setEditingAccount(account);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        setEditingAccount(undefined);
+    };
+
+    const handleCreateNew = () => {
+        setEditingAccount(undefined);
+        setIsModalOpen(true);
+    };
 
     if (error) {
         return <div className="accounts-page__error">Error loading accounts: {error.message}</div>;
@@ -23,7 +40,7 @@ export const Accounts: React.FC = () => {
                     <button
                         className="accounts-page__action-btn"
                         title="Add Account"
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={handleCreateNew}
                     >
                         <FontAwesomeIcon icon={faPlus} size="sm" />
                     </button>
@@ -43,14 +60,19 @@ export const Accounts: React.FC = () => {
             ) : (
                 <div className="accounts-page__grid">
                     {accountGroups?.map((group, index) => (
-                        <AccountGroupCard key={group.groupName + index} group={group} />
+                        <AccountGroupCard
+                            key={group.groupName + index}
+                            group={group}
+                            onEdit={handleEdit}
+                        />
                     ))}
                 </div>
             )}
 
             <AccountModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
+                onClose={handleCloseModal}
+                account={editingAccount}
             />
         </div>
     );

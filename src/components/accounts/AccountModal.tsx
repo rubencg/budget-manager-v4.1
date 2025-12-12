@@ -4,6 +4,7 @@ import { Button } from '../ui/Button';
 import { AccountIcons } from './accountIcons';
 import { HexColorPicker } from 'react-colorful';
 import { useAccountMutations } from '../../hooks/useAccountMutations';
+import { Account } from '../../types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import '../categories/CategoryModal.css';
@@ -11,10 +12,12 @@ import '../categories/CategoryModal.css';
 interface AccountModalProps {
     isOpen: boolean;
     onClose: () => void;
+    account?: Account;
 }
 
-export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) => {
-    const { createAccount } = useAccountMutations();
+export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, account }) => {
+    const { createAccount, updateAccount } = useAccountMutations();
+    const isEditing = !!account;
 
     const [name, setName] = useState('');
     const [balance, setBalance] = useState('0');
@@ -26,19 +29,30 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
 
     useEffect(() => {
         if (isOpen) {
-            setName('');
-            setBalance('0');
-            setSelectedIcon('');
-            setAccountType('');
-            setColor('#fff300');
-            setSumsToBudget(false);
+            if (account) {
+                // Populate form with existing account data
+                setName(account.name || '');
+                setBalance(account.currentBalance.toString());
+                setSelectedIcon(account.image || '');
+                setAccountType(account.accountType?.name || '');
+                setColor(account.color || '#fff300');
+                setSumsToBudget(account.sumsToMonthlyBudget || false);
+            } else {
+                // Reset form for new account
+                setName('');
+                setBalance('0');
+                setSelectedIcon('');
+                setAccountType('');
+                setColor('#fff300');
+                setSumsToBudget(false);
+            }
             setShowColorPicker(false);
         }
-    }, [isOpen]);
+    }, [isOpen, account]);
 
     const handleSubmit = async () => {
         try {
-            await createAccount.mutateAsync({
+            const accountData = {
                 name,
                 currentBalance: parseFloat(balance),
                 accountType: { name: accountType },
@@ -46,10 +60,19 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
                 isArchived: false,
                 image: selectedIcon,
                 sumsToMonthlyBudget: sumsToBudget
-            });
+            };
+
+            if (isEditing && account?.id) {
+                await updateAccount.mutateAsync({
+                    id: account.id,
+                    ...accountData
+                });
+            } else {
+                await createAccount.mutateAsync(accountData);
+            }
             onClose();
         } catch (error) {
-            console.error('Failed to create account:', error);
+            console.error('Failed to save account:', error);
         }
     };
 
@@ -57,13 +80,13 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose }) =
         selectedIcon.length > 0 &&
         accountType.trim().length > 0 &&
         !isNaN(parseFloat(balance));
-    const isSaving = createAccount.isPending;
+    const isSaving = createAccount.isPending || updateAccount.isPending;
 
     return (
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title="Nueva cuenta"
+            title={isEditing ? 'Editar cuenta' : 'Nueva cuenta'}
         >
             <div className="category-modal__form">
                 {/* Name */}

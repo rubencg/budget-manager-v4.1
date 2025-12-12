@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth0 } from '@auth0/auth0-react';
+import { Account } from '../types';
 
 interface CreateAccountCommand {
     name: string;
@@ -9,6 +10,10 @@ interface CreateAccountCommand {
     isArchived: boolean;
     image: string;
     sumsToMonthlyBudget: boolean;
+}
+
+interface UpdateAccountCommand extends CreateAccountCommand {
+    id: string;
 }
 
 export const useAccountMutations = () => {
@@ -40,7 +45,35 @@ export const useAccountMutations = () => {
         }
     });
 
+    const updateAccount = useMutation({
+        mutationFn: async (command: UpdateAccountCommand) => {
+            const token = await getAccessTokenSilently();
+            const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+            const { id, ...accountData } = command;
+
+            const response = await fetch(`${baseUrl}/api/Accounts/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(accountData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update account');
+            }
+
+            return response.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['accounts'] });
+        }
+    });
+
     return {
-        createAccount
+        createAccount,
+        updateAccount
     };
 };
