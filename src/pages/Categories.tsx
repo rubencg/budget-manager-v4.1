@@ -86,7 +86,7 @@ export const Categories: React.FC = () => {
                 <div className="categories-page__title-row">
                     <h1>Categorías</h1>
                     <Button variant="primary" onClick={handleCreateClick}>
-                        Agregar Categoría
+                        Agregar Categoría de {activeTab == 'expense' ? 'Gastos' : 'Ingresos'}
                     </Button>
                 </div>
 

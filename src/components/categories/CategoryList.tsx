@@ -42,17 +42,17 @@ export const CategoryList: React.FC<CategoryListProps> = ({ title, categories, o
                         </div>
 
                         <div className="category-item__actions">
-                            <Button variant="icon" title="Edit" onClick={() => onEdit && onEdit(category)}>✏️</Button>
+                            <Button variant="icon" title="Editar" onClick={() => onEdit && onEdit(category)}>✏️</Button>
                             <Button
                                 variant="icon"
-                                title="Add Subcategory"
+                                title="Agregar subcategoria"
                                 onClick={() => onAddSubcategory && onAddSubcategory(category)}
                             >
                                 ➕
                             </Button>
                             <Button
                                 variant="icon"
-                                title="Delete"
+                                title="Eliminar"
                                 style={{ color: 'var(--color-error)' }}
                                 onClick={() => onDelete && onDelete(category)}
                             >
