@@ -11,6 +11,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
 import { useTransactionsQuery } from '../hooks/useTransactionsQuery';
+import { useAccountsQuery } from '../hooks/useAccountsQuery';
+import { TransferModal } from '../components/accounts/TransferModal';
 import { Transaction, TransactionType } from '../api-client';
 import './Transactions.css';
 
@@ -27,8 +29,25 @@ export const Transactions: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [showUnapplied, setShowUnapplied] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
+    const [isAddDropdownOpen, setIsAddDropdownOpen] = useState(false);
+    const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+    const dropdownRef = React.useRef<HTMLDivElement>(null);
 
     const { data, isLoading, error } = useTransactionsQuery(currentYear, currentMonth);
+    const { data: accountGroups } = useAccountsQuery();
+
+    React.useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsAddDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     const handlePreviousMonth = () => {
         if (currentMonth === 1) {
@@ -188,10 +207,41 @@ export const Transactions: React.FC = () => {
                             }}
                         />
                     </div>
-                    <button className="transactions-page__action-btn" title="Add Transaction">
-                        <FontAwesomeIcon icon={faPlus} />
-                        Agregar
-                    </button>
+                    <div className="transactions-page__add-container" ref={dropdownRef}>
+                        <button
+                            className="transactions-page__action-btn"
+                            title="Add Transaction"
+                            onClick={() => setIsAddDropdownOpen(!isAddDropdownOpen)}
+                        >
+                            <FontAwesomeIcon icon={faPlus} />
+                            Agregar
+                        </button>
+                        {isAddDropdownOpen && (
+                            <div className="transactions-page__add-dropdown">
+                                <button className="transactions-page__add-option transactions-page__add-option--divider" onClick={() => setIsAddDropdownOpen(false)}>
+                                    Agregar ingreso
+                                </button>
+                                <button className="transactions-page__add-option" onClick={() => setIsAddDropdownOpen(false)}>
+                                    Agregar gasto
+                                </button>
+                                <button
+                                    className="transactions-page__add-option"
+                                    onClick={() => {
+                                        setIsAddDropdownOpen(false);
+                                        setIsTransferModalOpen(true);
+                                    }}
+                                >
+                                    Agregar transferencia
+                                </button>
+                                <button className="transactions-page__add-option" onClick={() => setIsAddDropdownOpen(false)}>
+                                    Agregar gasto planeado
+                                </button>
+                                <button className="transactions-page__add-option" onClick={() => setIsAddDropdownOpen(false)}>
+                                    Agregar ahorro
+                                </button>
+                            </div>
+                        )}
+                    </div>
                     <button className="transactions-page__action-btn" title="Filter">
                         <FontAwesomeIcon icon={faFilter} />
                         Filtrar
@@ -331,6 +381,11 @@ export const Transactions: React.FC = () => {
                     )}
                 </>
             )}
+            <TransferModal
+                isOpen={isTransferModalOpen}
+                onClose={() => setIsTransferModalOpen(false)}
+                accounts={accountGroups?.flatMap(group => group.accounts) || []}
+            />
         </div>
     );
 };
