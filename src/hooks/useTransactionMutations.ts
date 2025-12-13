@@ -70,8 +70,32 @@ export const useTransactionMutations = () => {
         }
     });
 
+    const deleteTransaction = useMutation({
+        mutationFn: async (id: string) => {
+            const token = await getAccessTokenSilently();
+            const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+            const response = await fetch(`${baseUrl}/api/Transactions/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete transaction');
+            }
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['accounts'] });
+            queryClient.invalidateQueries({ queryKey: ['transactions'] });
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+        }
+    });
+
     return {
         createTransfer,
-        createTransaction
+        createTransaction,
+        deleteTransaction
     };
 };

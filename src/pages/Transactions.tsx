@@ -12,8 +12,11 @@ import {
 import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
 import { useTransactionsQuery } from '../hooks/useTransactionsQuery';
 import { useAccountsQuery } from '../hooks/useAccountsQuery';
+import { useTransactionMutations } from '../hooks/useTransactionMutations';
 import { TransferModal } from '../components/accounts/TransferModal';
 import { TransactionModal } from '../components/transactions/TransactionModal';
+import { Modal } from '../components/ui/Modal';
+import { Button } from '../components/ui/Button';
 import { Transaction, TransactionType } from '../api-client';
 import './Transactions.css';
 
@@ -34,10 +37,13 @@ export const Transactions: React.FC = () => {
     const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
     const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
     const [transactionModalType, setTransactionModalType] = useState<TransactionType>(TransactionType.NUMBER_0);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [transactionToDelete, setTransactionToDelete] = useState<string | null>(null);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
     const { data, isLoading, error } = useTransactionsQuery(currentYear, currentMonth);
     const { data: accountGroups } = useAccountsQuery();
+    const { deleteTransaction } = useTransactionMutations();
 
     React.useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -56,6 +62,24 @@ export const Transactions: React.FC = () => {
         setTransactionModalType(type);
         setIsTransactionModalOpen(true);
         setIsAddDropdownOpen(false);
+        setIsAddDropdownOpen(false);
+    };
+
+    const handleDeleteClick = (transactionId: string) => {
+        setTransactionToDelete(transactionId);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (transactionToDelete) {
+            try {
+                await deleteTransaction.mutateAsync(transactionToDelete);
+                setIsDeleteModalOpen(false);
+                setTransactionToDelete(null);
+            } catch (error) {
+                console.error('Failed to delete transaction:', error);
+            }
+        }
     };
 
     const handlePreviousMonth = () => {
@@ -363,6 +387,7 @@ export const Transactions: React.FC = () => {
                                             <button
                                                 className="transactions-table__action-btn"
                                                 title="Delete"
+                                                onClick={() => handleDeleteClick(transaction.id || '')}
                                             >
                                                 <FontAwesomeIcon icon={faTrash} />
                                             </button>
@@ -407,6 +432,27 @@ export const Transactions: React.FC = () => {
                 type={transactionModalType}
                 accounts={accountGroups?.flatMap(group => group.accounts) || []}
             />
+            <Modal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                title="Eliminar Transacción"
+            >
+                <div style={{ padding: '1rem 0' }}>
+                    <p>¿Estás seguro de que quieres eliminar esta transacción? Esta acción no se puede deshacer.</p>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
+                    <Button variant="secondary" onClick={() => setIsDeleteModalOpen(false)}>
+                        CANCELAR
+                    </Button>
+                    <Button
+                        variant="primary"
+                        onClick={confirmDelete}
+                        style={{ background: 'var(--color-error)' }}
+                    >
+                        ELIMINAR
+                    </Button>
+                </div>
+            </Modal>
         </div>
     );
 };
