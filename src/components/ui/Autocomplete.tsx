@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import './Autocomplete.css';
@@ -28,6 +29,7 @@ export function Autocomplete<T>({
 }: AutocompleteProps<T>) {
     const [isOpen, setIsOpen] = useState(false);
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
+    const [coords, setCoords] = useState({ top: 0, left: 0, width: 0 });
     const wrapperRef = useRef<HTMLDivElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -38,16 +40,36 @@ export function Autocomplete<T>({
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+            if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node) &&
+                dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
             }
         };
 
+        const handleScroll = () => {
+            if (isOpen) setIsOpen(false);
+        };
+
         document.addEventListener('mousedown', handleClickOutside);
+        window.addEventListener('scroll', handleScroll, true); // Close on scroll to avoid detachment
+
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
+            window.removeEventListener('scroll', handleScroll, true);
         };
-    }, []);
+    }, [isOpen]);
+
+    // Update coordinates when opening
+    useEffect(() => {
+        if (isOpen && wrapperRef.current) {
+            const rect = wrapperRef.current.getBoundingClientRect();
+            setCoords({
+                top: rect.bottom + 4, // +4px for gap
+                left: rect.left,
+                width: rect.width
+            });
+        }
+    }, [isOpen, value]); // Re-calc on value change isn't strictly necessary but safe
 
     // Scroll to highlighted item
     useEffect(() => {
@@ -113,15 +135,26 @@ export function Autocomplete<T>({
                         setHighlightedIndex(0); // Auto-highlight first option when typing
                     }}
                     onFocus={() => setIsOpen(true)}
-                    onBlur={() => setIsOpen(false)}
+                    // onBlur={() => setIsOpen(false)} // Handled by click outside to support portal clicks
                     onKeyDown={handleKeyDown}
                     placeholder={placeholder}
                     style={!icon ? { paddingLeft: '0.75rem' } : undefined}
                 />
             </div>
 
-            {isOpen && (
-                <div className="autocomplete-dropdown" ref={dropdownRef}>
+            {isOpen && createPortal(
+                <div
+                    className="autocomplete-dropdown"
+                    ref={dropdownRef}
+                    style={{
+                        position: 'fixed',
+                        top: coords.top,
+                        left: coords.left,
+                        width: coords.width,
+                        maxHeight: '200px',
+                        zIndex: 9999
+                    }}
+                >
                     {filteredOptions.length > 0 ? (
                         filteredOptions.map((item, index) => (
                             <div
@@ -143,7 +176,8 @@ export function Autocomplete<T>({
                             No se encontraron resultados
                         </div>
                     )}
-                </div>
+                </div>,
+                document.body
             )}
         </div>
     );

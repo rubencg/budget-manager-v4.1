@@ -16,6 +16,7 @@ import { useTransactionMutations } from '../hooks/useTransactionMutations';
 import { TransferModal } from '../components/accounts/TransferModal';
 import { TransactionModal } from '../components/transactions/TransactionModal';
 import { MonthlyTransactionModal } from '../components/transactions/MonthlyTransactionModal';
+import { PlannedExpenseModal } from '../components/planned-expenses/PlannedExpenseModal';
 import { Modal } from '../components/ui/Modal';
 import { Button } from '../components/ui/Button';
 import { Transaction, TransactionType } from '../api-client';
@@ -41,6 +42,7 @@ export const Transactions: React.FC = () => {
     const [transactionToDelete, setTransactionToDelete] = useState<string | null>(null);
     const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
     const [isMonthlyTransactionModalOpen, setIsMonthlyTransactionModalOpen] = useState(false);
+    const [isPlannedExpenseModalOpen, setIsPlannedExpenseModalOpen] = useState(false);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
     const { data, isLoading, error } = useTransactionsQuery(currentYear, currentMonth);
@@ -291,7 +293,10 @@ export const Transactions: React.FC = () => {
                                 }}>
                                     Agregar transacción mensual
                                 </button>
-                                <button className="transactions-page__add-option" onClick={() => setIsAddDropdownOpen(false)}>
+                                <button className="transactions-page__add-option" onClick={() => {
+                                    setIsAddDropdownOpen(false);
+                                    setIsPlannedExpenseModalOpen(true);
+                                }}>
                                     Agregar gasto planeado
                                 </button>
                                 <button className="transactions-page__add-option" onClick={() => setIsAddDropdownOpen(false)}>
@@ -455,6 +460,10 @@ export const Transactions: React.FC = () => {
                 isOpen={isMonthlyTransactionModalOpen}
                 onClose={() => setIsMonthlyTransactionModalOpen(false)}
                 accounts={accountGroups?.flatMap(group => group.accounts) || []}
+            />
+            <PlannedExpenseModal
+                isOpen={isPlannedExpenseModalOpen}
+                onClose={() => setIsPlannedExpenseModalOpen(false)}
             />
             <Modal
                 isOpen={isDeleteModalOpen}
