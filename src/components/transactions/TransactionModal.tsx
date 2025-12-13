@@ -6,7 +6,7 @@ import { Button } from '../ui/Button';
 import { Account } from '../../types';
 import { useTransactionMutations } from '../../hooks/useTransactionMutations';
 import { useCategoriesQuery } from '../../hooks/useCategoriesQuery';
-import { Category } from '../../api-client';
+import { Category, Transaction } from '../../api-client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -28,6 +28,7 @@ interface TransactionModalProps {
     onClose: () => void;
     accounts: Account[];
     type: TransactionType;
+    transaction?: Transaction | null;
 }
 
 const iconMap: { [key: string]: any } = {
@@ -50,8 +51,8 @@ const getIcon = (iconName: string | null | undefined) => {
     return icon || ['fas', 'question-circle'] as [IconPrefix, IconName];
 };
 
-export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onClose, accounts, type }) => {
-    const { createTransaction } = useTransactionMutations();
+export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onClose, accounts, type, transaction }) => {
+    const { createTransaction, updateTransaction } = useTransactionMutations();
     const categoryType = type === TransactionType.NUMBER_0 ? 'expense' : 'income';
     const { data: categories } = useCategoriesQuery(categoryType);
 
@@ -76,21 +77,44 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
 
     useEffect(() => {
         if (isOpen) {
-            setAmount('');
-            setDate(new Date());
-            setAccountId('');
-            setAccountName('');
-            setAccountSearch('');
-            setCategoryId('');
-            setCategoryName('');
-            setCategoryImage('');
-            setCategoryColor('');
-            setCategorySearch('');
-            setSelectedCategory(null);
-            setSubcategory('');
-            setNotes('');
+            if (transaction) {
+                // Edit Mode
+                setAmount(transaction.amount?.toString() || '');
+                setDate(transaction.date ? new Date(transaction.date) : new Date());
+                setAccountId(transaction.accountId || '');
+                setAccountName(transaction.accountName || '');
+                setAccountSearch(transaction.accountName || '');
+
+                setCategoryId(transaction.categoryId || '');
+                setCategoryName(transaction.categoryName || '');
+                setCategoryImage(transaction.categoryImage || '');
+                setCategoryColor(transaction.categoryColor || '');
+                setCategorySearch(transaction.categoryName || '');
+
+                // Find and set selected category for subcategories
+                const foundCategory = categories?.find(c => c.id === transaction.categoryId);
+                setSelectedCategory(foundCategory || null);
+
+                setSubcategory(transaction.subcategory || '');
+                setNotes(transaction.notes || '');
+            } else {
+                // Create Mode
+                setAmount('');
+                setDate(new Date());
+                setAccountId('');
+                setAccountName('');
+                setAccountSearch('');
+                setCategoryId('');
+                setCategoryName('');
+                setCategoryImage('');
+                setCategoryColor('');
+                setCategorySearch('');
+                setSelectedCategory(null);
+                setSubcategory('');
+                setNotes('');
+            }
         }
-    }, [isOpen, type]);
+    }, [isOpen, type, transaction, categories]);
 
     const handleAccountSelect = (account: Account) => {
         setAccountId(account.id);
@@ -125,10 +149,14 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                 isApplied: true
             };
 
-            await createTransaction.mutateAsync(transactionData);
+            if (transaction && transaction.id) {
+                await updateTransaction.mutateAsync({ id: transaction.id, ...transactionData });
+            } else {
+                await createTransaction.mutateAsync(transactionData);
+            }
             onClose();
         } catch (error) {
-            console.error('Failed to create transaction:', error);
+            console.error('Failed to save transaction:', error);
         }
     };
 
@@ -138,9 +166,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
         accountId.length > 0 &&
         categoryId.length > 0;
 
-    const isSaving = createTransaction.isPending;
+    const isSaving = createTransaction.isPending || updateTransaction.isPending;
 
-    const title = type === TransactionType.NUMBER_0 ? 'Nuevo Gasto' : 'Nuevo Ingreso';
+    const title = transaction
+        ? (type === TransactionType.NUMBER_0 ? 'Editar Gasto' : 'Editar Ingreso')
+        : (type === TransactionType.NUMBER_0 ? 'Nuevo Gasto' : 'Nuevo Ingreso');
 
     return (
         <Modal
@@ -283,7 +313,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                         onClick={handleSubmit}
                         disabled={!isValid || isSaving}
                     >
-                        {isSaving ? 'GUARDANDO...' : 'GUARDAR'}
+                        {isSaving ? (transaction ? 'ACTUALIZANDO...' : 'GUARDANDO...') : (transaction ? 'ACTUALIZAR' : 'GUARDAR')}
                     </Button>
                     <Button variant="secondary" onClick={onClose} disabled={isSaving}>
                         CANCELAR

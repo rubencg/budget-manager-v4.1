@@ -5,6 +5,7 @@ import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Account } from '../../types';
 import { useTransactionMutations } from '../../hooks/useTransactionMutations';
+import { Transaction } from '../../api-client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faLandmark,
@@ -22,6 +23,7 @@ interface TransferModalProps {
     isOpen: boolean;
     onClose: () => void;
     accounts: Account[];
+    transaction?: Transaction | null;
 }
 
 const iconMap: { [key: string]: any } = {
@@ -38,8 +40,8 @@ const iconMap: { [key: string]: any } = {
     'default': faWallet
 };
 
-export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, accounts }) => {
-    const { createTransfer } = useTransactionMutations();
+export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, accounts, transaction }) => {
+    const { createTransfer, updateTransaction } = useTransactionMutations();
 
     const [amount, setAmount] = useState('');
     const [date, setDate] = useState<Date>(new Date());
@@ -55,18 +57,34 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
 
     useEffect(() => {
         if (isOpen) {
-            // Reset form
-            setAmount('');
-            setDate(new Date());
-            setFromAccountId('');
-            setFromAccountName('');
-            setFromAccountSearch('');
-            setToAccountId('');
-            setToAccountName('');
-            setToAccountSearch('');
-            setNotes('');
+            if (transaction) {
+                // Edit Mode
+                setAmount(transaction.amount?.toString() || '');
+                setDate(transaction.date ? new Date(transaction.date) : new Date());
+
+                setFromAccountId(transaction.fromAccountId || '');
+                setFromAccountName(transaction.fromAccountName || '');
+                setFromAccountSearch(transaction.fromAccountName || '');
+
+                setToAccountId(transaction.toAccountId || '');
+                setToAccountName(transaction.toAccountName || '');
+                setToAccountSearch(transaction.toAccountName || '');
+
+                setNotes(transaction.notes || '');
+            } else {
+                // Create Mode
+                setAmount('');
+                setDate(new Date());
+                setFromAccountId('');
+                setFromAccountName('');
+                setFromAccountSearch('');
+                setToAccountId('');
+                setToAccountName('');
+                setToAccountSearch('');
+                setNotes('');
+            }
         }
-    }, [isOpen]);
+    }, [isOpen, transaction]);
 
     const handleFromAccountSelect = (account: Account) => {
         setFromAccountId(account.id);
@@ -94,10 +112,14 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
                 isApplied: true
             };
 
-            await createTransfer.mutateAsync(transferData);
+            if (transaction && transaction.id) {
+                await updateTransaction.mutateAsync({ id: transaction.id, ...transferData });
+            } else {
+                await createTransfer.mutateAsync(transferData);
+            }
             onClose();
         } catch (error) {
-            console.error('Failed to create transfer:', error);
+            console.error('Failed to save transfer:', error);
         }
     };
 
@@ -108,13 +130,13 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
         toAccountId.length > 0 &&
         fromAccountId !== toAccountId;
 
-    const isSaving = createTransfer.isPending;
+    const isSaving = createTransfer.isPending || updateTransaction.isPending;
 
     return (
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title="Nueva transferencia"
+            title={transaction ? 'Editar transferencia' : 'Nueva transferencia'}
         >
             <div className="transfer-modal__form">
                 {/* Amount */}
@@ -246,16 +268,16 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
                     />
                 </div>
 
-                <div className="category-modal__actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
-                    <Button variant="secondary" onClick={onClose} disabled={isSaving}>
-                        CANCELAR
-                    </Button>
+                <div className="category-modal__actions" style={{ display: 'flex', flexDirection: 'row-reverse', justifyContent: 'flex-start', gap: '1rem' }}>
                     <Button
                         variant="primary"
                         onClick={handleSubmit}
                         disabled={!isValid || isSaving}
                     >
-                        {isSaving ? 'GUARDANDO...' : 'GUARDAR'}
+                        {isSaving ? (transaction ? 'ACTUALIZANDO...' : 'GUARDANDO...') : (transaction ? 'ACTUALIZAR' : 'GUARDAR')}
+                    </Button>
+                    <Button variant="secondary" onClick={onClose} disabled={isSaving}>
+                        CANCELAR
                     </Button>
                 </div>
             </div>
