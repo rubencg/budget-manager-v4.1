@@ -17,6 +17,7 @@ import { TransferModal } from '../components/accounts/TransferModal';
 import { TransactionModal } from '../components/transactions/TransactionModal';
 import { MonthlyTransactionModal } from '../components/transactions/MonthlyTransactionModal';
 import { PlannedExpenseModal } from '../components/planned-expenses/PlannedExpenseModal';
+import { SavingsModal } from '../components/savings/SavingsModal';
 import { Modal } from '../components/ui/Modal';
 import { Button } from '../components/ui/Button';
 import { Transaction, TransactionType } from '../api-client';
@@ -43,6 +44,7 @@ export const Transactions: React.FC = () => {
     const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
     const [isMonthlyTransactionModalOpen, setIsMonthlyTransactionModalOpen] = useState(false);
     const [isPlannedExpenseModalOpen, setIsPlannedExpenseModalOpen] = useState(false);
+    const [isSavingsModalOpen, setIsSavingsModalOpen] = useState(false);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
     const { data, isLoading, error } = useTransactionsQuery(currentYear, currentMonth);
@@ -299,7 +301,10 @@ export const Transactions: React.FC = () => {
                                 }}>
                                     Agregar gasto planeado
                                 </button>
-                                <button className="transactions-page__add-option" onClick={() => setIsAddDropdownOpen(false)}>
+                                <button className="transactions-page__add-option" onClick={() => {
+                                    setIsAddDropdownOpen(false);
+                                    setIsSavingsModalOpen(true);
+                                }}>
                                     Agregar ahorro
                                 </button>
                             </div>
@@ -464,6 +469,10 @@ export const Transactions: React.FC = () => {
             <PlannedExpenseModal
                 isOpen={isPlannedExpenseModalOpen}
                 onClose={() => setIsPlannedExpenseModalOpen(false)}
+            />
+            <SavingsModal
+                isOpen={isSavingsModalOpen}
+                onClose={() => setIsSavingsModalOpen(false)}
             />
             <Modal
                 isOpen={isDeleteModalOpen}
