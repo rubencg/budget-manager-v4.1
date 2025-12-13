@@ -7,6 +7,7 @@ This folder contains the architectural guidelines for the **Budget Manager** fro
 *   [**API Client & Generation**](./api-client.md): How to regenerate the API client and use the `apiFactory`.
 *   [**State Management**](./state-management.md): Patterns for `src/hooks`, TanStack Query, and Cache Invalidation.
 *   [**Authentication**](./authentication.md): How Auth0 is integrated into the API calls.
+*   [**Modals & Forms**](./modals.md): Guidelines for creating forms, handling state, and using mutation hooks.
 
 ## Directory Structure
 *   `src/api-client`: **Generated code**. Do not touch except `apiFactory.ts`.
