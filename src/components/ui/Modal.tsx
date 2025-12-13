@@ -30,16 +30,32 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
         };
     }, [isOpen, onClose]);
 
-    const handleOverlayClick = (e: React.MouseEvent) => {
+    const isMouseDownOnOverlay = useRef(false);
+
+    const handleOverlayMouseDown = (e: React.MouseEvent) => {
         if (e.target === overlayRef.current) {
+            isMouseDownOnOverlay.current = true;
+        } else {
+            isMouseDownOnOverlay.current = false;
+        }
+    };
+
+    const handleOverlayMouseUp = (e: React.MouseEvent) => {
+        if (e.target === overlayRef.current && isMouseDownOnOverlay.current) {
             onClose();
         }
+        isMouseDownOnOverlay.current = false;
     };
 
     if (!isOpen) return null;
 
     return createPortal(
-        <div className="modal-overlay" ref={overlayRef} onClick={handleOverlayClick}>
+        <div
+            className="modal-overlay"
+            ref={overlayRef}
+            onMouseDown={handleOverlayMouseDown}
+            onMouseUp={handleOverlayMouseUp}
+        >
             <div className="modal-content">
                 <div className="modal-header">
                     <h2>{title}</h2>

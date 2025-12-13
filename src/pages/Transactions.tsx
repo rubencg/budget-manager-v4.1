@@ -13,6 +13,7 @@ import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontaweso
 import { useTransactionsQuery } from '../hooks/useTransactionsQuery';
 import { useAccountsQuery } from '../hooks/useAccountsQuery';
 import { TransferModal } from '../components/accounts/TransferModal';
+import { TransactionModal } from '../components/transactions/TransactionModal';
 import { Transaction, TransactionType } from '../api-client';
 import './Transactions.css';
 
@@ -31,6 +32,8 @@ export const Transactions: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [isAddDropdownOpen, setIsAddDropdownOpen] = useState(false);
     const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+    const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
+    const [transactionModalType, setTransactionModalType] = useState<TransactionType>(TransactionType.NUMBER_0);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
     const { data, isLoading, error } = useTransactionsQuery(currentYear, currentMonth);
@@ -48,6 +51,12 @@ export const Transactions: React.FC = () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    const handleOpenTransactionModal = (type: TransactionType) => {
+        setTransactionModalType(type);
+        setIsTransactionModalOpen(true);
+        setIsAddDropdownOpen(false);
+    };
 
     const handlePreviousMonth = () => {
         if (currentMonth === 1) {
@@ -218,10 +227,16 @@ export const Transactions: React.FC = () => {
                         </button>
                         {isAddDropdownOpen && (
                             <div className="transactions-page__add-dropdown">
-                                <button className="transactions-page__add-option transactions-page__add-option--divider" onClick={() => setIsAddDropdownOpen(false)}>
+                                <button
+                                    className="transactions-page__add-option transactions-page__add-option--divider"
+                                    onClick={() => handleOpenTransactionModal(TransactionType.NUMBER_1)}
+                                >
                                     Agregar ingreso
                                 </button>
-                                <button className="transactions-page__add-option" onClick={() => setIsAddDropdownOpen(false)}>
+                                <button
+                                    className="transactions-page__add-option"
+                                    onClick={() => handleOpenTransactionModal(TransactionType.NUMBER_0)}
+                                >
                                     Agregar gasto
                                 </button>
                                 <button
@@ -384,6 +399,12 @@ export const Transactions: React.FC = () => {
             <TransferModal
                 isOpen={isTransferModalOpen}
                 onClose={() => setIsTransferModalOpen(false)}
+                accounts={accountGroups?.flatMap(group => group.accounts) || []}
+            />
+            <TransactionModal
+                isOpen={isTransactionModalOpen}
+                onClose={() => setIsTransactionModalOpen(false)}
+                type={transactionModalType}
                 accounts={accountGroups?.flatMap(group => group.accounts) || []}
             />
         </div>

@@ -6,8 +6,16 @@ import { Button } from '../ui/Button';
 import { Account } from '../../types';
 import { useTransactionMutations } from '../../hooks/useTransactionMutations';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLandmark, faMoneyCheck, faHandHoldingDollar, faWallet, faPiggyBank, faCreditCard, faSackDollar } from '@fortawesome/free-solid-svg-icons';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
+import {
+    faLandmark,
+    faMoneyCheck,
+    faHandHoldingDollar,
+    faWallet,
+    faPiggyBank,
+    faCreditCard,
+    faSackDollar
+} from '@fortawesome/free-solid-svg-icons';
+import { Autocomplete } from '../ui/Autocomplete';
 import './TransferModal.css';
 
 interface TransferModalProps {
@@ -38,12 +46,10 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
     const [fromAccountId, setFromAccountId] = useState('');
     const [fromAccountName, setFromAccountName] = useState('');
     const [fromAccountSearch, setFromAccountSearch] = useState('');
-    const [showFromDropdown, setShowFromDropdown] = useState(false);
 
     const [toAccountId, setToAccountId] = useState('');
     const [toAccountName, setToAccountName] = useState('');
     const [toAccountSearch, setToAccountSearch] = useState('');
-    const [showToDropdown, setShowToDropdown] = useState(false);
 
     const [notes, setNotes] = useState('');
 
@@ -59,34 +65,19 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
             setToAccountName('');
             setToAccountSearch('');
             setNotes('');
-            setShowFromDropdown(false);
-            setShowToDropdown(false);
         }
     }, [isOpen]);
-
-    const filterAccounts = (searchTerm: string, excludeId?: string) => {
-        if (!searchTerm) return accounts.filter(acc => acc.id !== excludeId);
-
-        const search = searchTerm.toLowerCase();
-        return accounts.filter(acc =>
-            acc.id !== excludeId &&
-            (acc.name.toLowerCase().includes(search) ||
-                acc.accountType.name.toLowerCase().includes(search))
-        );
-    };
 
     const handleFromAccountSelect = (account: Account) => {
         setFromAccountId(account.id);
         setFromAccountName(account.name);
         setFromAccountSearch(account.name);
-        setShowFromDropdown(false);
     };
 
     const handleToAccountSelect = (account: Account) => {
         setToAccountId(account.id);
         setToAccountName(account.name);
         setToAccountSearch(account.name);
-        setShowToDropdown(false);
     };
 
     const handleSubmit = async () => {
@@ -119,9 +110,6 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
 
     const isSaving = createTransfer.isPending;
 
-    const filteredFromAccounts = filterAccounts(fromAccountSearch, toAccountId);
-    const filteredToAccounts = filterAccounts(toAccountSearch, fromAccountId);
-
     return (
         <Modal
             isOpen={isOpen}
@@ -144,7 +132,7 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
                         <input
                             className="transfer-modal__input"
                             type="number"
-                            step="1"
+                            step="any"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
                             placeholder="0.00"
@@ -170,125 +158,81 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
                 {/* From Account */}
                 <div className="transfer-modal__field">
                     <label className="transfer-modal__label">Cuenta Origen</label>
-                    <div className="transfer-modal__autocomplete">
-                        <FontAwesomeIcon
-                            icon={faLandmark}
-                            className="transfer-modal__autocomplete-icon"
-                        />
-                        <input
-                            className="transfer-modal__autocomplete-input"
-                            type="text"
-                            value={fromAccountSearch}
-                            onChange={(e) => {
-                                setFromAccountSearch(e.target.value);
-                                setShowFromDropdown(true);
-                                if (!e.target.value) {
-                                    setFromAccountId('');
-                                    setFromAccountName('');
-                                }
-                            }}
-                            onFocus={() => setShowFromDropdown(true)}
-                            onBlur={() => setTimeout(() => setShowFromDropdown(false), 200)}
-                            placeholder="Buscar cuenta..."
-                        />
-                        {showFromDropdown && (
-                            <div className="transfer-modal__autocomplete-dropdown">
-                                {filteredFromAccounts.length > 0 ? (
-                                    filteredFromAccounts.map(account => {
-                                        const icon = iconMap[account.image] || iconMap['default'];
-                                        return (
-                                            <div
-                                                key={account.id}
-                                                className="transfer-modal__autocomplete-option"
-                                                onClick={() => handleFromAccountSelect(account)}
-                                            >
-                                                <div
-                                                    className="transfer-modal__autocomplete-option-icon"
-                                                    style={{ backgroundColor: account.color }}
-                                                >
-                                                    <FontAwesomeIcon icon={icon} />
-                                                </div>
-                                                <div className="transfer-modal__autocomplete-option-text">
-                                                    <span className="transfer-modal__autocomplete-option-name">
-                                                        {account.name}
-                                                    </span>
-                                                    <span className="transfer-modal__autocomplete-option-type">
-                                                        {account.accountType.name}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        );
-                                    })
-                                ) : (
-                                    <div className="transfer-modal__autocomplete-empty">
-                                        No se encontraron cuentas
+                    <Autocomplete<Account>
+                        options={accounts}
+                        value={fromAccountSearch}
+                        onChange={setFromAccountSearch}
+                        onSelect={handleFromAccountSelect}
+                        getLabel={(acc) => acc.name}
+                        icon={faLandmark}
+                        placeholder="Buscar cuenta..."
+                        filterFunction={(item, search) =>
+                            item.id !== toAccountId &&
+                            (item.name.toLowerCase().includes(search.toLowerCase()) ||
+                                item.accountType.name.toLowerCase().includes(search.toLowerCase()))
+                        }
+                        renderOption={(account) => {
+                            const icon = iconMap[account.image] || iconMap['default'];
+                            return (
+                                <div className="transfer-modal__autocomplete-option" style={{ padding: 0 }}>
+                                    <div
+                                        className="transfer-modal__autocomplete-option-icon"
+                                        style={{ backgroundColor: account.color }}
+                                    >
+                                        <FontAwesomeIcon icon={icon} />
                                     </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
+                                    <div className="transfer-modal__autocomplete-option-text">
+                                        <span className="transfer-modal__autocomplete-option-name">
+                                            {account.name}
+                                        </span>
+                                        <span className="transfer-modal__autocomplete-option-type">
+                                            {account.accountType.name}
+                                        </span>
+                                    </div>
+                                </div>
+                            );
+                        }}
+                    />
                 </div>
 
                 {/* To Account */}
                 <div className="transfer-modal__field">
                     <label className="transfer-modal__label">Cuenta Destino</label>
-                    <div className="transfer-modal__autocomplete">
-                        <FontAwesomeIcon
-                            icon={faLandmark}
-                            className="transfer-modal__autocomplete-icon"
-                        />
-                        <input
-                            className="transfer-modal__autocomplete-input"
-                            type="text"
-                            value={toAccountSearch}
-                            onChange={(e) => {
-                                setToAccountSearch(e.target.value);
-                                setShowToDropdown(true);
-                                if (!e.target.value) {
-                                    setToAccountId('');
-                                    setToAccountName('');
-                                }
-                            }}
-                            onFocus={() => setShowToDropdown(true)}
-                            onBlur={() => setTimeout(() => setShowToDropdown(false), 200)}
-                            placeholder="Buscar cuenta..."
-                        />
-                        {showToDropdown && (
-                            <div className="transfer-modal__autocomplete-dropdown">
-                                {filteredToAccounts.length > 0 ? (
-                                    filteredToAccounts.map(account => {
-                                        const icon = iconMap[account.image] || iconMap['default'];
-                                        return (
-                                            <div
-                                                key={account.id}
-                                                className="transfer-modal__autocomplete-option"
-                                                onClick={() => handleToAccountSelect(account)}
-                                            >
-                                                <div
-                                                    className="transfer-modal__autocomplete-option-icon"
-                                                    style={{ backgroundColor: account.color }}
-                                                >
-                                                    <FontAwesomeIcon icon={icon} />
-                                                </div>
-                                                <div className="transfer-modal__autocomplete-option-text">
-                                                    <span className="transfer-modal__autocomplete-option-name">
-                                                        {account.name}
-                                                    </span>
-                                                    <span className="transfer-modal__autocomplete-option-type">
-                                                        {account.accountType.name}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        );
-                                    })
-                                ) : (
-                                    <div className="transfer-modal__autocomplete-empty">
-                                        No se encontraron cuentas
+                    <Autocomplete<Account>
+                        options={accounts}
+                        value={toAccountSearch}
+                        onChange={setToAccountSearch}
+                        onSelect={handleToAccountSelect}
+                        getLabel={(acc) => acc.name}
+                        icon={faLandmark}
+                        placeholder="Buscar cuenta..."
+                        filterFunction={(item, search) =>
+                            item.id !== fromAccountId &&
+                            (item.name.toLowerCase().includes(search.toLowerCase()) ||
+                                item.accountType.name.toLowerCase().includes(search.toLowerCase()))
+                        }
+                        renderOption={(account) => {
+                            const icon = iconMap[account.image] || iconMap['default'];
+                            return (
+                                <div className="transfer-modal__autocomplete-option" style={{ padding: 0 }}>
+                                    <div
+                                        className="transfer-modal__autocomplete-option-icon"
+                                        style={{ backgroundColor: account.color }}
+                                    >
+                                        <FontAwesomeIcon icon={icon} />
                                     </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
+                                    <div className="transfer-modal__autocomplete-option-text">
+                                        <span className="transfer-modal__autocomplete-option-name">
+                                            {account.name}
+                                        </span>
+                                        <span className="transfer-modal__autocomplete-option-type">
+                                            {account.accountType.name}
+                                        </span>
+                                    </div>
+                                </div>
+                            );
+                        }}
+                    />
                 </div>
 
                 {/* Notes */}
@@ -302,7 +246,7 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
                     />
                 </div>
 
-                <div className="category-modal__actions">
+                <div className="category-modal__actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
                     <Button variant="secondary" onClick={onClose} disabled={isSaving}>
                         CANCELAR
                     </Button>

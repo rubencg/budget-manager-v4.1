@@ -1,0 +1,74 @@
+.autocomplete-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.autocomplete-input-container {
+    position: relative;
+}
+
+.autocomplete-input {
+    width: 100%;
+    padding: 0.75rem;
+    padding-left: 2.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.autocomplete-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.autocomplete-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-tertiary);
+    pointer-events: none;
+}
+
+.autocomplete-dropdown {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    right: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.autocomplete-option {
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.autocomplete-option:hover,
+.autocomplete-option.selected {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.autocomplete-option.selected {
+    border-left: 3px solid var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.2);
+    padding-left: calc(0.75rem - 3px);
+    /* Adjust padding to prevent shift */
+}
+
+.autocomplete-empty {
+    padding: 0.75rem;
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+}
