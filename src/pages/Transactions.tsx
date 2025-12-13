@@ -39,6 +39,7 @@ export const Transactions: React.FC = () => {
     const [transactionModalType, setTransactionModalType] = useState<TransactionType>(TransactionType.NUMBER_0);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [transactionToDelete, setTransactionToDelete] = useState<string | null>(null);
+    const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
     const { data, isLoading, error } = useTransactionsQuery(currentYear, currentMonth);
@@ -59,10 +60,20 @@ export const Transactions: React.FC = () => {
     }, []);
 
     const handleOpenTransactionModal = (type: TransactionType) => {
+        setEditingTransaction(null); // Ensure not editing
         setTransactionModalType(type);
         setIsTransactionModalOpen(true);
         setIsAddDropdownOpen(false);
-        setIsAddDropdownOpen(false);
+    };
+
+    const handleEditClick = (transaction: Transaction) => {
+        setEditingTransaction(transaction);
+        if (transaction.transactionType === TransactionType.NUMBER_2) {
+            setIsTransferModalOpen(true);
+        } else if (transaction.transactionType !== undefined) {
+            setTransactionModalType(transaction.transactionType);
+            setIsTransactionModalOpen(true);
+        }
     };
 
     const handleDeleteClick = (transactionId: string) => {
@@ -266,6 +277,7 @@ export const Transactions: React.FC = () => {
                                 <button
                                     className="transactions-page__add-option"
                                     onClick={() => {
+                                        setEditingTransaction(null); // Ensure not editing
                                         setIsAddDropdownOpen(false);
                                         setIsTransferModalOpen(true);
                                     }}
@@ -381,6 +393,7 @@ export const Transactions: React.FC = () => {
                                             <button
                                                 className="transactions-table__action-btn"
                                                 title="Edit"
+                                                onClick={() => handleEditClick(transaction)}
                                             >
                                                 <FontAwesomeIcon icon={faPenToSquare} />
                                             </button>
@@ -423,14 +436,22 @@ export const Transactions: React.FC = () => {
             )}
             <TransferModal
                 isOpen={isTransferModalOpen}
-                onClose={() => setIsTransferModalOpen(false)}
+                onClose={() => {
+                    setIsTransferModalOpen(false);
+                    setEditingTransaction(null);
+                }}
                 accounts={accountGroups?.flatMap(group => group.accounts) || []}
+                transaction={editingTransaction}
             />
             <TransactionModal
                 isOpen={isTransactionModalOpen}
-                onClose={() => setIsTransactionModalOpen(false)}
+                onClose={() => {
+                    setIsTransactionModalOpen(false);
+                    setEditingTransaction(null);
+                }}
                 type={transactionModalType}
                 accounts={accountGroups?.flatMap(group => group.accounts) || []}
+                transaction={editingTransaction}
             />
             <Modal
                 isOpen={isDeleteModalOpen}

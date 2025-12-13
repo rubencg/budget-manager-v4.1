@@ -93,9 +93,37 @@ export const useTransactionMutations = () => {
         }
     });
 
+    const updateTransaction = useMutation({
+        mutationFn: async ({ id, ...data }: { id: string } & any) => {
+            const token = await getAccessTokenSilently();
+            const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+            const response = await fetch(`${baseUrl}/api/Transactions/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update transaction');
+            }
+
+            return response.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['accounts'] });
+            queryClient.invalidateQueries({ queryKey: ['transactions'] });
+            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+        }
+    });
+
     return {
         createTransfer,
         createTransaction,
-        deleteTransaction
+        deleteTransaction,
+        updateTransaction
     };
 };
