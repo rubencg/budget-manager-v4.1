@@ -1,0 +1,77 @@
+.monthly-transaction-modal__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.monthly-transaction-modal__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.monthly-transaction-modal__label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.monthly-transaction-modal__input,
+.monthly-transaction-modal__select,
+.monthly-transaction-modal__textarea {
+    padding: 0.75rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    font-size: 1rem;
+    width: 100%;
+    transition: all 0.2s;
+}
+
+.monthly-transaction-modal__input:focus,
+.monthly-transaction-modal__select:focus,
+.monthly-transaction-modal__textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-color-alpha);
+}
+
+.monthly-transaction-modal__textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.monthly-transaction-modal__toggles {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.monthly-transaction-modal__toggle-btn {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    background-color: transparent;
+    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.monthly-transaction-modal__toggle-btn.active {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.monthly-transaction-modal__toggle-btn.expense.active {
+    background-color: var(--color-error);
+    border-color: var(--color-error);
+}
+
+.monthly-transaction-modal__toggle-btn.income.active {
+    background-color: var(--color-success);
+    border-color: var(--color-success);
+}

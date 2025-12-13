@@ -15,6 +15,7 @@ import { useAccountsQuery } from '../hooks/useAccountsQuery';
 import { useTransactionMutations } from '../hooks/useTransactionMutations';
 import { TransferModal } from '../components/accounts/TransferModal';
 import { TransactionModal } from '../components/transactions/TransactionModal';
+import { MonthlyTransactionModal } from '../components/transactions/MonthlyTransactionModal';
 import { Modal } from '../components/ui/Modal';
 import { Button } from '../components/ui/Button';
 import { Transaction, TransactionType } from '../api-client';
@@ -31,7 +32,6 @@ export const Transactions: React.FC = () => {
     const [currentMonth, setCurrentMonth] = useState(now.getMonth() + 1); // 1-based
     const [pageSize, setPageSize] = useState(50);
     const [currentPage, setCurrentPage] = useState(1);
-    const [showUnapplied, setShowUnapplied] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [isAddDropdownOpen, setIsAddDropdownOpen] = useState(false);
     const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
@@ -40,6 +40,7 @@ export const Transactions: React.FC = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [transactionToDelete, setTransactionToDelete] = useState<string | null>(null);
     const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+    const [isMonthlyTransactionModalOpen, setIsMonthlyTransactionModalOpen] = useState(false);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
     const { data, isLoading, error } = useTransactionsQuery(currentYear, currentMonth);
@@ -284,6 +285,12 @@ export const Transactions: React.FC = () => {
                                 >
                                     Agregar transferencia
                                 </button>
+                                <button className="transactions-page__add-option" onClick={() => {
+                                    setIsAddDropdownOpen(false);
+                                    setIsMonthlyTransactionModalOpen(true);
+                                }}>
+                                    Agregar transacción mensual
+                                </button>
                                 <button className="transactions-page__add-option" onClick={() => setIsAddDropdownOpen(false)}>
                                     Agregar gasto planeado
                                 </button>
@@ -293,13 +300,8 @@ export const Transactions: React.FC = () => {
                             </div>
                         )}
                     </div>
-                    <label className="transactions-page__toggle">
-                        <input
-                            type="checkbox"
-                            checked={showUnapplied}
-                            onChange={(e) => setShowUnapplied(e.target.checked)}
-                        />
-                        Mostrar transacciones no aplicadas
+                    <label className="transactions-page__toggle" style={{ display: 'none' }}>
+                        {/* Removed: Mostrar transacciones no aplicadas */}
                     </label>
                 </div>
             </div>
@@ -448,6 +450,11 @@ export const Transactions: React.FC = () => {
                 type={transactionModalType}
                 accounts={accountGroups?.flatMap(group => group.accounts) || []}
                 transaction={editingTransaction}
+            />
+            <MonthlyTransactionModal
+                isOpen={isMonthlyTransactionModalOpen}
+                onClose={() => setIsMonthlyTransactionModalOpen(false)}
+                accounts={accountGroups?.flatMap(group => group.accounts) || []}
             />
             <Modal
                 isOpen={isDeleteModalOpen}
