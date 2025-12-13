@@ -156,3 +156,40 @@
     bottom: 0;
     left: 0;
 }
+
+/* Custom Toggle Switch (extracted for reuse) */
+.category-modal__toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+}
+
+.category-modal__toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 99px;
+    transition: background-color 0.2s;
+}
+
+.category-modal__toggle.active {
+    background-color: var(--color-success);
+}
+
+.category-modal__toggle-handle {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.category-modal__toggle.active .category-modal__toggle-handle {
+    transform: translateX(20px);
+}

@@ -170,24 +170,26 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, acc
 
                 {/* Sums to Budget Toggle */}
                 <div className="category-modal__field">
-                    <label
-                        className="category-modal__label"
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            cursor: 'pointer'
-                        }}
+                    <div
+                        className="category-modal__toggle-container"
                         onClick={() => setSumsToBudget(!sumsToBudget)}
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                setSumsToBudget(!sumsToBudget);
+                            }
+                        }}
+                        role="button"
+                        aria-pressed={sumsToBudget}
                     >
-                        <input
-                            type="checkbox"
-                            checked={sumsToBudget}
-                            onChange={(e) => setSumsToBudget(e.target.checked)}
-                            style={{ width: '20px', height: '20px', cursor: 'pointer' }}
-                        />
-                        Se suma al presupuesto
-                    </label>
+                        <div className={`category-modal__toggle ${sumsToBudget ? 'active' : ''}`}>
+                            <div className="category-modal__toggle-handle" />
+                        </div>
+                        <span className="category-modal__label" style={{ cursor: 'pointer', color: 'var(--text-primary)' }}>
+                            Se suma al presupuesto
+                        </span>
+                    </div>
                 </div>
 
                 <div className="category-modal__actions">
