@@ -1,0 +1,159 @@
+.planned-expense-modal__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.planned-expense-modal__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.planned-expense-modal__label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.planned-expense-modal__input {
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.2s, background-color 0.2s;
+    width: 100%;
+}
+
+.planned-expense-modal__input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Row for Amount and Toggle */
+.planned-expense-modal__row {
+    display: flex;
+    align-items: flex-end;
+    /* Align bottom to match input height */
+    gap: 1rem;
+}
+
+.planned-expense-modal__amount-container {
+    flex: 1;
+    position: relative;
+}
+
+.planned-expense-modal__toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 0.75rem;
+    /* Center vertically with input */
+    cursor: pointer;
+}
+
+/* Custom Toggle Switch */
+.planned-expense-modal__toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 99px;
+    transition: background-color 0.2s;
+}
+
+.planned-expense-modal__toggle.active {
+    background-color: var(--primary-color);
+}
+
+.planned-expense-modal__toggle-handle {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.planned-expense-modal__toggle.active .planned-expense-modal__toggle-handle {
+    transform: translateX(20px);
+}
+
+/* Autocomplete Styles (Shared/Similar to others) */
+.planned-expense-modal__autocomplete-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.planned-expense-modal__autocomplete-option:hover {
+    background-color: var(--bg-hover);
+}
+
+.planned-expense-modal__autocomplete-option-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.planned-expense-modal__autocomplete-option-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.planned-expense-modal__autocomplete-option-name {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+/* Select for Day of Month / Subcategory */
+.planned-expense-modal__select {
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    font-size: 1rem;
+    width: 100%;
+    cursor: pointer;
+    appearance: none;
+    /* Remove default arrow */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
+}
+
+.planned-expense-modal__select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.planned-expense-modal__select option {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.planned-expense-modal__actions {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    gap: 1rem;
+    margin-top: 1rem;
+}
