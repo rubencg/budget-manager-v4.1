@@ -91,6 +91,21 @@ frontend/
 - `npm run build` - Build for production
 - `npm run preview` - Preview production build
 - `npm run lint` - Run ESLint
+- `npx @openapitools/openapi-generator-cli ...` - Re-generate API client
+
+### API Client Generation
+
+To update the frontend API client when the backend API changes (e.g., new endpoints, model updates), run the following command:
+
+```bash
+npx @openapitools/openapi-generator-cli generate -i http://localhost:5023/swagger/v1/swagger.json -g typescript-fetch -o ./src/api-client --additional-properties=supportsES6=true
+```
+
+**What this does:**
+1.  **`-i ...`**: Points to the Swagger/OpenAPI JSON definition of your running backend (ensure backend is running at port 5023).
+2.  **`-g typescript-fetch`**: Tells the generator to create a TypeScript client using the native `fetch` API.
+3.  **`-o ./src/api-client`**: Outputs the generated code into the `src/api-client` directory.
+4.  **`--additional-properties=supportsES6=true`**: Ensures the generated code uses modern ES6 syntax.
 
 ## Design System
 
