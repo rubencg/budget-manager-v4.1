@@ -1,0 +1,180 @@
+.transaction-modal__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.transaction-modal__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.transaction-modal__label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.transaction-modal__input {
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.2s, background-color 0.2s;
+    width: 100%;
+}
+
+.transaction-modal__input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.transaction-modal__input--error {
+    border-color: var(--color-error);
+}
+
+.transaction-modal__textarea {
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    font-size: 1rem;
+    min-height: 80px;
+    resize: vertical;
+    font-family: inherit;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.transaction-modal__textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.transaction-modal__autocomplete {
+    position: relative;
+}
+
+.transaction-modal__autocomplete-input {
+    width: 100%;
+    padding: 0.75rem;
+    padding-left: 2.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.transaction-modal__autocomplete-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.transaction-modal__autocomplete-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-tertiary);
+    pointer-events: none;
+}
+
+.transaction-modal__autocomplete-dropdown {
+    position: absolute;
+    top: calc(100% + 0.25rem);
+    left: 0;
+    right: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.transaction-modal__autocomplete-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.transaction-modal__autocomplete-option:hover {
+    background-color: var(--bg-hover);
+}
+
+.transaction-modal__autocomplete-option-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.transaction-modal__autocomplete-option-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.transaction-modal__autocomplete-option-name {
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.transaction-modal__autocomplete-option-type {
+    color: var(--text-tertiary);
+    font-size: 0.75rem;
+}
+
+.transaction-modal__autocomplete-empty {
+    padding: 0.75rem;
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 0.85rem;
+}
+
+/* Custom DatePicker Styles */
+.transaction-modal__datepicker-wrapper {
+    position: relative;
+}
+
+.transaction-modal__datepicker-wrapper .react-datepicker-wrapper {
+    width: 100%;
+}
+
+.transaction-modal__datepicker-wrapper .react-datepicker__input-container {
+    width: 100%;
+}
+
+.transaction-modal__datepicker-wrapper input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.transaction-modal__datepicker-wrapper input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.1);
+}
