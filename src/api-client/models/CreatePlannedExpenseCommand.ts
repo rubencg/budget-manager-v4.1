@@ -30,7 +30,13 @@ export interface CreatePlannedExpenseCommand {
      * @type {Date}
      * @memberof CreatePlannedExpenseCommand
      */
-    date?: Date;
+    date?: Date | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreatePlannedExpenseCommand
+     */
+    dayOfMonth?: number | null;
     /**
      * 
      * @type {boolean}
@@ -94,6 +100,7 @@ export function CreatePlannedExpenseCommandFromJSONTyped(json: any, ignoreDiscri
         
         'name': json['name'] == null ? undefined : json['name'],
         'date': json['date'] == null ? undefined : (new Date(json['date'])),
+        'dayOfMonth': json['dayOfMonth'] == null ? undefined : json['dayOfMonth'],
         'isRecurring': json['isRecurring'] == null ? undefined : json['isRecurring'],
         'totalAmount': json['totalAmount'] == null ? undefined : json['totalAmount'],
         'categoryId': json['categoryId'] == null ? undefined : json['categoryId'],
@@ -117,6 +124,7 @@ export function CreatePlannedExpenseCommandToJSONTyped(value?: CreatePlannedExpe
         
         'name': value['name'],
         'date': value['date'] == null ? value['date'] : value['date'].toISOString(),
+        'dayOfMonth': value['dayOfMonth'],
         'isRecurring': value['isRecurring'],
         'totalAmount': value['totalAmount'],
         'categoryId': value['categoryId'],

@@ -11,6 +11,7 @@ Name | Type
 `itemType` | string
 `name` | string
 `date` | Date
+`dayOfMonth` | number
 `isRecurring` | boolean
 `totalAmount` | number
 `categoryId` | string
@@ -33,6 +34,7 @@ const example = {
   "itemType": null,
   "name": null,
   "date": null,
+  "dayOfMonth": null,
   "isRecurring": null,
   "totalAmount": null,
   "categoryId": null,

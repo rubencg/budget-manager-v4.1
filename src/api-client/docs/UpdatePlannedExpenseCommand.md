@@ -8,6 +8,7 @@ Name | Type
 ------------ | -------------
 `name` | string
 `date` | Date
+`dayOfMonth` | number
 `isRecurring` | boolean
 `totalAmount` | number
 `categoryId` | string
@@ -26,6 +27,7 @@ import type { UpdatePlannedExpenseCommand } from ''
 const example = {
   "name": null,
   "date": null,
+  "dayOfMonth": null,
   "isRecurring": null,
   "totalAmount": null,
   "categoryId": null,

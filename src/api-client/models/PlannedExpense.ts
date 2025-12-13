@@ -48,7 +48,13 @@ export interface PlannedExpense {
      * @type {Date}
      * @memberof PlannedExpense
      */
-    date?: Date;
+    date?: Date | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PlannedExpense
+     */
+    dayOfMonth?: number | null;
     /**
      * 
      * @type {boolean}
@@ -127,6 +133,7 @@ export function PlannedExpenseFromJSONTyped(json: any, ignoreDiscriminator: bool
         'itemType': json['itemType'] == null ? undefined : json['itemType'],
         'name': json['name'] == null ? undefined : json['name'],
         'date': json['date'] == null ? undefined : (new Date(json['date'])),
+        'dayOfMonth': json['dayOfMonth'] == null ? undefined : json['dayOfMonth'],
         'isRecurring': json['isRecurring'] == null ? undefined : json['isRecurring'],
         'totalAmount': json['totalAmount'] == null ? undefined : json['totalAmount'],
         'categoryId': json['categoryId'] == null ? undefined : json['categoryId'],
@@ -155,6 +162,7 @@ export function PlannedExpenseToJSONTyped(value?: PlannedExpense | null, ignoreD
         'itemType': value['itemType'],
         'name': value['name'],
         'date': value['date'] == null ? value['date'] : value['date'].toISOString(),
+        'dayOfMonth': value['dayOfMonth'],
         'isRecurring': value['isRecurring'],
         'totalAmount': value['totalAmount'],
         'categoryId': value['categoryId'],
