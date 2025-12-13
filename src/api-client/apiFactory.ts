@@ -1,4 +1,4 @@
-import { Configuration, DashboardApi, CategoriesApi, TransactionsApi } from ".";
+import { Configuration, DashboardApi, CategoriesApi, TransactionsApi, MonthlyTransactionsApi } from ".";
 
 export const getApiBasePath = () => {
     const basePath = import.meta.env.VITE_API_URL;
@@ -31,4 +31,12 @@ export const createTransactionsApi = (accessToken: string) => {
         accessToken: accessToken,
     });
     return new TransactionsApi(config);
+};
+
+export const createMonthlyTransactionsApi = (accessToken: string) => {
+    const config = new Configuration({
+        basePath: getApiBasePath(),
+        accessToken: accessToken,
+    });
+    return new MonthlyTransactionsApi(config);
 };
