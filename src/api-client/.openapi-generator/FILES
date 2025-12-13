@@ -1,6 +1,7 @@
 apis/AccountsApi.ts
 apis/CategoriesApi.ts
 apis/DashboardApi.ts
+apis/MonthlyTransactionsApi.ts
 apis/PlannedExpensesApi.ts
 apis/SavingsApi.ts
 apis/TransactionsApi.ts
@@ -16,6 +17,7 @@ docs/Category.md
 docs/CategoryType.md
 docs/CreateAccountCommand.md
 docs/CreateCategoryCommand.md
+docs/CreateMonthlyTransactionCommand.md
 docs/CreatePlannedExpenseCommand.md
 docs/CreateSavingCommand.md
 docs/CreateTransactionCommand.md
@@ -23,6 +25,9 @@ docs/DashboardApi.md
 docs/DashboardBalance.md
 docs/DayActivitySummary.md
 docs/GetDashboardQueryResult.md
+docs/MonthlyTransaction.md
+docs/MonthlyTransactionType.md
+docs/MonthlyTransactionsApi.md
 docs/PlannedExpense.md
 docs/PlannedExpensesApi.md
 docs/ProblemDetails.md
@@ -34,6 +39,7 @@ docs/TransactionType.md
 docs/TransactionsApi.md
 docs/UpdateAccountCommand.md
 docs/UpdateCategoryCommand.md
+docs/UpdateMonthlyTransactionCommand.md
 docs/UpdatePlannedExpenseCommand.md
 docs/UpdateSavingCommand.md
 docs/UpdateTransactionCommand.md
@@ -47,12 +53,15 @@ models/Category.ts
 models/CategoryType.ts
 models/CreateAccountCommand.ts
 models/CreateCategoryCommand.ts
+models/CreateMonthlyTransactionCommand.ts
 models/CreatePlannedExpenseCommand.ts
 models/CreateSavingCommand.ts
 models/CreateTransactionCommand.ts
 models/DashboardBalance.ts
 models/DayActivitySummary.ts
 models/GetDashboardQueryResult.ts
+models/MonthlyTransaction.ts
+models/MonthlyTransactionType.ts
 models/PlannedExpense.ts
 models/ProblemDetails.ts
 models/Saving.ts
@@ -61,6 +70,7 @@ models/TransactionPagedResult.ts
 models/TransactionType.ts
 models/UpdateAccountCommand.ts
 models/UpdateCategoryCommand.ts
+models/UpdateMonthlyTransactionCommand.ts
 models/UpdatePlannedExpenseCommand.ts
 models/UpdateSavingCommand.ts
 models/UpdateTransactionCommand.ts

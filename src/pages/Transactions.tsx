@@ -293,10 +293,6 @@ export const Transactions: React.FC = () => {
                             </div>
                         )}
                     </div>
-                    <button className="transactions-page__action-btn" title="Filter">
-                        <FontAwesomeIcon icon={faFilter} />
-                        Filtrar
-                    </button>
                     <label className="transactions-page__toggle">
                         <input
                             type="checkbox"
