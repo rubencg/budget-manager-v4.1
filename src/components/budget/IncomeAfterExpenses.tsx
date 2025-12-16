@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { BudgetSection } from './BudgetSection';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
 import { IncomeAfterFixedExpensesDto } from '../../api-client';
+import { useAccountsQuery } from '../../hooks/useAccountsQuery';
+import { useCategoriesQuery } from '../../hooks/useCategoriesQuery';
 import './IncomeAfterExpenses.css';
 
 interface IncomeAfterExpensesProps {
@@ -11,7 +14,39 @@ interface IncomeAfterExpensesProps {
     month: number;
 }
 
+const getIcon = (iconName: string | null | undefined) => {
+    const prefix: IconPrefix = 'fas';
+    // Fallback if iconName is 'default' or null
+    if (!iconName || iconName === 'default') {
+        return findIconDefinition({ prefix, iconName: 'wallet' }) || ['fas', 'wallet'] as [IconPrefix, IconName];
+    }
+    const icon = findIconDefinition({ prefix, iconName: iconName as any });
+    return icon || ['fas', 'question-circle'] as [IconPrefix, IconName];
+};
+
 export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, year, month }) => {
+    const { data: accountGroups } = useAccountsQuery();
+    const { data: expenseCategories } = useCategoriesQuery('expense');
+    const { data: incomeCategories } = useCategoriesQuery('income');
+
+    const flattenedAccounts = useMemo(() => {
+        if (!accountGroups) return [];
+        return accountGroups.flatMap(g => g.accounts);
+    }, [accountGroups]);
+
+    const allCategories = useMemo(() => {
+        return [...(incomeCategories || []), ...(expenseCategories || [])];
+    }, [incomeCategories, expenseCategories]);
+
+    const getAccountDetails = (accountId: string | null | undefined) => {
+        if (!accountId) return null;
+        return flattenedAccounts.find(a => a.id === accountId);
+    };
+
+    const getCategoryDetails = (categoryId: string | null | undefined) => {
+        if (!categoryId) return null;
+        return allCategories.find(c => c.id === categoryId);
+    };
 
     if (!data || !data.incomesAfterMonthlyExpenses) return <div className="income-after-expenses__no-data">No hay datos disponibles.</div>;
 
@@ -52,14 +87,12 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
 
     // Helper to render isApplied status
     const renderApplied = (isApplied: boolean) => (
-        <div className="flex justify-center">
-            <FontAwesomeIcon
-                icon={faCheckCircle}
-                className={`income-after-expenses__applied-icon ${!isApplied ? 'income-after-expenses__applied-icon--inactive' : ''}`}
-            />
-        </div>
+        isApplied ? (
+            <div className="income-after-expenses__applied-status income-after-expenses__applied-status--active">
+                <FontAwesomeIcon icon={faCheckCircle} />
+            </div>
+        ) : null
     );
-
 
     return (
         <div className="income-after-expenses">
@@ -79,41 +112,54 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                             </tr>
                         </thead>
                         <tbody>
-                            {monthlyIncomes?.items?.map((item) => (
-                                <tr key={item.id} className="income-after-expenses__tr">
-                                    <td className="income-after-expenses__td">{formatDate(item.dayOfMonth)}</td>
-                                    <td className="income-after-expenses__td">
-                                        <div className="income-after-expenses__category">
-                                            {item.categoryName && (
-                                                <div className="income-after-expenses__icon">
-                                                    {/* Placeholder for icon logic, can reuse existing icon logic */}
-                                                    <span style={{ fontSize: '12px' }}>{item.categoryName.substring(0, 1)}</span>
-                                                </div>
-                                            )}
-                                            <div className="income-after-expenses__category-info">
-                                                <div className="income-after-expenses__category-name">{item.categoryName || item.name}</div>
-                                                {item.subcategory && (
-                                                    <div className="income-after-expenses__subcategory">{item.subcategory}</div>
+                            {monthlyIncomes?.items?.map((item) => {
+                                const account = getAccountDetails(item.accountId);
+                                const category = getCategoryDetails(item.categoryId);
+                                return (
+                                    <tr key={item.id} className="income-after-expenses__tr">
+                                        <td className="income-after-expenses__td">{formatDate(item.dayOfMonth)}</td>
+                                        <td className="income-after-expenses__td">
+                                            <div className="income-after-expenses__category">
+                                                {item.categoryName && (
+                                                    <div
+                                                        className="income-after-expenses__icon"
+                                                        style={{ backgroundColor: category?.color || item.color || '#374151' }}
+                                                    >
+                                                        <FontAwesomeIcon icon={getIcon(category?.image || item.icon)} />
+                                                    </div>
                                                 )}
+                                                <div className="income-after-expenses__category-info">
+                                                    <div className="income-after-expenses__category-name">{item.categoryName || item.name}</div>
+                                                    {item.subcategory && (
+                                                        <div className="income-after-expenses__subcategory">{item.subcategory}</div>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td className="income-after-expenses__td">
-                                        <div className="income-after-expenses__account">
-                                            <div className="income-after-expenses__account-dot"></div>
-                                            <span>{item.accountName}</span>
-                                        </div>
-                                    </td>
-                                    <td className="income-after-expenses__td income-after-expenses__amount income-after-expenses__amount--income">{formatCurrency(item.amount)}</td>
-                                    <td className="income-after-expenses__td">
-                                        <div className="income-after-expenses__notes" title={item.notes || ''}>
-                                            {item.notes}
-                                        </div>
-                                    </td>
-                                    <td className="income-after-expenses__td">{renderApplied(item.isApplied || false)}</td>
-                                    <td className="income-after-expenses__td">{renderActions()}</td>
-                                </tr>
-                            ))}
+                                        </td>
+                                        <td className="income-after-expenses__td">
+                                            <div className="income-after-expenses__account">
+                                                {item.accountName && (
+                                                    <div
+                                                        className="income-after-expenses__icon"
+                                                        style={{ backgroundColor: account?.color }}
+                                                    >
+                                                        <FontAwesomeIcon icon={getIcon(account?.image)} />
+                                                    </div>
+                                                )}
+                                                <span>{item.accountName}</span>
+                                            </div>
+                                        </td>
+                                        <td className="income-after-expenses__td income-after-expenses__amount income-after-expenses__amount--income">{formatCurrency(item.amount)}</td>
+                                        <td className="income-after-expenses__td">
+                                            <div className="income-after-expenses__notes" title={item.notes || ''}>
+                                                {item.notes}
+                                            </div>
+                                        </td>
+                                        <td className="income-after-expenses__td">{renderApplied(item.isApplied || false)}</td>
+                                        <td className="income-after-expenses__td">{renderActions()}</td>
+                                    </tr>
+                                )
+                            })}
                         </tbody>
                     </table>
                 </div>
@@ -135,42 +181,54 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                             </tr>
                         </thead>
                         <tbody>
-                            {monthlyExpenses?.items?.map((item) => (
-                                <tr key={item.id} className="income-after-expenses__tr">
-                                    <td className="income-after-expenses__td">{formatDate(item.dayOfMonth)}</td>
-                                    <td className="income-after-expenses__td">
-                                        <div className="income-after-expenses__category">
-                                            {/* Reuse Category Display Logic */}
-                                            <div className="income-after-expenses__icon">
-                                                <span>{item.categoryName ? item.categoryName.substring(0, 1) : 'G'}</span>
+                            {monthlyExpenses?.items?.map((item) => {
+                                const account = getAccountDetails(item.accountId);
+                                const category = getCategoryDetails(item.categoryId);
+                                return (
+                                    <tr key={item.id} className="income-after-expenses__tr">
+                                        <td className="income-after-expenses__td">{formatDate(item.dayOfMonth)}</td>
+                                        <td className="income-after-expenses__td">
+                                            <div className="income-after-expenses__category">
+                                                <div
+                                                    className="income-after-expenses__icon"
+                                                    style={{ backgroundColor: category?.color || item.color || '#374151' }}
+                                                >
+                                                    <FontAwesomeIcon icon={getIcon(category?.image || item.icon)} />
+                                                </div>
+                                                <div className="income-after-expenses__category-info">
+                                                    <div className="income-after-expenses__category-name">{item.categoryName || item.name}</div>
+                                                    {item.subcategory && (
+                                                        <div className="income-after-expenses__subcategory">
+                                                            <span>{item.subcategory}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
-                                            <div className="income-after-expenses__category-info">
-                                                <div className="income-after-expenses__category-name">{item.categoryName || item.name}</div>
-                                                {item.subcategory && (
-                                                    <div className="income-after-expenses__subcategory">
-                                                        <span>{item.categoryName}</span>
-                                                        <span>»</span>
-                                                        <span>{item.subcategory}</span>
+                                        </td>
+                                        <td className="income-after-expenses__td">
+                                            <div className="income-after-expenses__account">
+                                                {item.accountName && (
+                                                    <div
+                                                        className="income-after-expenses__icon"
+                                                        style={{ backgroundColor: account?.color }}
+                                                    >
+                                                        <FontAwesomeIcon icon={getIcon(account?.image)} />
                                                     </div>
                                                 )}
+                                                <span>{item.accountName}</span>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td className="income-after-expenses__td">
-                                        <div className="income-after-expenses__account">
-                                            <span>{item.accountName}</span>
-                                        </div>
-                                    </td>
-                                    <td className="income-after-expenses__td income-after-expenses__amount income-after-expenses__amount--expense">{formatCurrency(item.amount)}</td>
-                                    <td className="income-after-expenses__td">
-                                        <div className="income-after-expenses__notes" title={item.notes || ''}>
-                                            {item.notes}
-                                        </div>
-                                    </td>
-                                    <td className="income-after-expenses__td">{renderApplied(item.isApplied || false)}</td>
-                                    <td className="income-after-expenses__td">{renderActions()}</td>
-                                </tr>
-                            ))}
+                                        </td>
+                                        <td className="income-after-expenses__td income-after-expenses__amount income-after-expenses__amount--expense">{formatCurrency(item.amount)}</td>
+                                        <td className="income-after-expenses__td">
+                                            <div className="income-after-expenses__notes" title={item.notes || ''}>
+                                                {item.notes}
+                                            </div>
+                                        </td>
+                                        <td className="income-after-expenses__td">{renderApplied(item.isApplied || false)}</td>
+                                        <td className="income-after-expenses__td">{renderActions()}</td>
+                                    </tr>
+                                )
+                            })}
                         </tbody>
                     </table>
                 </div>
@@ -196,15 +254,12 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                 <tr key={item.id} className="income-after-expenses__tr">
                                     <td className="income-after-expenses__td">
                                         <div className="income-after-expenses__category">
-                                            {item.icon && (
-                                                <div
-                                                    className="income-after-expenses__icon"
-                                                    style={{ backgroundColor: item.color || '#333' }}
-                                                >
-                                                    {/* Icon logic placeholder */}
-                                                    <span>{item.icon.substring(0, 2)}</span>
-                                                </div>
-                                            )}
+                                            <div
+                                                className="income-after-expenses__icon"
+                                                style={{ backgroundColor: item.color || '#374151' }}
+                                            >
+                                                <FontAwesomeIcon icon={getIcon(item.icon)} />
+                                            </div>
                                             <span className="income-after-expenses__category-name">{item.name}</span>
                                         </div>
                                     </td>
