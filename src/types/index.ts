@@ -64,7 +64,7 @@ export interface UserProfile {
 export type CardVariant = 'default' | 'interactive' | 'elevated';
 
 // Button variant types
-export type ButtonVariant = 'primary' | 'secondary' | 'icon';
+export type ButtonVariant = 'primary' | 'secondary' | 'icon' | 'danger';
 
 // Status badge variant
 export type StatusBadgeVariant = 'waiting' | 'success' | 'due_date' | 'disabled';
