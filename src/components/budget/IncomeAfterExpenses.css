@@ -1,0 +1,165 @@
+.income-after-expenses {
+    width: 100%;
+}
+
+.income-after-expenses__no-data {
+    padding: var(--space-xl);
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.income-after-expenses__table-container {
+    overflow-x: auto;
+}
+
+.income-after-expenses__table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.income-after-expenses__th {
+    padding: var(--space-md);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.income-after-expenses__tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    transition: background-color 0.2s;
+}
+
+.income-after-expenses__tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.income-after-expenses__td {
+    padding: var(--space-md);
+    color: var(--text-primary);
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.income-after-expenses__date {
+    display: flex;
+    flex-direction: column;
+}
+
+.income-after-expenses__day-name {
+    text-transform: capitalize;
+    color: var(--text-primary);
+}
+
+.income-after-expenses__full-date {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.income-after-expenses__category {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.income-after-expenses__icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #374151;
+    /* Fallback gray */
+    color: white;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.income-after-expenses__category-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.income-after-expenses__category-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.income-after-expenses__subcategory {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.income-after-expenses__account {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.income-after-expenses__account-dot {
+    width: 24px;
+    height: 16px;
+    border-radius: 4px;
+    background-color: rgba(30, 58, 138, 0.5);
+    /* Example blueish */
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.income-after-expenses__amount {
+    font-weight: 500;
+}
+
+.income-after-expenses__amount--income {
+    color: #4ade80;
+    /* green-400 */
+}
+
+.income-after-expenses__amount--expense {
+    color: #f87171;
+    /* red-400 */
+}
+
+.income-after-expenses__notes {
+    color: var(--text-secondary);
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.income-after-expenses__applied-icon {
+    color: #22c55e;
+    /* green-500 */
+    font-size: 18px;
+}
+
+.income-after-expenses__applied-icon--inactive {
+    color: var(--text-tertiary);
+    opacity: 0.3;
+}
+
+.income-after-expenses__actions {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: flex-end;
+}
+
+.income-after-expenses__action-btn {
+    color: var(--text-secondary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+    font-size: 14px;
+}
+
+.income-after-expenses__action-btn:hover {
+    color: var(--text-primary);
+}
+
+.income-after-expenses__action-btn--delete:hover {
+    color: #f87171;
+    /* red-400 */
+}
