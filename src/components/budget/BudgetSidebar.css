@@ -12,21 +12,35 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.budget-sidebar__amount-row {
-    margin-bottom: var(--space-md);
+.budget-sidebar__nav-list {
+    display: flex;
+    flex-direction: column;
+    padding-top: var(--space-lg);
 }
 
-.budget-sidebar__label {
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-bottom: var(--space-xs);
-    text-transform: capitalize;
+.budget-sidebar__nav-item {
+    margin-bottom: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: background-color 0.2s;
+    text-align: left;
+}
+
+.budget-sidebar__nav-item:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.budget-sidebar__nav-item.active {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left-color: var(--color-primary);
 }
 
 .budget-sidebar__amount {
     font-size: 28px;
     font-weight: bold;
     color: var(--text-primary);
+    margin-bottom: var(--space-xs);
 }
 
 .budget-sidebar__sub-amount {
@@ -34,34 +48,11 @@
     color: var(--text-secondary);
 }
 
-.budget-sidebar__nav {
-    display: flex;
-    flex-direction: column;
-    padding: var(--space-md) 0;
-}
-
-.budget-sidebar__nav-item {
-    padding: var(--space-md) var(--space-lg);
-    color: var(--text-secondary);
-    text-align: left;
-    background: none;
-    border: none;
-    cursor: pointer;
-    transition: color 0.2s, background-color 0.2s;
+.budget-sidebar__label {
     font-size: 14px;
-    border-left: 3px solid transparent;
-}
-
-.budget-sidebar__nav-item:hover {
-    color: var(--text-primary);
-    background-color: rgba(255, 255, 255, 0.03);
-}
-
-.budget-sidebar__nav-item.active {
-    color: var(--text-primary);
-    background-color: rgba(255, 255, 255, 0.05);
-    border-left-color: var(--color-primary, #3b82f6);
-    /* Fallback to blue if generic var missing */
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xs);
+    text-transform: capitalize;
 }
 
 .budget-sidebar__chart {
