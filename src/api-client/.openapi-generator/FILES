@@ -1,4 +1,5 @@
 apis/AccountsApi.ts
+apis/BudgetApi.ts
 apis/CategoriesApi.ts
 apis/DashboardApi.ts
 apis/MonthlyTransactionsApi.ts
@@ -11,6 +12,9 @@ docs/AccountDashboardGroupDto.md
 docs/AccountPagedResult.md
 docs/AccountType.md
 docs/AccountsApi.md
+docs/BudgetApi.md
+docs/BudgetSectionDto.md
+docs/BudgetSectionItemDto.md
 docs/CalendarView.md
 docs/CategoriesApi.md
 docs/Category.md
@@ -25,6 +29,8 @@ docs/DashboardApi.md
 docs/DashboardBalance.md
 docs/DayActivitySummary.md
 docs/GetDashboardQueryResult.md
+docs/IncomeAfterFixedExpensesDto.md
+docs/IncomesAfterMonthlyExpensesData.md
 docs/MonthlyTransaction.md
 docs/MonthlyTransactionType.md
 docs/MonthlyTransactionsApi.md
@@ -48,6 +54,8 @@ models/Account.ts
 models/AccountDashboardGroupDto.ts
 models/AccountPagedResult.ts
 models/AccountType.ts
+models/BudgetSectionDto.ts
+models/BudgetSectionItemDto.ts
 models/CalendarView.ts
 models/Category.ts
 models/CategoryType.ts
@@ -60,6 +68,8 @@ models/CreateTransactionCommand.ts
 models/DashboardBalance.ts
 models/DayActivitySummary.ts
 models/GetDashboardQueryResult.ts
+models/IncomeAfterFixedExpensesDto.ts
+models/IncomesAfterMonthlyExpensesData.ts
 models/MonthlyTransaction.ts
 models/MonthlyTransactionType.ts
 models/PlannedExpense.ts
