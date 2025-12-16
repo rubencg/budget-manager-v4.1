@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export * from './AccountsApi';
+export * from './BudgetApi';
 export * from './CategoriesApi';
 export * from './DashboardApi';
 export * from './MonthlyTransactionsApi';
