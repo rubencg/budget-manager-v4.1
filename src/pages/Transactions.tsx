@@ -4,7 +4,6 @@ import {
     faChevronLeft,
     faChevronRight,
     faPlus,
-    faFilter,
     faSearch,
     faPenToSquare,
     faTrash
@@ -18,8 +17,7 @@ import { TransactionModal } from '../components/transactions/TransactionModal';
 import { MonthlyTransactionModal } from '../components/transactions/MonthlyTransactionModal';
 import { PlannedExpenseModal } from '../components/planned-expenses/PlannedExpenseModal';
 import { SavingsModal } from '../components/savings/SavingsModal';
-import { Modal } from '../components/ui/Modal';
-import { Button } from '../components/ui/Button';
+import { ConfirmationModal } from '../components/ui/ConfirmationModal';
 import { Transaction, TransactionType } from '../api-client';
 import './Transactions.css';
 
@@ -474,27 +472,16 @@ export const Transactions: React.FC = () => {
                 isOpen={isSavingsModalOpen}
                 onClose={() => setIsSavingsModalOpen(false)}
             />
-            <Modal
+            <ConfirmationModal
                 isOpen={isDeleteModalOpen}
                 onClose={() => setIsDeleteModalOpen(false)}
+                onConfirm={confirmDelete}
                 title="Eliminar Transacción"
-            >
-                <div style={{ padding: '1rem 0' }}>
-                    <p>¿Estás seguro de que quieres eliminar esta transacción? Esta acción no se puede deshacer.</p>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1rem' }}>
-                    <Button variant="secondary" onClick={() => setIsDeleteModalOpen(false)}>
-                        CANCELAR
-                    </Button>
-                    <Button
-                        variant="primary"
-                        onClick={confirmDelete}
-                        style={{ background: 'var(--color-error)' }}
-                    >
-                        ELIMINAR
-                    </Button>
-                </div>
-            </Modal>
+                message="¿Estás seguro de que quieres eliminar esta transacción? Esta acción no se puede deshacer."
+                confirmText="ELIMINAR"
+                cancelText="CANCELAR"
+                isLoading={deleteTransaction.isPending}
+            />
         </div>
     );
 };

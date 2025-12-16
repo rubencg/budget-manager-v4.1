@@ -1,0 +1,19 @@
+.confirmation-modal__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.confirmation-modal__message {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.confirmation-modal__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+}

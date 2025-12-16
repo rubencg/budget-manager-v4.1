@@ -24,8 +24,9 @@ export const useSavingMutations = () => {
             });
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['accounts'] }); // Savings might appear in accounts list? Or a separate savings list
+            queryClient.invalidateQueries({ queryKey: ['accounts'] });
             queryClient.invalidateQueries({ queryKey: ['savings'] });
+            queryClient.invalidateQueries({ queryKey: ['budget'] });
         }
     });
 
@@ -40,11 +41,25 @@ export const useSavingMutations = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['savings'] });
             queryClient.invalidateQueries({ queryKey: ['accounts'] });
+            queryClient.invalidateQueries({ queryKey: ['budget'] });
+        }
+    });
+
+    const deleteSaving = useMutation({
+        mutationFn: async (id: string) => {
+            const api = await getApi();
+            return api.apiSavingsIdDelete({ id });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['savings'] });
+            queryClient.invalidateQueries({ queryKey: ['accounts'] });
+            queryClient.invalidateQueries({ queryKey: ['budget'] });
         }
     });
 
     return {
         createSaving,
-        updateSaving
+        updateSaving,
+        deleteSaving
     };
 };

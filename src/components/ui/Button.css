@@ -37,6 +37,17 @@
   box-shadow: var(--shadow-md);
 }
 
+.button--danger {
+  background: var(--color-error);
+  color: white;
+  border: none;
+}
+
+.button--danger:hover:not(:disabled) {
+  opacity: 0.9;
+  box-shadow: 0 4px 6px -1px rgba(255, 68, 68, 0.2);
+}
+
 .button--secondary {
   background: rgba(255, 255, 255, 0.05);
   color: var(--text-primary);

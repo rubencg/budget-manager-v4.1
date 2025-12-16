@@ -4,7 +4,7 @@ import { Button } from '../ui/Button';
 import { Account } from '../../types';
 import { useMonthlyTransactionMutations } from '../../hooks/useMonthlyTransactionMutations';
 import { useCategoriesQuery } from '../../hooks/useCategoriesQuery';
-import { Category, MonthlyTransactionType } from '../../api-client';
+import { Category, MonthlyTransactionType, BudgetSectionItemDto } from '../../api-client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -25,6 +25,7 @@ interface MonthlyTransactionModalProps {
     isOpen: boolean;
     onClose: () => void;
     accounts: Account[];
+    entity?: BudgetSectionItemDto | null;
 }
 
 const iconMap: { [key: string]: any } = {
@@ -47,8 +48,8 @@ const getIcon = (iconName: string | null | undefined) => {
     return icon || ['fas', 'question-circle'] as [IconPrefix, IconName];
 };
 
-export const MonthlyTransactionModal: React.FC<MonthlyTransactionModalProps> = ({ isOpen, onClose, accounts }) => {
-    const { createMonthlyTransaction } = useMonthlyTransactionMutations();
+export const MonthlyTransactionModal: React.FC<MonthlyTransactionModalProps> = ({ isOpen, onClose, accounts, entity }) => {
+    const { createMonthlyTransaction, updateMonthlyTransaction } = useMonthlyTransactionMutations();
 
     const [type, setType] = useState<MonthlyTransactionType>(MonthlyTransactionType.NUMBER_0);
     const categoryType = type === MonthlyTransactionType.NUMBER_0 ? 'expense' : 'income';
@@ -73,20 +74,53 @@ export const MonthlyTransactionModal: React.FC<MonthlyTransactionModalProps> = (
 
     useEffect(() => {
         if (isOpen) {
-            setAmount('');
-            setDayOfMonth(1);
-            setAccountId('');
-            setAccountName('');
-            setAccountSearch('');
-            setCategoryId('');
-            setCategoryName('');
-            setCategorySearch('');
-            setSelectedCategory(null);
-            setSubcategory('');
-            setNotes('');
-            setType(MonthlyTransactionType.NUMBER_0);
+            if (entity) {
+                // Edit Mode
+                setAmount(entity.amount?.toString() || '');
+                setDayOfMonth(entity.dayOfMonth || 1);
+                setAccountId(entity.accountId || '');
+                setAccountName(entity.accountName || '');
+                setAccountSearch(entity.accountName || '');
+                setCategoryId(entity.categoryId || '');
+                setCategoryName(entity.categoryName || '');
+                setCategorySearch(entity.categoryName || '');
+                setSubcategory(entity.subcategory || '');
+                setNotes(entity.notes || '');
+                setType(entity.monthlyTransactionType !== undefined ? entity.monthlyTransactionType : MonthlyTransactionType.NUMBER_0);
+
+                // We don't have the full Category object to set selectedCategory (for subcategories) immediately unless we look it up.
+                // It will be found when user searches or we could look it up from 'categories' if specific logic is needed, 
+                // but typically autocomplete works with strings for display. 
+                // If subcategory dropdown depends on selectedCategory, it might be empty initially in edit mode until category is re-selected or we find it.
+                // For now we just set valid string values.
+            } else {
+                // Create Mode
+                setAmount('');
+                setDayOfMonth(1);
+                setAccountId('');
+                setAccountName('');
+                setAccountSearch('');
+                setCategoryId('');
+                setCategoryName('');
+                setCategorySearch('');
+                setSelectedCategory(null);
+                setSubcategory('');
+                setNotes('');
+                setType(MonthlyTransactionType.NUMBER_0);
+            }
         }
-    }, [isOpen]);
+    }, [isOpen, entity]);
+
+    // Find category object when categories are loaded and in edit mode to populate subcategories
+    useEffect(() => {
+        if (entity && categories && !selectedCategory) {
+            const cat = categories.find(c => c.id === entity.categoryId);
+            if (cat) {
+                setSelectedCategory(cat);
+            }
+        }
+    }, [entity, categories, selectedCategory]);
+
 
     const handleAccountSelect = (account: Account) => {
         setAccountId(account.id);
@@ -116,10 +150,17 @@ export const MonthlyTransactionModal: React.FC<MonthlyTransactionModalProps> = (
                 notes: notes || ''
             };
 
-            await createMonthlyTransaction.mutateAsync(transactionData);
+            if (entity && entity.id) {
+                await updateMonthlyTransaction.mutateAsync({
+                    id: entity.id,
+                    command: transactionData
+                });
+            } else {
+                await createMonthlyTransaction.mutateAsync(transactionData);
+            }
             onClose();
         } catch (error) {
-            console.error('Failed to create monthly transaction:', error);
+            console.error('Failed to save monthly transaction:', error);
         }
     };
 
@@ -130,13 +171,13 @@ export const MonthlyTransactionModal: React.FC<MonthlyTransactionModalProps> = (
         accountId.length > 0 &&
         categoryId.length > 0;
 
-    const isSaving = createMonthlyTransaction.isPending;
+    const isSaving = createMonthlyTransaction.isPending || updateMonthlyTransaction.isPending;
 
     return (
         <Modal
             isOpen={isOpen}
             onClose={onClose}
-            title="Nueva Transacción Mensual"
+            title={entity ? 'Editar Transacción Mensual' : 'Nueva Transacción Mensual'}
         >
             <div className="monthly-transaction-modal__form">
 
@@ -318,7 +359,7 @@ export const MonthlyTransactionModal: React.FC<MonthlyTransactionModalProps> = (
                         onClick={handleSubmit}
                         disabled={!isValid || isSaving}
                     >
-                        {isSaving ? 'GUARDANDO...' : 'GUARDAR'}
+                        {isSaving ? (entity ? 'ACTUALIZANDO...' : 'GUARDANDO...') : (entity ? 'ACTUALIZAR' : 'GUARDAR')}
                     </Button>
                     <Button variant="secondary" onClick={onClose} disabled={isSaving}>
                         CANCELAR
