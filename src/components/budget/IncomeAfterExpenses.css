@@ -129,15 +129,25 @@
     text-overflow: ellipsis;
 }
 
-.income-after-expenses__applied-icon {
-    color: #22c55e;
-    /* green-500 */
-    font-size: 18px;
-}
 
-.income-after-expenses__applied-icon--inactive {
+.income-after-expenses__applied-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    margin: 0 auto;
+    font-size: 20px;
     color: var(--text-tertiary);
     opacity: 0.3;
+}
+
+.income-after-expenses__applied-status--active {
+    color: #22c55e;
+    /* green-500 */
+    background-color: white;
+    border-radius: 50%;
+    opacity: 1;
 }
 
 .income-after-expenses__actions {
