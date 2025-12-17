@@ -16,15 +16,24 @@
 import * as runtime from '../runtime';
 import type {
   IncomeAfterFixedExpensesDto,
+  PlannedExpensesResponseDto,
 } from '../models/index';
 import {
     IncomeAfterFixedExpensesDtoFromJSON,
     IncomeAfterFixedExpensesDtoToJSON,
+    PlannedExpensesResponseDtoFromJSON,
+    PlannedExpensesResponseDtoToJSON,
 } from '../models/index';
 
 export interface ApiBudgetIncomeAfterFixedExpensesYearMonthGetRequest {
     year: number;
     month: number;
+}
+
+export interface ApiBudgetPlannedExpensesYearMonthGetRequest {
+    year: number;
+    month: number;
+    plannedExpenseId?: string;
 }
 
 /**
@@ -80,6 +89,61 @@ export class BudgetApi extends runtime.BaseAPI {
      */
     async apiBudgetIncomeAfterFixedExpensesYearMonthGet(requestParameters: ApiBudgetIncomeAfterFixedExpensesYearMonthGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IncomeAfterFixedExpensesDto> {
         const response = await this.apiBudgetIncomeAfterFixedExpensesYearMonthGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiBudgetPlannedExpensesYearMonthGetRaw(requestParameters: ApiBudgetPlannedExpensesYearMonthGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PlannedExpensesResponseDto>> {
+        if (requestParameters['year'] == null) {
+            throw new runtime.RequiredError(
+                'year',
+                'Required parameter "year" was null or undefined when calling apiBudgetPlannedExpensesYearMonthGet().'
+            );
+        }
+
+        if (requestParameters['month'] == null) {
+            throw new runtime.RequiredError(
+                'month',
+                'Required parameter "month" was null or undefined when calling apiBudgetPlannedExpensesYearMonthGet().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['plannedExpenseId'] != null) {
+            queryParameters['plannedExpenseId'] = requestParameters['plannedExpenseId'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Bearer", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/api/budget/plannedExpenses/{year}/{month}`;
+        urlPath = urlPath.replace(`{${"year"}}`, encodeURIComponent(String(requestParameters['year'])));
+        urlPath = urlPath.replace(`{${"month"}}`, encodeURIComponent(String(requestParameters['month'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PlannedExpensesResponseDtoFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiBudgetPlannedExpensesYearMonthGet(requestParameters: ApiBudgetPlannedExpensesYearMonthGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PlannedExpensesResponseDto> {
+        const response = await this.apiBudgetPlannedExpensesYearMonthGetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
