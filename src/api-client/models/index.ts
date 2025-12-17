@@ -23,6 +23,8 @@ export * from './IncomesAfterMonthlyExpensesData';
 export * from './MonthlyTransaction';
 export * from './MonthlyTransactionType';
 export * from './PlannedExpense';
+export * from './PlannedExpenseViewDto';
+export * from './PlannedExpensesResponseDto';
 export * from './ProblemDetails';
 export * from './Saving';
 export * from './Transaction';

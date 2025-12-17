@@ -35,7 +35,9 @@ docs/MonthlyTransaction.md
 docs/MonthlyTransactionType.md
 docs/MonthlyTransactionsApi.md
 docs/PlannedExpense.md
+docs/PlannedExpenseViewDto.md
 docs/PlannedExpensesApi.md
+docs/PlannedExpensesResponseDto.md
 docs/ProblemDetails.md
 docs/Saving.md
 docs/SavingsApi.md
@@ -73,6 +75,8 @@ models/IncomesAfterMonthlyExpensesData.ts
 models/MonthlyTransaction.ts
 models/MonthlyTransactionType.ts
 models/PlannedExpense.ts
+models/PlannedExpenseViewDto.ts
+models/PlannedExpensesResponseDto.ts
 models/ProblemDetails.ts
 models/Saving.ts
 models/Transaction.ts
