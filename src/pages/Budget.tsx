@@ -3,7 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronLeft, faChevronRight, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { BudgetSidebar } from '../components/budget/BudgetSidebar';
 import { IncomeAfterExpenses } from '../components/budget/IncomeAfterExpenses';
+import { PlannedExpensesView } from '../components/budget/PlannedExpensesView';
 import { useBudgetQuery } from '../hooks/useBudgetQuery';
+import { useBudgetPlannedExpensesQuery } from '../hooks/useBudgetPlannedExpensesQuery';
 import { useAccountsQuery } from '../hooks/useAccountsQuery';
 import { TransferModal } from '../components/accounts/TransferModal';
 import { TransactionModal } from '../components/transactions/TransactionModal';
@@ -37,6 +39,12 @@ export const Budget: React.FC = () => {
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     const { data, isLoading, error } = useBudgetQuery(currentYear, currentMonth);
+    const {
+        data: plannedExpensesData,
+        isLoading: isPlannedLoading,
+        error: plannedError
+    } = useBudgetPlannedExpensesQuery(currentYear, currentMonth);
+
     const { data: accountGroups } = useAccountsQuery();
 
     useEffect(() => {
@@ -164,6 +172,7 @@ export const Budget: React.FC = () => {
                 <BudgetSidebar
                     totalAvailable={data?.incomesAfterMonthlyExpenses?.total || 0}
                     dailyAvailable={184.35}
+                    plannedExpensesTotal={plannedExpensesData?.total}
                     activeTab={activeTab}
                     onTabChange={setActiveTab}
                 />
@@ -178,7 +187,11 @@ export const Budget: React.FC = () => {
                         />
                     )}
                     {activeTab === 'plannedExpenses' && (
-                        <div className="text-white p-4">Gastos planeados content placeholder</div>
+                        <PlannedExpensesView
+                            data={plannedExpensesData}
+                            isLoading={isPlannedLoading}
+                            error={plannedError}
+                        />
                     )}
                     {activeTab === 'otherExpenses' && (
                         <div className="text-white p-4">Otros gastos content placeholder</div>
