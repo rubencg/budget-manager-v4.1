@@ -1,0 +1,163 @@
+/* Planned Expenses View */
+.planned-expenses-view {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+    width: 100%;
+}
+
+.planned-expenses-view__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-lg);
+}
+
+/* Card Styles */
+.planned-expense-card {
+    background-color: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.planned-expense-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.planned-expense-card__title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.planned-expense-card__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.planned-expense-card__recurring-icon {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.planned-expense-card__menu-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0 var(--space-xs);
+}
+
+.planned-expense-card__category {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.planned-expense-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.planned-expense-card__amount-status {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.planned-expense-card__amount-status.remaining {
+    color: #4ade80;
+    /* Green */
+}
+
+.planned-expense-card__amount-status.warning {
+    color: var(--color-warning);
+    /* Yellow/Orange */
+}
+
+.planned-expense-card__amount-status.overspent {
+    color: var(--color-error);
+    /* Red */
+}
+
+.planned-expense-card__progress-container {
+    height: 24px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.planned-expense-card__progress-bar {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+}
+
+.planned-expense-card__progress-fill {
+    height: 100%;
+    /* Background gradient is set inline */
+    transition: width 0.3s ease;
+}
+
+/* Toggle Switch Styles */
+.planned-expenses-view__toggle-label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 14px;
+    user-select: none;
+}
+
+.planned-expenses-view__toggle-input {
+    display: none;
+}
+
+.planned-expenses-view__toggle-switch {
+    width: 36px;
+    height: 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    position: relative;
+    transition: background-color 0.2s;
+}
+
+.planned-expenses-view__toggle-input:checked+.planned-expenses-view__toggle-switch {
+    background-color: var(--color-primary, #3b82f6);
+}
+
+.planned-expenses-view__toggle-handle {
+    width: 16px;
+    height: 16px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.2s;
+}
+
+.planned-expenses-view__toggle-input:checked+.planned-expenses-view__toggle-switch .planned-expenses-view__toggle-handle {
+    transform: translateX(16px);
+}
+
+.planned-expense-card__footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+}
+
+/* Reusing basic table structure from global or defining specific if needed */
+/* Assuming we can reuse .transactions-table classes if we render generic HTML or import styles */

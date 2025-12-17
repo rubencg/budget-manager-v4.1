@@ -4,6 +4,8 @@ import './BudgetSidebar.css';
 interface BudgetSidebarProps {
     totalAvailable: number;
     dailyAvailable: number;
+    plannedExpensesTotal?: number;
+    otherExpensesTotal?: number;
     activeTab: 'incomeAfterExpenses' | 'plannedExpenses' | 'otherExpenses';
     onTabChange: (tab: 'incomeAfterExpenses' | 'plannedExpenses' | 'otherExpenses') => void;
 }
@@ -11,6 +13,8 @@ interface BudgetSidebarProps {
 export const BudgetSidebar: React.FC<BudgetSidebarProps> = ({
     totalAvailable,
     dailyAvailable,
+    plannedExpensesTotal = 0,
+    otherExpensesTotal = 0,
     activeTab,
     onTabChange
 }) => {
@@ -42,7 +46,7 @@ export const BudgetSidebar: React.FC<BudgetSidebarProps> = ({
                     className={`budget-sidebar__nav-item ${activeTab === 'plannedExpenses' ? 'active' : ''}`}
                     onClick={() => onTabChange('plannedExpenses')}
                 >
-                    <div className="budget-sidebar__amount">{formatCurrency(0)}</div>
+                    <div className="budget-sidebar__amount">{formatCurrency(plannedExpensesTotal)}</div>
                     <div className="budget-sidebar__sub-amount" style={{ color: '#f87171', opacity: activeTab === 'plannedExpenses' ? 1 : 0.7 }}>
                         Gastos planeados
                     </div>
@@ -52,7 +56,7 @@ export const BudgetSidebar: React.FC<BudgetSidebarProps> = ({
                     className={`budget-sidebar__nav-item ${activeTab === 'otherExpenses' ? 'active' : ''}`}
                     onClick={() => onTabChange('otherExpenses')}
                 >
-                    <div className="budget-sidebar__amount">{formatCurrency(0)}</div>
+                    <div className="budget-sidebar__amount">{formatCurrency(otherExpensesTotal)}</div>
                     <div className="budget-sidebar__sub-amount" style={{ color: '#f87171', opacity: activeTab === 'otherExpenses' ? 1 : 0.7 }}>
                         Otros gastos
                     </div>
