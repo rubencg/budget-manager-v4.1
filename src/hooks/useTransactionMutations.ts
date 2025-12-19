@@ -11,6 +11,8 @@ interface CreateTransferCommand {
     toAccountName: string;
     notes: string;
     isApplied: boolean;
+    monthlyKey?: string;
+    savingKey?: string;
 }
 
 export const useTransactionMutations = () => {
@@ -41,6 +43,7 @@ export const useTransactionMutations = () => {
             queryClient.invalidateQueries({ queryKey: ['accounts'] });
             queryClient.invalidateQueries({ queryKey: ['transactions'] });
             queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budget'] });
         }
     });
 
@@ -69,6 +72,7 @@ export const useTransactionMutations = () => {
             queryClient.invalidateQueries({ queryKey: ['transactions'] });
             queryClient.invalidateQueries({ queryKey: ['dashboard'] });
             queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budget'] });
         }
     });
 
@@ -93,6 +97,7 @@ export const useTransactionMutations = () => {
             queryClient.invalidateQueries({ queryKey: ['transactions'] });
             queryClient.invalidateQueries({ queryKey: ['dashboard'] });
             queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budget'] });
         }
     });
 
@@ -120,6 +125,7 @@ export const useTransactionMutations = () => {
             queryClient.invalidateQueries({ queryKey: ['accounts'] });
             queryClient.invalidateQueries({ queryKey: ['transactions'] });
             queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            queryClient.invalidateQueries({ queryKey: ['budget'] });
         }
     });
 

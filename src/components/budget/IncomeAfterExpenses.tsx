@@ -9,8 +9,11 @@ import { useCategoriesQuery } from '../../hooks/useCategoriesQuery';
 import { useMonthlyTransactionMutations } from '../../hooks/useMonthlyTransactionMutations';
 import { useSavingMutations } from '../../hooks/useSavingMutations';
 import { MonthlyTransactionModal } from '../transactions/MonthlyTransactionModal';
+import { TransactionModal } from '../transactions/TransactionModal';
+import { TransferModal } from '../accounts/TransferModal';
 import { SavingsModal } from '../savings/SavingsModal';
 import { ConfirmationModal } from '../ui/ConfirmationModal';
+import { TransactionType } from '../../api-client/models/TransactionType';
 import './IncomeAfterExpenses.css';
 
 interface IncomeAfterExpensesProps {
@@ -31,6 +34,12 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
 
     const [isSavingModalOpen, setIsSavingModalOpen] = useState(false);
     const [editingSaving, setEditingSaving] = useState<BudgetSectionItemDto | null>(null);
+
+    // Apply Modal State
+    const [isApplyTransactionModalOpen, setIsApplyTransactionModalOpen] = useState(false);
+    const [isApplyTransferModalOpen, setIsApplyTransferModalOpen] = useState(false);
+    const [applyDefaultValues, setApplyDefaultValues] = useState<any>(null);
+    const [applyTransactionType, setApplyTransactionType] = useState<TransactionType>(TransactionType.NUMBER_0);
 
     // Confirmation Modal State
     const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -100,9 +109,48 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
         setIsSavingModalOpen(true);
     };
 
+    const handleApplyTransaction = (item: BudgetSectionItemDto, type: TransactionType) => {
+        const category = getCategoryDetails(item.categoryId);
+        setApplyDefaultValues({
+            amount: item.amount,
+            categoryId: item.categoryId,
+            categoryName: item.categoryName || category?.name,
+            notes: item.notes,
+            monthlyKey: item.id
+        });
+        setApplyTransactionType(type);
+        setIsApplyTransactionModalOpen(true);
+    };
+
+    const handleApplySaving = (item: BudgetSectionItemDto) => {
+        setApplyDefaultValues({
+            amount: item.amountPerMonth,
+            toAccountId: item.accountId,
+            savingKey: item.id,
+            notes: `Ahorro mensual: ${item.name}`
+        });
+        setIsApplyTransferModalOpen(true);
+    };
+
     // Helper to render action buttons
-    const renderActions = (item: BudgetSectionItemDto, type: 'transaction' | 'saving') => (
+    const renderActions = (item: BudgetSectionItemDto, type: 'transaction' | 'saving', transactionType?: TransactionType) => (
         <div className="income-after-expenses__actions">
+            {!item.isApplied && (
+                <button
+                    className="income-after-expenses__action-btn income-after-expenses__action-btn--apply"
+                    title="Aplicar"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        if (type === 'transaction' && transactionType !== undefined) {
+                            handleApplyTransaction(item, transactionType);
+                        } else if (type === 'saving') {
+                            handleApplySaving(item);
+                        }
+                    }}
+                >
+                    <FontAwesomeIcon icon={faCheckCircle} />
+                </button>
+            )}
             <button
                 className="income-after-expenses__action-btn"
                 title="Editar"
@@ -224,7 +272,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                                 {renderApplied(item.isApplied || false)}
                                             </td>
                                             <td className="income-after-expenses__td" style={{ textAlign: 'right' }}>
-                                                {renderActions(item, 'transaction')}
+                                                {renderActions(item, 'transaction', TransactionType.NUMBER_1)}
                                             </td>
                                         </tr>
                                     );
@@ -314,7 +362,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                                 {renderApplied(item.isApplied || false)}
                                             </td>
                                             <td className="income-after-expenses__td" style={{ textAlign: 'right' }}>
-                                                {renderActions(item, 'transaction')}
+                                                {renderActions(item, 'transaction', TransactionType.NUMBER_0)}
                                             </td>
                                         </tr>
                                     );
@@ -400,6 +448,21 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                 isOpen={isSavingModalOpen}
                 onClose={() => setIsSavingModalOpen(false)}
                 saving={editingSaving as any}
+            />
+
+            <TransactionModal
+                isOpen={isApplyTransactionModalOpen}
+                onClose={() => setIsApplyTransactionModalOpen(false)}
+                accounts={flattenedAccounts}
+                type={applyTransactionType}
+                defaultValues={applyDefaultValues}
+            />
+
+            <TransferModal
+                isOpen={isApplyTransferModalOpen}
+                onClose={() => setIsApplyTransferModalOpen(false)}
+                accounts={flattenedAccounts}
+                defaultValues={applyDefaultValues}
             />
 
             <ConfirmationModal
