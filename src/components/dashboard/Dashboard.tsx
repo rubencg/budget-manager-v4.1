@@ -31,11 +31,11 @@ export const Dashboard: React.FC = () => {
         </div>
 
         <div className="dashboard__item dashboard__item--goals">
-          <GoalsCard goals={mockGoals} />
+          <GoalsCard savings={dashboardData?.savings || []} />
         </div>
 
         <div className="dashboard__item dashboard__item--overview">
-          <OverviewCard metrics={mockOverview} />
+          <OverviewCard calendarView={dashboardData?.calendarView} />
         </div>
 
       </div>
