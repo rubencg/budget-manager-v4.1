@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import './GoalsCard.css';
 import { Card } from '../ui/Card';
@@ -6,12 +6,27 @@ import { ProgressBar } from '../ui/ProgressBar';
 import { BudgetSectionItemDto } from '../../api-client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
+import { TransferModal } from '../accounts/TransferModal';
+import { useAccountsQuery } from '../../hooks/useAccountsQuery';
 
 interface GoalsCardProps {
   savings: BudgetSectionItemDto[];
 }
 
 export const GoalsCard: React.FC<GoalsCardProps> = ({ savings }) => {
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+  const [selectedSaving, setSelectedSaving] = useState<BudgetSectionItemDto | null>(null);
+  const { data: accountsData } = useAccountsQuery();
+
+  const flattenedAccounts = useMemo(() => {
+    if (!accountsData) return [];
+    return accountsData.flatMap(type => type.accounts || []);
+  }, [accountsData]);
+
+  const handleAhorrarClick = (item: BudgetSectionItemDto) => {
+    setSelectedSaving(item);
+    setIsTransferModalOpen(true);
+  };
   const formatCurrency = (value: number | undefined | null) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -80,7 +95,10 @@ export const GoalsCard: React.FC<GoalsCardProps> = ({ savings }) => {
                   {formatCurrency(item.savedAmount)}
                 </span>
                 {!item.isApplied && (
-                  <button className="goals-card__apply-btn">
+                  <button
+                    className="goals-card__apply-btn"
+                    onClick={() => handleAhorrarClick(item)}
+                  >
                     Ahorrar {formatCurrency(item.amountPerMonth)}
                   </button>
                 )}
@@ -89,6 +107,21 @@ export const GoalsCard: React.FC<GoalsCardProps> = ({ savings }) => {
           );
         })}
       </div>
+
+      <TransferModal
+        isOpen={isTransferModalOpen}
+        onClose={() => {
+          setIsTransferModalOpen(false);
+          setSelectedSaving(null);
+        }}
+        accounts={flattenedAccounts}
+        defaultValues={{
+          amount: selectedSaving?.amountPerMonth || 0,
+          toAccountId: selectedSaving?.accountId || undefined,
+          savingKey: selectedSaving?.id || undefined,
+          notes: `Ahorro mensual para ${selectedSaving?.name}`
+        }}
+      />
     </Card>
   );
 };

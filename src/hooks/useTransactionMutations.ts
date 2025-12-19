@@ -22,7 +22,7 @@ export const useTransactionMutations = () => {
     const invalidateBudget = () => {
         queryClient.invalidateQueries({ queryKey: ['accounts'] });
         queryClient.invalidateQueries({ queryKey: ['transactions'] });
-        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+        queryClient.invalidateQueries({ queryKey: ['dashboardData'] });
         queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
         queryClient.invalidateQueries({ queryKey: ['budgetOtherExpenses'] });
         queryClient.invalidateQueries({ queryKey: ['budget'] });
