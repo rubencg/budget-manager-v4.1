@@ -7,8 +7,14 @@ import {
     faTrash
 } from '@fortawesome/free-solid-svg-icons';
 import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
-import { PlannedExpensesResponseDto, BudgetSectionItemDto } from '../../api-client';
+import { PlannedExpensesResponseDto, BudgetSectionItemDto, Transaction } from '../../api-client';
 import { PlannedExpenseCard } from './PlannedExpenseCard';
+import { TransactionModal } from '../transactions/TransactionModal';
+import { ConfirmationModal } from '../ui/ConfirmationModal';
+import { useTransactionMutations } from '../../hooks/useTransactionMutations';
+import { useTransactionsQuery } from '../../hooks/useTransactionsQuery';
+import { useAccountsQuery } from '../../hooks/useAccountsQuery';
+import { TransactionType } from '../../api-client/models/TransactionType';
 import './PlannedExpensesView.css';
 import '../../pages/Transactions.css'; // Reuse table styles
 
@@ -16,16 +22,37 @@ interface PlannedExpensesViewProps {
     data: PlannedExpensesResponseDto | undefined;
     isLoading: boolean;
     error: Error | null;
+    year: number;
+    month: number;
 }
 
 export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
     data,
     isLoading,
-    error
+    error,
+    year,
+    month
 }) => {
     const [showCompleted, setShowCompleted] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(50); // Default page size matches Transactions
+
+    // Hooks
+    const { deleteTransaction } = useTransactionMutations();
+    const { data: accountsData } = useAccountsQuery();
+    const { data: transactionsData } = useTransactionsQuery(year, month);
+
+    // Modal State
+    const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
+    const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+
+    const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+
+    const flattenedAccounts = useMemo(() => {
+        if (!accountsData) return [];
+        return accountsData.flatMap(type => type.accounts || []);
+    }, [accountsData]);
 
     // Filter Planned Expenses based on toggle
     const filteredPlannedExpenses = useMemo(() => {
@@ -94,6 +121,33 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
         const month = d.getMonth() + 1;
         const year = d.getFullYear();
         return `${dayName}\n${day}/${month}/${year}`;
+    };
+
+    const handleEditTransaction = (item: BudgetSectionItemDto) => {
+        if (!item.id) return;
+        const transaction = transactionsData?.data?.find((t: Transaction) => t.id === item.id);
+        if (transaction) {
+            setEditingTransaction(transaction);
+            setIsTransactionModalOpen(true);
+        }
+    };
+
+    const handleDeleteTransaction = (id: string | null | undefined) => {
+        if (!id) return;
+        setItemToDelete(id);
+        setIsConfirmationModalOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!itemToDelete) return;
+
+        try {
+            await deleteTransaction.mutateAsync(itemToDelete);
+            setIsConfirmationModalOpen(false);
+            setItemToDelete(null);
+        } catch (error) {
+            console.error('Failed to delete transaction:', error);
+        }
     };
 
     if (isLoading) {
@@ -210,10 +264,18 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
                                     {item.notes}
                                 </div>
                                 <div className="transactions-table__cell transactions-table__cell--actions">
-                                    <button className="transactions-table__action-btn" title="Edit">
+                                    <button
+                                        className="transactions-table__action-btn"
+                                        title="Edit"
+                                        onClick={() => handleEditTransaction(item)}
+                                    >
                                         <FontAwesomeIcon icon={faPenToSquare} />
                                     </button>
-                                    <button className="transactions-table__action-btn" title="Delete">
+                                    <button
+                                        className="transactions-table__action-btn"
+                                        title="Delete"
+                                        onClick={() => handleDeleteTransaction(item.id)}
+                                    >
                                         <FontAwesomeIcon icon={faTrash} />
                                     </button>
                                 </div>
@@ -245,6 +307,31 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
                     </button>
                 </div>
             )}
+
+            {/* Modals */}
+            <TransactionModal
+                isOpen={isTransactionModalOpen}
+                onClose={() => {
+                    setIsTransactionModalOpen(false);
+                    setEditingTransaction(null);
+                }}
+                type={editingTransaction?.transactionType ?? TransactionType.NUMBER_0}
+                accounts={flattenedAccounts}
+                transaction={editingTransaction}
+            />
+
+            <ConfirmationModal
+                isOpen={isConfirmationModalOpen}
+                onClose={() => {
+                    setIsConfirmationModalOpen(false);
+                    setItemToDelete(null);
+                }}
+                onConfirm={handleConfirmDelete}
+                title="Eliminar Transacción"
+                message="¿Estás seguro de que deseas eliminar esta transacción vinculada a este gasto planeado?"
+                confirmText="Eliminar"
+                isLoading={deleteTransaction.isPending}
+            />
         </div>
     );
 };

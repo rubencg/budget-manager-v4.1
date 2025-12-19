@@ -125,6 +125,7 @@ export const useTransactionMutations = () => {
             queryClient.invalidateQueries({ queryKey: ['accounts'] });
             queryClient.invalidateQueries({ queryKey: ['transactions'] });
             queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
             queryClient.invalidateQueries({ queryKey: ['budget'] });
         }
     });

@@ -191,6 +191,8 @@ export const Budget: React.FC = () => {
                             data={plannedExpensesData}
                             isLoading={isPlannedLoading}
                             error={plannedError}
+                            year={currentYear}
+                            month={currentMonth}
                         />
                     )}
                     {activeTab === 'otherExpenses' && (
