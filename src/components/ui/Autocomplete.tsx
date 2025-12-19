@@ -46,8 +46,10 @@ export function Autocomplete<T>({
             }
         };
 
-        const handleScroll = () => {
-            if (isOpen) setIsOpen(false);
+        const handleScroll = (event: Event) => {
+            if (isOpen && dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
         };
 
         document.addEventListener('mousedown', handleClickOutside);
