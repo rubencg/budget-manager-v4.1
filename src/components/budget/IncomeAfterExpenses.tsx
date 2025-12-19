@@ -3,11 +3,13 @@ import { BudgetSection } from './BudgetSection';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash, faCheckCircle, faWallet, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
-import { IncomeAfterFixedExpensesDto, BudgetSectionItemDto } from '../../api-client';
+import { IncomeAfterFixedExpensesDto, BudgetSectionItemDto, Transaction } from '../../api-client';
 import { useAccountsQuery } from '../../hooks/useAccountsQuery';
 import { useCategoriesQuery } from '../../hooks/useCategoriesQuery';
 import { useMonthlyTransactionMutations } from '../../hooks/useMonthlyTransactionMutations';
 import { useSavingMutations } from '../../hooks/useSavingMutations';
+import { useTransactionsQuery } from '../../hooks/useTransactionsQuery';
+import { useTransactionMutations } from '../../hooks/useTransactionMutations';
 import { MonthlyTransactionModal } from '../transactions/MonthlyTransactionModal';
 import { TransactionModal } from '../transactions/TransactionModal';
 import { TransferModal } from '../accounts/TransferModal';
@@ -28,12 +30,16 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
     const { data: incomeCategories } = useCategoriesQuery('income');
     const { deleteMonthlyTransaction } = useMonthlyTransactionMutations();
     const { deleteSaving } = useSavingMutations();
+    const { data: transactionsData } = useTransactionsQuery(year, month);
+    const { deleteTransaction } = useTransactionMutations();
 
     const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
     const [editingTransaction, setEditingTransaction] = useState<BudgetSectionItemDto | null>(null);
 
     const [isSavingModalOpen, setIsSavingModalOpen] = useState(false);
     const [editingSaving, setEditingSaving] = useState<BudgetSectionItemDto | null>(null);
+
+    const [editingAppliedTransaction, setEditingAppliedTransaction] = useState<Transaction | null>(null);
 
     // Apply Modal State
     const [isApplyTransactionModalOpen, setIsApplyTransactionModalOpen] = useState(false);
@@ -43,7 +49,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
 
     // Confirmation Modal State
     const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-    const [itemToDelete, setItemToDelete] = useState<{ id: string, type: 'transaction' | 'saving' } | null>(null);
+    const [itemToDelete, setItemToDelete] = useState<{ id: string, type: 'transaction' | 'saving' | 'applied-transaction' } | null>(null);
 
     const flattenedAccounts = useMemo(() => {
         if (!accountsData) return [];
@@ -71,13 +77,23 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
         return icon || faQuestionCircle;
     };
 
-    const handleDeleteTransaction = (id: string) => {
-        setItemToDelete({ id, type: 'transaction' });
+    const handleDeleteTransaction = (item: BudgetSectionItemDto) => {
+        if (!item.id) return;
+        if (item.isApplied && item.transactionId) {
+            setItemToDelete({ id: item.transactionId, type: 'applied-transaction' });
+        } else {
+            setItemToDelete({ id: item.id, type: 'transaction' });
+        }
         setIsConfirmationModalOpen(true);
     };
 
-    const handleDeleteSaving = (id: string) => {
-        setItemToDelete({ id, type: 'saving' });
+    const handleDeleteSaving = (item: BudgetSectionItemDto) => {
+        if (!item.id) return;
+        if (item.isApplied && item.transactionId) {
+            setItemToDelete({ id: item.transactionId, type: 'applied-transaction' });
+        } else {
+            setItemToDelete({ id: item.id, type: 'saving' });
+        }
         setIsConfirmationModalOpen(true);
     };
 
@@ -87,8 +103,10 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
         try {
             if (itemToDelete.type === 'transaction') {
                 await deleteMonthlyTransaction.mutateAsync(itemToDelete.id);
-            } else {
+            } else if (itemToDelete.type === 'saving') {
                 await deleteSaving.mutateAsync(itemToDelete.id);
+            } else if (itemToDelete.type === 'applied-transaction') {
+                await deleteTransaction.mutateAsync(itemToDelete.id);
             }
         } catch (error) {
             console.error('Failed to delete item:', error);
@@ -99,18 +117,42 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
         }
     };
 
-    const handleEditTransaction = (item: BudgetSectionItemDto) => {
-        setEditingTransaction(item);
-        setIsTransactionModalOpen(true);
+    const handleEditTransaction = (item: BudgetSectionItemDto, type: TransactionType) => {
+        if (item.isApplied && item.transactionId) {
+            const transaction = transactionsData?.data?.find((t: Transaction) => t.id === item.transactionId);
+            if (transaction) {
+                setEditingAppliedTransaction(transaction);
+                setApplyDefaultValues({
+                    monthlyKey: item.id
+                });
+                setApplyTransactionType(type);
+                setIsApplyTransactionModalOpen(true);
+            }
+        } else {
+            setEditingTransaction(item);
+            setIsTransactionModalOpen(true);
+        }
     };
 
     const handleEditSaving = (item: BudgetSectionItemDto) => {
-        setEditingSaving(item);
-        setIsSavingModalOpen(true);
+        if (item.isApplied && item.transactionId) {
+            const transaction = transactionsData?.data?.find((t: Transaction) => t.id === item.transactionId);
+            if (transaction) {
+                setEditingAppliedTransaction(transaction);
+                setApplyDefaultValues({
+                    savingKey: item.id
+                });
+                setIsApplyTransferModalOpen(true);
+            }
+        } else {
+            setEditingSaving(item);
+            setIsSavingModalOpen(true);
+        }
     };
 
     const handleApplyTransaction = (item: BudgetSectionItemDto, type: TransactionType) => {
         const category = getCategoryDetails(item.categoryId);
+        setEditingAppliedTransaction(null); // Ensure we are in create mode
         setApplyDefaultValues({
             amount: item.amount,
             categoryId: item.categoryId,
@@ -123,6 +165,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
     };
 
     const handleApplySaving = (item: BudgetSectionItemDto) => {
+        setEditingAppliedTransaction(null); // Ensure we are in create mode
         setApplyDefaultValues({
             amount: item.amountPerMonth,
             toAccountId: item.accountId,
@@ -156,7 +199,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                 title="Editar"
                 onClick={(e) => {
                     e.stopPropagation();
-                    type === 'transaction' ? handleEditTransaction(item) : handleEditSaving(item);
+                    type === 'transaction' && transactionType !== undefined ? handleEditTransaction(item, transactionType) : handleEditSaving(item);
                 }}
             >
                 <FontAwesomeIcon icon={faPenToSquare} />
@@ -166,11 +209,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                 title="Eliminar"
                 onClick={(e) => {
                     e.stopPropagation();
-                    if (!item.id) {
-                        console.error('Missing ID for item:', item);
-                        return; // Or show error toast
-                    }
-                    type === 'transaction' ? handleDeleteTransaction(item.id) : handleDeleteSaving(item.id);
+                    type === 'transaction' ? handleDeleteTransaction(item) : handleDeleteSaving(item);
                 }}
             >
                 <FontAwesomeIcon icon={faTrash} />
@@ -189,7 +228,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
 
     if (!data) return <div className="income-after-expenses__loading">Cargando...</div>;
 
-    const isDeleting = deleteMonthlyTransaction.isPending || deleteSaving.isPending;
+    const isDeleting = deleteMonthlyTransaction.isPending || deleteSaving.isPending || deleteTransaction.isPending;
 
     return (
         <div className="income-after-expenses">
@@ -452,17 +491,27 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
 
             <TransactionModal
                 isOpen={isApplyTransactionModalOpen}
-                onClose={() => setIsApplyTransactionModalOpen(false)}
+                onClose={() => {
+                    setIsApplyTransactionModalOpen(false);
+                    setEditingAppliedTransaction(null);
+                    setApplyDefaultValues(null);
+                }}
                 accounts={flattenedAccounts}
                 type={applyTransactionType}
                 defaultValues={applyDefaultValues}
+                transaction={editingAppliedTransaction}
             />
 
             <TransferModal
                 isOpen={isApplyTransferModalOpen}
-                onClose={() => setIsApplyTransferModalOpen(false)}
+                onClose={() => {
+                    setIsApplyTransferModalOpen(false);
+                    setEditingAppliedTransaction(null);
+                    setApplyDefaultValues(null);
+                }}
                 accounts={flattenedAccounts}
                 defaultValues={applyDefaultValues}
+                transaction={editingAppliedTransaction}
             />
 
             <ConfirmationModal
@@ -472,7 +521,9 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                 title="Eliminar elemento"
                 message={itemToDelete?.type === 'transaction'
                     ? "¿Estás seguro de que deseas eliminar esta transacción mensual?"
-                    : "¿Estás seguro de que deseas eliminar este ahorro?"}
+                    : itemToDelete?.type === 'saving'
+                        ? "¿Estás seguro de que deseas eliminar este ahorro?"
+                        : "¿Estás seguro de que deseas eliminar la transacción aplicada? Esto desaplicará el elemento del presupuesto."}
                 confirmText="Eliminar"
                 isLoading={isDeleting}
             />

@@ -141,8 +141,8 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
                 toAccountName,
                 notes: notes || '',
                 isApplied: true,
-                monthlyKey: defaultValues?.monthlyKey,
-                savingKey: defaultValues?.savingKey
+                monthlyKey: transaction?.monthlyKey || defaultValues?.monthlyKey,
+                savingKey: transaction?.savingKey || defaultValues?.savingKey
             };
 
             if (transaction && transaction.id) {
