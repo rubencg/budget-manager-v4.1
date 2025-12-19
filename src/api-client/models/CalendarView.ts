@@ -13,14 +13,6 @@
  */
 
 import { mapValues } from '../runtime';
-import type { DayActivitySummary } from './DayActivitySummary';
-import {
-    DayActivitySummaryFromJSON,
-    DayActivitySummaryFromJSONTyped,
-    DayActivitySummaryToJSON,
-    DayActivitySummaryToJSONTyped,
-} from './DayActivitySummary';
-
 /**
  * 
  * @export
@@ -33,12 +25,6 @@ export interface CalendarView {
      * @memberof CalendarView
      */
     yearMonth?: string | null;
-    /**
-     * 
-     * @type {Array<DayActivitySummary>}
-     * @memberof CalendarView
-     */
-    days?: Array<DayActivitySummary> | null;
     /**
      * 
      * @type {number}
@@ -77,7 +63,6 @@ export function CalendarViewFromJSONTyped(json: any, ignoreDiscriminator: boolea
     return {
         
         'yearMonth': json['yearMonth'] == null ? undefined : json['yearMonth'],
-        'days': json['days'] == null ? undefined : ((json['days'] as Array<any>).map(DayActivitySummaryFromJSON)),
         'transfersCount': json['transfersCount'] == null ? undefined : json['transfersCount'],
         'expensesCount': json['expensesCount'] == null ? undefined : json['expensesCount'],
         'incomesCount': json['incomesCount'] == null ? undefined : json['incomesCount'],
@@ -96,7 +81,6 @@ export function CalendarViewToJSONTyped(value?: CalendarView | null, ignoreDiscr
     return {
         
         'yearMonth': value['yearMonth'],
-        'days': value['days'] == null ? undefined : ((value['days'] as Array<any>).map(DayActivitySummaryToJSON)),
         'transfersCount': value['transfersCount'],
         'expensesCount': value['expensesCount'],
         'incomesCount': value['incomesCount'],
