@@ -7,7 +7,6 @@
 Name | Type
 ------------ | -------------
 `yearMonth` | string
-`days` | [Array&lt;DayActivitySummary&gt;](DayActivitySummary.md)
 `transfersCount` | number
 `expensesCount` | number
 `incomesCount` | number
@@ -20,7 +19,6 @@ import type { CalendarView } from ''
 // TODO: Update the object below with actual values
 const example = {
   "yearMonth": null,
-  "days": null,
   "transfersCount": null,
   "expensesCount": null,
   "incomesCount": null,

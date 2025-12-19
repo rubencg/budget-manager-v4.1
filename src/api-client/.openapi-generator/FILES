@@ -27,7 +27,6 @@ docs/CreateSavingCommand.md
 docs/CreateTransactionCommand.md
 docs/DashboardApi.md
 docs/DashboardBalance.md
-docs/DayActivitySummary.md
 docs/GetDashboardQueryResult.md
 docs/IncomeAfterFixedExpensesDto.md
 docs/IncomesAfterMonthlyExpensesData.md
@@ -69,7 +68,6 @@ models/CreatePlannedExpenseCommand.ts
 models/CreateSavingCommand.ts
 models/CreateTransactionCommand.ts
 models/DashboardBalance.ts
-models/DayActivitySummary.ts
 models/GetDashboardQueryResult.ts
 models/IncomeAfterFixedExpensesDto.ts
 models/IncomesAfterMonthlyExpensesData.ts

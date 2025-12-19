@@ -16,7 +16,6 @@ export * from './CreatePlannedExpenseCommand';
 export * from './CreateSavingCommand';
 export * from './CreateTransactionCommand';
 export * from './DashboardBalance';
-export * from './DayActivitySummary';
 export * from './GetDashboardQueryResult';
 export * from './IncomeAfterFixedExpensesDto';
 export * from './IncomesAfterMonthlyExpensesData';
