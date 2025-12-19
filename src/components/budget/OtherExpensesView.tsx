@@ -8,6 +8,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
 import { OtherExpensesResponseDto, BudgetSectionItemDto, Transaction } from '../../api-client';
+import { ResponsivePie } from '@nivo/pie';
 import { TransactionModal } from '../transactions/TransactionModal';
 import { ConfirmationModal } from '../ui/ConfirmationModal';
 import { useTransactionMutations } from '../../hooks/useTransactionMutations';
@@ -61,6 +62,27 @@ export const OtherExpensesView: React.FC<OtherExpensesViewProps> = ({
     }, [data?.items, currentPage, pageSize]);
 
     const totalPages = Math.ceil((data?.items?.length || 0) / pageSize);
+
+    // Group items by category for the chart
+    const chartData = useMemo(() => {
+        const items = data?.items || [];
+        const groups: Record<string, { id: string, label: string, value: number, color: string }> = {};
+
+        items.forEach(item => {
+            const categoryName = item.categoryName || item.name || 'Otros';
+            if (!groups[categoryName]) {
+                groups[categoryName] = {
+                    id: categoryName,
+                    label: categoryName,
+                    value: 0,
+                    color: item.color || '#cccccc'
+                };
+            }
+            groups[categoryName].value += item.amount || 0;
+        });
+
+        return Object.values(groups).sort((a, b) => b.value - a.value);
+    }, [data?.items]);
 
     // Helper for icons
     const getIcon = (iconName: string | null | undefined) => {
@@ -135,6 +157,52 @@ export const OtherExpensesView: React.FC<OtherExpensesViewProps> = ({
                     <span className="other-expenses-view__value">{formatAmount(data?.total)}</span>
                 </div>
             </div>
+
+            {/* Chart Area */}
+            {chartData.length > 0 && (
+                <div className="other-expenses-view__chart-container">
+                    <div className="other-expenses-view__chart">
+                        <ResponsivePie
+                            data={chartData}
+                            margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+                            innerRadius={0}
+                            padAngle={0.7}
+                            cornerRadius={3}
+                            activeOuterRadiusOffset={8}
+                            colors={{ datum: 'data.color' }}
+                            borderWidth={1}
+                            borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
+                            enableArcLinkLabels={false}
+                            enableArcLabels={false}
+                            isInteractive={true}
+                            tooltip={({ datum }) => (
+                                <div style={{
+                                    color: '#fff',
+                                    background: '#333',
+                                    padding: '5px 10px',
+                                    borderRadius: '4px',
+                                    fontSize: '12px',
+                                    border: `1px solid ${datum.color}`,
+                                    boxShadow: '0 4px 6px rgba(0,0,0,0.3)'
+                                }}>
+                                    <strong>{datum.label}</strong>: {formatAmount(datum.value)}
+                                </div>
+                            )}
+                        />
+                    </div>
+                    <div className="other-expenses-view__legend">
+                        {chartData.map(item => (
+                            <div key={item.id} className="other-expenses-view__legend-item">
+                                <div
+                                    className="other-expenses-view__legend-color"
+                                    style={{ backgroundColor: item.color }}
+                                />
+                                <span className="other-expenses-view__legend-label">{item.label}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             <div className="transactions-page__controls">
                 <div className="transactions-page__page-size">
