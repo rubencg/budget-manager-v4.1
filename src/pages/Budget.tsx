@@ -4,8 +4,10 @@ import { faChevronLeft, faChevronRight, faPlus } from '@fortawesome/free-solid-s
 import { BudgetSidebar } from '../components/budget/BudgetSidebar';
 import { IncomeAfterExpenses } from '../components/budget/IncomeAfterExpenses';
 import { PlannedExpensesView } from '../components/budget/PlannedExpensesView';
+import { OtherExpensesView } from '../components/budget/OtherExpensesView';
 import { useBudgetQuery } from '../hooks/useBudgetQuery';
 import { useBudgetPlannedExpensesQuery } from '../hooks/useBudgetPlannedExpensesQuery';
+import { useBudgetOtherExpensesQuery } from '../hooks/useBudgetOtherExpensesQuery';
 import { useAccountsQuery } from '../hooks/useAccountsQuery';
 import { TransferModal } from '../components/accounts/TransferModal';
 import { TransactionModal } from '../components/transactions/TransactionModal';
@@ -44,6 +46,12 @@ export const Budget: React.FC = () => {
         isLoading: isPlannedLoading,
         error: plannedError
     } = useBudgetPlannedExpensesQuery(currentYear, currentMonth);
+
+    const {
+        data: otherExpensesData,
+        isLoading: isOtherLoading,
+        error: otherError
+    } = useBudgetOtherExpensesQuery(currentYear, currentMonth);
 
     const { data: accountGroups } = useAccountsQuery();
 
@@ -84,6 +92,26 @@ export const Budget: React.FC = () => {
         setIsTransactionModalOpen(true);
         setIsAddDropdownOpen(false);
     };
+
+    const incomeTotal = data?.incomesAfterMonthlyExpenses?.total || 0;
+    const plannedTotal = plannedExpensesData?.total || 0;
+    const otherTotal = otherExpensesData?.total || 0;
+    const grandTotal = incomeTotal - plannedTotal - otherTotal;
+
+    const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+    const isCurrentMonth = currentYear === now.getFullYear() && currentMonth === now.getMonth() + 1;
+    const isPastMonth = currentYear < now.getFullYear() || (currentYear === now.getFullYear() && currentMonth < now.getMonth() + 1);
+
+    let remainingDays = 0;
+    if (isCurrentMonth) {
+        remainingDays = daysInMonth - now.getDate() + 1;
+    } else if (isPastMonth) {
+        remainingDays = 1;
+    } else {
+        remainingDays = daysInMonth;
+    }
+
+    const dailyAvailable = remainingDays > 0 && grandTotal > 0 ? grandTotal / remainingDays : 0;
 
     return (
         <div className="budget-page">
@@ -170,9 +198,11 @@ export const Budget: React.FC = () => {
             <div className="budget-page__content">
                 {/* Sidebar */}
                 <BudgetSidebar
-                    totalAvailable={data?.incomesAfterMonthlyExpenses?.total || 0}
-                    dailyAvailable={184.35}
-                    plannedExpensesTotal={plannedExpensesData?.total}
+                    totalAvailable={incomeTotal}
+                    dailyAvailable={dailyAvailable}
+                    plannedExpensesTotal={plannedTotal}
+                    otherExpensesTotal={otherTotal}
+                    grandTotal={grandTotal}
                     activeTab={activeTab}
                     onTabChange={setActiveTab}
                 />
@@ -196,7 +226,13 @@ export const Budget: React.FC = () => {
                         />
                     )}
                     {activeTab === 'otherExpenses' && (
-                        <div className="text-white p-4">Otros gastos content placeholder</div>
+                        <OtherExpensesView
+                            data={otherExpensesData}
+                            isLoading={isOtherLoading}
+                            error={otherError}
+                            year={currentYear}
+                            month={currentMonth}
+                        />
                     )}
                 </div>
             </div>

@@ -26,6 +26,8 @@ export const useSavingMutations = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['accounts'] });
             queryClient.invalidateQueries({ queryKey: ['savings'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetOtherExpenses'] });
             queryClient.invalidateQueries({ queryKey: ['budget'] });
         }
     });
@@ -41,6 +43,8 @@ export const useSavingMutations = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['savings'] });
             queryClient.invalidateQueries({ queryKey: ['accounts'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetOtherExpenses'] });
             queryClient.invalidateQueries({ queryKey: ['budget'] });
         }
     });
@@ -53,6 +57,8 @@ export const useSavingMutations = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['savings'] });
             queryClient.invalidateQueries({ queryKey: ['accounts'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetOtherExpenses'] });
             queryClient.invalidateQueries({ queryKey: ['budget'] });
         }
     });

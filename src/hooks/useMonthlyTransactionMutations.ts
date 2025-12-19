@@ -15,6 +15,8 @@ export const useMonthlyTransactionMutations = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['monthly-transactions'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetOtherExpenses'] });
             queryClient.invalidateQueries({ queryKey: ['budget'] });
         },
     });
@@ -38,6 +40,8 @@ export const useMonthlyTransactionMutations = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['monthly-transactions'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetOtherExpenses'] });
             queryClient.invalidateQueries({ queryKey: ['budget'] }); // Also invalidate budget
         },
     });
@@ -50,6 +54,8 @@ export const useMonthlyTransactionMutations = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['monthly-transactions'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetOtherExpenses'] });
             queryClient.invalidateQueries({ queryKey: ['budget'] }); // Also invalidate budget
         },
     });
