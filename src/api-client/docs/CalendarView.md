@@ -8,6 +8,9 @@ Name | Type
 ------------ | -------------
 `yearMonth` | string
 `days` | [Array&lt;DayActivitySummary&gt;](DayActivitySummary.md)
+`transfersCount` | number
+`expensesCount` | number
+`incomesCount` | number
 
 ## Example
 
@@ -18,6 +21,9 @@ import type { CalendarView } from ''
 const example = {
   "yearMonth": null,
   "days": null,
+  "transfersCount": null,
+  "expensesCount": null,
+  "incomesCount": null,
 } satisfies CalendarView
 
 console.log(example)

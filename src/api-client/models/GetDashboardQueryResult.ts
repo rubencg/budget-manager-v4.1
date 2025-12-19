@@ -34,6 +34,13 @@ import {
     DashboardBalanceToJSON,
     DashboardBalanceToJSONTyped,
 } from './DashboardBalance';
+import type { BudgetSectionItemDto } from './BudgetSectionItemDto';
+import {
+    BudgetSectionItemDtoFromJSON,
+    BudgetSectionItemDtoFromJSONTyped,
+    BudgetSectionItemDtoToJSON,
+    BudgetSectionItemDtoToJSONTyped,
+} from './BudgetSectionItemDto';
 
 /**
  * 
@@ -59,6 +66,12 @@ export interface GetDashboardQueryResult {
      * @memberof GetDashboardQueryResult
      */
     calendarView?: CalendarView;
+    /**
+     * 
+     * @type {Array<BudgetSectionItemDto>}
+     * @memberof GetDashboardQueryResult
+     */
+    savings?: Array<BudgetSectionItemDto> | null;
 }
 
 /**
@@ -81,6 +94,7 @@ export function GetDashboardQueryResultFromJSONTyped(json: any, ignoreDiscrimina
         'balance': json['balance'] == null ? undefined : DashboardBalanceFromJSON(json['balance']),
         'recentTransactions': json['recentTransactions'] == null ? undefined : ((json['recentTransactions'] as Array<any>).map(TransactionFromJSON)),
         'calendarView': json['calendarView'] == null ? undefined : CalendarViewFromJSON(json['calendarView']),
+        'savings': json['savings'] == null ? undefined : ((json['savings'] as Array<any>).map(BudgetSectionItemDtoFromJSON)),
     };
 }
 
@@ -98,6 +112,7 @@ export function GetDashboardQueryResultToJSONTyped(value?: GetDashboardQueryResu
         'balance': DashboardBalanceToJSON(value['balance']),
         'recentTransactions': value['recentTransactions'] == null ? undefined : ((value['recentTransactions'] as Array<any>).map(TransactionToJSON)),
         'calendarView': CalendarViewToJSON(value['calendarView']),
+        'savings': value['savings'] == null ? undefined : ((value['savings'] as Array<any>).map(BudgetSectionItemDtoToJSON)),
     };
 }
 
