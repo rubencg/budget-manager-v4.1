@@ -5,9 +5,17 @@ import { PlannedExpenseViewDto } from '../../api-client';
 
 interface PlannedExpenseCardProps {
     expense: PlannedExpenseViewDto;
+    onAction: (action: 'create-expense' | 'modify' | 'delete' | 'release-remaining' | 'filter', expense: PlannedExpenseViewDto) => void;
+    isActiveMenu: boolean;
+    onToggleMenu: (e: React.MouseEvent) => void;
 }
 
-export const PlannedExpenseCard: React.FC<PlannedExpenseCardProps> = ({ expense }) => {
+export const PlannedExpenseCard: React.FC<PlannedExpenseCardProps> = ({
+    expense,
+    onAction,
+    isActiveMenu,
+    onToggleMenu
+}) => {
 
 
     const formatCurrency = (amount: number | undefined) => {
@@ -23,13 +31,14 @@ export const PlannedExpenseCard: React.FC<PlannedExpenseCardProps> = ({ expense 
     const rawPercentage = expense.percentageSpent || 0;
 
     const getStatusColorClass = () => {
+        if (Math.abs(expense.amountLeft || 0) < 0.01) return 'remaining';
         if (rawPercentage >= 100) return 'overspent';
         if (rawPercentage > 90) return 'warning';
         return 'remaining';
     };
 
     const statusClass = getStatusColorClass();
-    const isOverspent = rawPercentage >= 100;
+    const isOverspent = (expense.amountLeft || 0) < -0.01;
 
     return (
         <div className="planned-expense-card">
@@ -42,9 +51,33 @@ export const PlannedExpenseCard: React.FC<PlannedExpenseCardProps> = ({ expense 
                             <FontAwesomeIcon icon={faRedoAlt} className="planned-expense-card__recurring-icon" />
                         )}
                     </h3>
-                    <button className="planned-expense-card__menu-btn">
-                        <FontAwesomeIcon icon={faEllipsisV} />
-                    </button>
+                    <div className="planned-expense-card__menu-container">
+                        <button
+                            className={`planned-expense-card__menu-btn ${isActiveMenu ? 'active' : ''}`}
+                            onClick={onToggleMenu}
+                        >
+                            <FontAwesomeIcon icon={faEllipsisV} />
+                        </button>
+                        {isActiveMenu && (
+                            <div className="planned-expense-card__dropdown">
+                                <button className="planned-expense-card__dropdown-item" onClick={() => onAction('create-expense', expense)}>
+                                    Crear gasto
+                                </button>
+                                <button className="planned-expense-card__dropdown-item" onClick={() => onAction('modify', expense)}>
+                                    Modificar
+                                </button>
+                                <button className="planned-expense-card__dropdown-item" onClick={() => onAction('delete', expense)}>
+                                    Eliminar
+                                </button>
+                                <button className="planned-expense-card__dropdown-item" onClick={() => onAction('release-remaining', expense)}>
+                                    Liberar restante
+                                </button>
+                                <button className="planned-expense-card__dropdown-item" onClick={() => onAction('filter', expense)}>
+                                    Filtrar solo estos
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
                 <div className="planned-expense-card__category">
                     Categoria: {expense.categoryName} {expense.subCategory ? `- ${expense.subCategory}` : ''}
@@ -54,9 +87,11 @@ export const PlannedExpenseCard: React.FC<PlannedExpenseCardProps> = ({ expense 
             {/* Content */}
             <div className="planned-expense-card__content">
                 <div className={`planned-expense-card__amount-status ${statusClass}`}>
-                    {isOverspent
-                        ? `${formatCurrency(Math.abs(expense.amountLeft || 0))} sobrepasado`
-                        : `${formatCurrency(expense.amountLeft)} restante`
+                    {Math.abs(expense.amountLeft || 0) < 0.01
+                        ? 'Completado'
+                        : isOverspent
+                            ? `${formatCurrency(Math.abs(expense.amountLeft || 0))} sobrepasado`
+                            : `${formatCurrency(expense.amountLeft)} restante`
                     }
                 </div>
 
