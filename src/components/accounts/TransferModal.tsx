@@ -24,6 +24,14 @@ interface TransferModalProps {
     onClose: () => void;
     accounts: Account[];
     transaction?: Transaction | null;
+    defaultValues?: {
+        amount?: number;
+        monthlyKey?: string;
+        savingKey?: string;
+        notes?: string;
+        fromAccountId?: string;
+        toAccountId?: string;
+    };
 }
 
 const iconMap: { [key: string]: any } = {
@@ -40,7 +48,7 @@ const iconMap: { [key: string]: any } = {
     'default': faWallet
 };
 
-export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, accounts, transaction }) => {
+export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, accounts, transaction, defaultValues }) => {
     const { createTransfer, updateTransaction } = useTransactionMutations();
 
     const [amount, setAmount] = useState('');
@@ -73,18 +81,41 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
                 setNotes(transaction.notes || '');
             } else {
                 // Create Mode
-                setAmount('');
+                setAmount(defaultValues?.amount?.toString() || '');
                 setDate(new Date());
-                setFromAccountId('');
-                setFromAccountName('');
-                setFromAccountSearch('');
-                setToAccountId('');
-                setToAccountName('');
-                setToAccountSearch('');
-                setNotes('');
+
+                // Handle default fromAccount
+                if (defaultValues?.fromAccountId) {
+                    const fromAcc = accounts?.find(a => a.id === defaultValues.fromAccountId);
+                    if (fromAcc) {
+                        setFromAccountId(fromAcc.id);
+                        setFromAccountName(fromAcc.name);
+                        setFromAccountSearch(fromAcc.name);
+                    }
+                } else {
+                    setFromAccountId('');
+                    setFromAccountName('');
+                    setFromAccountSearch('');
+                }
+
+                // Handle default toAccount
+                if (defaultValues?.toAccountId) {
+                    const toAcc = accounts?.find(a => a.id === defaultValues.toAccountId);
+                    if (toAcc) {
+                        setToAccountId(toAcc.id);
+                        setToAccountName(toAcc.name);
+                        setToAccountSearch(toAcc.name);
+                    }
+                } else {
+                    setToAccountId('');
+                    setToAccountName('');
+                    setToAccountSearch('');
+                }
+
+                setNotes(defaultValues?.notes || '');
             }
         }
-    }, [isOpen, transaction]);
+    }, [isOpen, transaction, defaultValues, accounts]);
 
     const handleFromAccountSelect = (account: Account) => {
         setFromAccountId(account.id);
@@ -109,7 +140,9 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
                 toAccountId,
                 toAccountName,
                 notes: notes || '',
-                isApplied: true
+                isApplied: true,
+                monthlyKey: defaultValues?.monthlyKey,
+                savingKey: defaultValues?.savingKey
             };
 
             if (transaction && transaction.id) {

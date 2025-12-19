@@ -29,6 +29,13 @@ interface TransactionModalProps {
     accounts: Account[];
     type: TransactionType;
     transaction?: Transaction | null;
+    defaultValues?: {
+        amount?: number;
+        categoryId?: string;
+        categoryName?: string;
+        monthlyKey?: string;
+        notes?: string;
+    };
 }
 
 const iconMap: { [key: string]: any } = {
@@ -51,7 +58,7 @@ const getIcon = (iconName: string | null | undefined) => {
     return icon || ['fas', 'question-circle'] as [IconPrefix, IconName];
 };
 
-export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onClose, accounts, type, transaction }) => {
+export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onClose, accounts, type, transaction, defaultValues }) => {
     const { createTransaction, updateTransaction } = useTransactionMutations();
     const categoryType = type === TransactionType.NUMBER_0 ? 'expense' : 'income';
     const { data: categories } = useCategoriesQuery(categoryType);
@@ -98,23 +105,42 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                 setSubcategory(transaction.subcategory || '');
                 setNotes(transaction.notes || '');
             } else {
-                // Create Mode
-                setAmount('');
+                // Create Mode with optional default values
+                setAmount(defaultValues?.amount?.toString() || '');
                 setDate(new Date());
                 setAccountId('');
                 setAccountName('');
                 setAccountSearch('');
-                setCategoryId('');
-                setCategoryName('');
-                setCategoryImage('');
-                setCategoryColor('');
-                setCategorySearch('');
-                setSelectedCategory(null);
+
+                if (defaultValues?.categoryId) {
+                    const foundCategory = categories?.find(c => c.id === defaultValues.categoryId);
+                    if (foundCategory) {
+                        setCategoryId(foundCategory.id || '');
+                        setCategoryName(foundCategory.name || '');
+                        setCategoryImage(foundCategory.image || '');
+                        setCategoryColor(foundCategory.color || '');
+                        setCategorySearch(foundCategory.name || '');
+                        setSelectedCategory(foundCategory);
+                    } else {
+                        // Fallback if category not found in list but info provided
+                        setCategoryId(defaultValues.categoryId);
+                        setCategoryName(defaultValues.categoryName || '');
+                        setCategorySearch(defaultValues.categoryName || '');
+                    }
+                } else {
+                    setCategoryId('');
+                    setCategoryName('');
+                    setCategoryImage('');
+                    setCategoryColor('');
+                    setCategorySearch('');
+                    setSelectedCategory(null);
+                }
+
                 setSubcategory('');
-                setNotes('');
+                setNotes(defaultValues?.notes || '');
             }
         }
-    }, [isOpen, type, transaction, categories]);
+    }, [isOpen, type, transaction, categories, defaultValues]);
 
     const handleAccountSelect = (account: Account) => {
         setAccountId(account.id);
@@ -146,7 +172,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                 categoryColor,
                 subcategory: type === TransactionType.NUMBER_0 ? subcategory : undefined,
                 notes: notes || '',
-                isApplied: true
+                isApplied: true,
+                monthlyKey: defaultValues?.monthlyKey
             };
 
             if (transaction && transaction.id) {
