@@ -202,13 +202,13 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                         <table className="income-after-expenses__table">
                             <thead>
                                 <tr>
-                                    <th className="income-after-expenses__th">Fecha</th>
-                                    <th className="income-after-expenses__th">Categoría</th>
-                                    <th className="income-after-expenses__th">Cuenta</th>
-                                    <th className="income-after-expenses__th">Cantidad</th>
-                                    <th className="income-after-expenses__th">Notas</th>
-                                    <th className="income-after-expenses__th" style={{ textAlign: 'center' }}>Aplicada</th>
-                                    <th className="income-after-expenses__th" style={{ textAlign: 'right' }}>Acciones</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--date">Fecha</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--category">Categoría</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--account">Cuenta</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--amount">Cantidad</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--notes">Notas</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--applied" style={{ textAlign: 'center' }}>Aplicada</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--actions" style={{ textAlign: 'right' }}>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -259,7 +259,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                                 </div>
                                             </td>
                                             <td className="income-after-expenses__td">
-                                                <span className="income-after-expenses__amount income-after-expenses__amount--income">
+                                                <span className={`income-after-expenses__amount ${item.isApplied ? 'income-after-expenses__amount--income-applied' : 'income-after-expenses__amount--income-not-applied'}`}>
                                                     ${item.amount?.toFixed(2)}
                                                 </span>
                                             </td>
@@ -292,13 +292,13 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                         <table className="income-after-expenses__table">
                             <thead>
                                 <tr>
-                                    <th className="income-after-expenses__th">Fecha</th>
-                                    <th className="income-after-expenses__th">Categoría</th>
-                                    <th className="income-after-expenses__th">Cuenta</th>
-                                    <th className="income-after-expenses__th">Cantidad</th>
-                                    <th className="income-after-expenses__th">Notas</th>
-                                    <th className="income-after-expenses__th" style={{ textAlign: 'center' }}>Aplicada</th>
-                                    <th className="income-after-expenses__th" style={{ textAlign: 'right' }}>Acciones</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--date">Fecha</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--category">Categoría</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--account">Cuenta</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--amount">Cantidad</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--notes">Notas</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--applied" style={{ textAlign: 'center' }}>Aplicada</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--actions" style={{ textAlign: 'right' }}>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -349,7 +349,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                                 </div>
                                             </td>
                                             <td className="income-after-expenses__td">
-                                                <span className="income-after-expenses__amount income-after-expenses__amount--expense">
+                                                <span className={`income-after-expenses__amount ${item.isApplied ? 'income-after-expenses__amount--expense-applied' : 'income-after-expenses__amount--expense-not-applied'}`}>
                                                     ${item.amount?.toFixed(2)}
                                                 </span>
                                             </td>
@@ -382,13 +382,13 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                         <table className="income-after-expenses__table">
                             <thead>
                                 <tr>
-                                    <th className="income-after-expenses__th">Nombre</th>
-                                    <th className="income-after-expenses__th">Cantidad por mes</th>
-                                    <th className="income-after-expenses__th">Ahorrado</th>
-                                    <th className="income-after-expenses__th">Objetivo</th>
-                                    <th className="income-after-expenses__th">Restante</th>
-                                    <th className="income-after-expenses__th" style={{ textAlign: 'center' }}>Aplicada</th>
-                                    <th className="income-after-expenses__th" style={{ textAlign: 'right' }}>Acciones</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--savings-name">Nombre</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--savings-monthly">Cantidad por mes</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--savings-saved">Ahorrado</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--savings-goal">Objetivo</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--savings-remaining">Restante</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--applied" style={{ textAlign: 'center' }}>Aplicada</th>
+                                    <th className="income-after-expenses__th income-after-expenses__col--actions" style={{ textAlign: 'right' }}>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>

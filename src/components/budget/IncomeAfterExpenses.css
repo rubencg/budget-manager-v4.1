@@ -16,6 +16,7 @@
     width: 100%;
     border-collapse: collapse;
     text-align: left;
+    table-layout: fixed;
 }
 
 .income-after-expenses__th {
@@ -24,6 +25,55 @@
     font-size: 13px;
     font-weight: 600;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.income-after-expenses__col--date {
+    width: 120px;
+}
+
+.income-after-expenses__col--category {
+    width: 250px;
+}
+
+.income-after-expenses__col--account {
+    width: 180px;
+}
+
+.income-after-expenses__col--amount {
+    width: 120px;
+}
+
+.income-after-expenses__col--notes {
+    width: auto;
+}
+
+.income-after-expenses__col--applied {
+    width: 80px;
+}
+
+.income-after-expenses__col--actions {
+    width: 120px;
+}
+
+/* Savings specific columns */
+.income-after-expenses__col--savings-name {
+    width: auto;
+}
+
+.income-after-expenses__col--savings-monthly {
+    width: 180px;
+}
+
+.income-after-expenses__col--savings-saved {
+    width: 150px;
+}
+
+.income-after-expenses__col--savings-goal {
+    width: 150px;
+}
+
+.income-after-expenses__col--savings-remaining {
+    width: 150px;
 }
 
 .income-after-expenses__tr {
@@ -111,14 +161,24 @@
     font-weight: 500;
 }
 
-.income-after-expenses__amount--income {
+.income-after-expenses__amount--income-applied {
     color: #4ade80;
-    /* green-400 */
+    /* green-400 - current green */
 }
 
-.income-after-expenses__amount--expense {
+.income-after-expenses__amount--income-not-applied {
+    color: #15803d;
+    /* green-700 - darker green */
+}
+
+.income-after-expenses__amount--expense-applied {
     color: #f87171;
-    /* red-400 */
+    /* red-400 - current red */
+}
+
+.income-after-expenses__amount--expense-not-applied {
+    color: #eab308;
+    /* yellow-500 - yellow */
 }
 
 .income-after-expenses__notes {
