@@ -56,6 +56,12 @@ export interface BudgetSectionItemDto {
      * @type {string}
      * @memberof BudgetSectionItemDto
      */
+    transactionId?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof BudgetSectionItemDto
+     */
     notes?: string | null;
     /**
      * 
@@ -178,6 +184,7 @@ export function BudgetSectionItemDtoFromJSONTyped(json: any, ignoreDiscriminator
         'userId': json['userId'] == null ? undefined : json['userId'],
         'amount': json['amount'] == null ? undefined : json['amount'],
         'isApplied': json['isApplied'] == null ? undefined : json['isApplied'],
+        'transactionId': json['transactionId'] == null ? undefined : json['transactionId'],
         'notes': json['notes'] == null ? undefined : json['notes'],
         'dayOfMonth': json['dayOfMonth'] == null ? undefined : json['dayOfMonth'],
         'icon': json['icon'] == null ? undefined : json['icon'],
@@ -213,6 +220,7 @@ export function BudgetSectionItemDtoToJSONTyped(value?: BudgetSectionItemDto | n
         'userId': value['userId'],
         'amount': value['amount'],
         'isApplied': value['isApplied'],
+        'transactionId': value['transactionId'],
         'notes': value['notes'],
         'dayOfMonth': value['dayOfMonth'],
         'icon': value['icon'],

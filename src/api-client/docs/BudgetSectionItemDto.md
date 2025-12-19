@@ -10,6 +10,7 @@ Name | Type
 `userId` | string
 `amount` | number
 `isApplied` | boolean
+`transactionId` | string
 `notes` | string
 `dayOfMonth` | number
 `icon` | string
@@ -39,6 +40,7 @@ const example = {
   "userId": null,
   "amount": null,
   "isApplied": null,
+  "transactionId": null,
   "notes": null,
   "dayOfMonth": null,
   "icon": null,
