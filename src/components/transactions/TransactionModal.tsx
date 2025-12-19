@@ -34,6 +34,7 @@ interface TransactionModalProps {
         categoryId?: string;
         categoryName?: string;
         monthlyKey?: string;
+        savingKey?: string;
         notes?: string;
     };
 }
@@ -173,7 +174,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                 subcategory: type === TransactionType.NUMBER_0 ? subcategory : undefined,
                 notes: notes || '',
                 isApplied: true,
-                monthlyKey: defaultValues?.monthlyKey
+                monthlyKey: transaction?.monthlyKey || defaultValues?.monthlyKey,
+                savingKey: transaction?.savingKey || defaultValues?.savingKey
             };
 
             if (transaction && transaction.id) {
