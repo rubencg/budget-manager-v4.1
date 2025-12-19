@@ -36,6 +36,7 @@ interface TransactionModalProps {
         monthlyKey?: string;
         savingKey?: string;
         notes?: string;
+        subcategory?: string;
     };
 }
 
@@ -137,7 +138,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                     setSelectedCategory(null);
                 }
 
-                setSubcategory('');
+                setSubcategory(defaultValues?.subcategory || '');
                 setNotes(defaultValues?.notes || '');
             }
         }

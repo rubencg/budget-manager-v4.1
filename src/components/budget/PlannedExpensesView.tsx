@@ -7,11 +7,13 @@ import {
     faTrash
 } from '@fortawesome/free-solid-svg-icons';
 import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
-import { PlannedExpensesResponseDto, BudgetSectionItemDto, Transaction } from '../../api-client';
+import { PlannedExpensesResponseDto, BudgetSectionItemDto, Transaction, PlannedExpenseViewDto } from '../../api-client';
 import { PlannedExpenseCard } from './PlannedExpenseCard';
 import { TransactionModal } from '../transactions/TransactionModal';
+import { PlannedExpenseModal } from '../planned-expenses/PlannedExpenseModal';
 import { ConfirmationModal } from '../ui/ConfirmationModal';
 import { useTransactionMutations } from '../../hooks/useTransactionMutations';
+import { usePlannedExpenseMutations } from '../../hooks/usePlannedExpenseMutations';
 import { useTransactionsQuery } from '../../hooks/useTransactionsQuery';
 import { useAccountsQuery } from '../../hooks/useAccountsQuery';
 import { TransactionType } from '../../api-client/models/TransactionType';
@@ -39,15 +41,38 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
 
     // Hooks
     const { deleteTransaction } = useTransactionMutations();
+    const { updatePlannedExpense, deletePlannedExpense } = usePlannedExpenseMutations();
     const { data: accountsData } = useAccountsQuery();
     const { data: transactionsData } = useTransactionsQuery(year, month);
+
+    // Filter Logic State
+    const [filterPlannedExpenseId, setFilterPlannedExpenseId] = useState<string | null>(null);
 
     // Modal State
     const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
     const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
+    const [transactionDefaultValues, setTransactionDefaultValues] = useState<any>(null);
+
+    const [isPlannedExpenseModalOpen, setIsPlannedExpenseModalOpen] = useState(false);
+    const [editingPlannedExpense, setEditingPlannedExpense] = useState<PlannedExpenseViewDto | null>(null);
 
     const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-    const [itemToDelete, setItemToDelete] = useState<string | null>(null);
+    const [itemToDelete, setItemToDelete] = useState<{ id: string, type: 'transaction' | 'planned-expense' } | null>(null);
+
+    // Menu state
+    const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+
+    const handleToggleMenu = (e: React.MouseEvent, id: string) => {
+        e.stopPropagation();
+        setActiveMenuId(activeMenuId === id ? null : id);
+    };
+
+    // Close menu when clicking outside
+    React.useEffect(() => {
+        const handleClickAway = () => setActiveMenuId(null);
+        window.addEventListener('click', handleClickAway);
+        return () => window.removeEventListener('click', handleClickAway);
+    }, []);
 
     const flattenedAccounts = useMemo(() => {
         if (!accountsData) return [];
@@ -90,13 +115,35 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
 
     // Pagination for the item list (bottom grid)
     const paginatedItems = useMemo(() => {
-        const items = data?.items || [];
+        let items = data?.items || [];
+
+        // Apply FE filter if selected
+        if (filterPlannedExpenseId) {
+            const pe = data?.plannedExpenses?.find(p => p.id === filterPlannedExpenseId);
+            if (pe) {
+                items = items.filter(item =>
+                    item.categoryId === pe.categoryId &&
+                    (!pe.subCategory || item.subcategory === pe.subCategory)
+                );
+            }
+        }
+
         const startIndex = (currentPage - 1) * pageSize;
         const endIndex = startIndex + pageSize;
         return items.slice(startIndex, endIndex);
-    }, [data?.items, currentPage, pageSize]);
+    }, [data?.items, data?.plannedExpenses, filterPlannedExpenseId, currentPage, pageSize]);
 
-    const totalPages = Math.ceil((data?.items?.length || 0) / pageSize);
+    const totalItems = useMemo(() => {
+        if (!filterPlannedExpenseId) return data?.items?.length || 0;
+        const pe = data?.plannedExpenses?.find(p => p.id === filterPlannedExpenseId);
+        if (!pe) return 0;
+        return (data?.items || []).filter(item =>
+            item.categoryId === pe.categoryId &&
+            (!pe.subCategory || item.subcategory === pe.subCategory)
+        ).length;
+    }, [data?.items, data?.plannedExpenses, filterPlannedExpenseId]);
+
+    const totalPages = Math.ceil(totalItems / pageSize);
 
     // Helper for icons (copied from Transactions.tsx)
     const getIcon = (iconName: string | null | undefined) => {
@@ -134,19 +181,74 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
 
     const handleDeleteTransaction = (id: string | null | undefined) => {
         if (!id) return;
-        setItemToDelete(id);
+        setItemToDelete({ id, type: 'transaction' });
         setIsConfirmationModalOpen(true);
+    };
+
+    const handlePlannedExpenseAction = async (action: string, pe: PlannedExpenseViewDto) => {
+        setActiveMenuId(null);
+
+        switch (action) {
+            case 'create-expense':
+                setEditingTransaction(null);
+                setTransactionDefaultValues({
+                    categoryId: pe.categoryId,
+                    categoryName: pe.categoryName,
+                    subcategory: pe.subCategory
+                });
+                setIsTransactionModalOpen(true);
+                break;
+            case 'modify':
+                setEditingPlannedExpense(pe);
+                setIsPlannedExpenseModalOpen(true);
+                break;
+            case 'delete':
+                if (pe.id) {
+                    setItemToDelete({ id: pe.id, type: 'planned-expense' });
+                    setIsConfirmationModalOpen(true);
+                }
+                break;
+            case 'release-remaining':
+                if (pe.id) {
+                    try {
+                        await updatePlannedExpense.mutateAsync({
+                            plannedExpenseId: pe.id,
+                            name: pe.name || '',
+                            totalAmount: pe.amountSpent || 0,
+                            categoryId: pe.categoryId || '',
+                            categoryName: pe.categoryName || '',
+                            categoryImage: pe.categoryImage || '',
+                            categoryColor: pe.categoryColor || '',
+                            subCategory: pe.subCategory || '',
+                            isRecurring: pe.isRecurring || false,
+                            date: pe.date,
+                            dayOfMonth: pe.dayOfMonth
+                        });
+                    } catch (err) {
+                        console.error('Failed to release remaining:', err);
+                    }
+                }
+                break;
+            case 'filter':
+                setFilterPlannedExpenseId(pe.id || null);
+                setCurrentPage(1);
+                break;
+        }
     };
 
     const handleConfirmDelete = async () => {
         if (!itemToDelete) return;
 
         try {
-            await deleteTransaction.mutateAsync(itemToDelete);
+            if (itemToDelete.type === 'transaction') {
+                await deleteTransaction.mutateAsync(itemToDelete.id);
+            } else {
+                await deletePlannedExpense.mutateAsync(itemToDelete.id);
+            }
             setIsConfirmationModalOpen(false);
             setItemToDelete(null);
         } catch (error) {
-            console.error('Failed to delete transaction:', error);
+            console.error('Failed to delete:', error);
         }
     };
 
@@ -183,7 +285,13 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
             {/* Cards Grid */}
             <div className="planned-expenses-view__grid">
                 {filteredPlannedExpenses.map(expense => (
-                    <PlannedExpenseCard key={expense.id} expense={expense} />
+                    <PlannedExpenseCard
+                        key={expense.id}
+                        expense={expense}
+                        onAction={handlePlannedExpenseAction}
+                        isActiveMenu={activeMenuId === expense.id}
+                        onToggleMenu={(e) => handleToggleMenu(e, expense.id || '')}
+                    />
                 ))}
             </div>
 
@@ -194,21 +302,37 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
             {/* Logic implies we reuse the same structure as Transactions page table */}
 
             <div className="transactions-page__controls">
-                <div className="transactions-page__page-size">
-                    <label>Mostrar:</label>
-                    <select
-                        value={pageSize}
-                        onChange={(e) => {
-                            setPageSize(Number(e.target.value));
-                            setCurrentPage(1);
-                        }}
-                    >
-                        <option value={20}>20</option>
-                        <option value={50}>50</option>
-                        <option value={75}>75</option>
-                        <option value={100}>100</option>
-                    </select>
+                <div style={{ display: 'flex', gap: 'var(--space-md)', alignItems: 'center' }}>
+                    <div className="transactions-page__page-size">
+                        <label>Mostrar:</label>
+                        <select
+                            value={pageSize}
+                            onChange={(e) => {
+                                setPageSize(Number(e.target.value));
+                                setCurrentPage(1);
+                            }}
+                        >
+                            <option value={20}>20</option>
+                            <option value={50}>50</option>
+                            <option value={75}>75</option>
+                            <option value={100}>100</option>
+                        </select>
+                    </div>
+                    {filterPlannedExpenseId && (
+                        <button
+                            className="budget-page__action-btn"
+                            style={{ height: '36px', padding: '0 16px' }}
+                            onClick={() => setFilterPlannedExpenseId(null)}
+                        >
+                            Borrar filtros
+                        </button>
+                    )}
                 </div>
+                {filterPlannedExpenseId && (
+                    <div className="transactions-page__filter-info" style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
+                        Filtrando por: <strong>{data?.plannedExpenses?.find(p => p.id === filterPlannedExpenseId)?.name}</strong>
+                    </div>
+                )}
             </div>
 
             {/* Table */}
@@ -314,10 +438,21 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
                 onClose={() => {
                     setIsTransactionModalOpen(false);
                     setEditingTransaction(null);
+                    setTransactionDefaultValues(null);
                 }}
                 type={editingTransaction?.transactionType ?? TransactionType.NUMBER_0}
                 accounts={flattenedAccounts}
                 transaction={editingTransaction}
+                defaultValues={transactionDefaultValues}
+            />
+
+            <PlannedExpenseModal
+                isOpen={isPlannedExpenseModalOpen}
+                onClose={() => {
+                    setIsPlannedExpenseModalOpen(false);
+                    setEditingPlannedExpense(null);
+                }}
+                plannedExpense={editingPlannedExpense as any}
             />
 
             <ConfirmationModal
@@ -327,10 +462,12 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
                     setItemToDelete(null);
                 }}
                 onConfirm={handleConfirmDelete}
-                title="Eliminar Transacción"
-                message="¿Estás seguro de que deseas eliminar esta transacción vinculada a este gasto planeado?"
+                title={itemToDelete?.type === 'transaction' ? "Eliminar Transacción" : "Eliminar Gasto Planeado"}
+                message={itemToDelete?.type === 'transaction'
+                    ? "¿Estás seguro de que deseas eliminar esta transacción vinculada a este gasto planeado?"
+                    : "¿Estás seguro de que deseas eliminar este gasto planeado? Las transacciones asociadas no se eliminarán, pero ya no aparecerán aquí."}
                 confirmText="Eliminar"
-                isLoading={deleteTransaction.isPending}
+                isLoading={itemToDelete?.type === 'transaction' ? deleteTransaction.isPending : deletePlannedExpense.isPending}
             />
         </div>
     );
