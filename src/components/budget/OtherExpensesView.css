@@ -1,0 +1,33 @@
+.other-expenses-view {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.other-expenses-view__header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: var(--space-md) var(--space-lg);
+    background-color: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+}
+
+.other-expenses-view__summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.other-expenses-view__label {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+.other-expenses-view__value {
+    color: var(--color-error);
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+}

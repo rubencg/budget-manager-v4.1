@@ -28,6 +28,9 @@ export const usePlannedExpenseMutations = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['planned-expenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetOtherExpenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budget'] });
         }
     });
 
@@ -55,6 +58,9 @@ export const usePlannedExpenseMutations = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['planned-expenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetOtherExpenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budget'] });
         }
     });
 
@@ -76,6 +82,9 @@ export const usePlannedExpenseMutations = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['planned-expenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budgetOtherExpenses'] });
+            queryClient.invalidateQueries({ queryKey: ['budget'] });
         }
     });
 
