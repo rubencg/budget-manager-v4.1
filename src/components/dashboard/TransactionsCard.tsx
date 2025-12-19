@@ -1,8 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './TransactionsCard.css';
 import '../../fontAwesome'; // Initialize the Font Awesome library
 import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
 import { Transaction, TransactionType } from '../../api-client';
 import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
 import { IconProp, findIconDefinition, IconPrefix } from '@fortawesome/fontawesome-svg-core';
@@ -48,7 +48,7 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions
     <Card className="transactions-card">
       <div className="transactions-card__header">
         <h3 className="card__title">Transacciones Recientes</h3>
-        <Button variant="icon">⚙️</Button>
+        <Link to="/transactions" className="goals-card__view-all">Ver todas</Link>
       </div>
 
       <div className="transactions-card__table-wrapper">
