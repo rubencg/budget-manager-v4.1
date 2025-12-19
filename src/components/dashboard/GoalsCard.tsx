@@ -2,19 +2,27 @@ import React from 'react';
 import './GoalsCard.css';
 import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
-import { Goal } from '../../types';
+import { BudgetSectionItemDto } from '../../api-client';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
 
 interface GoalsCardProps {
-  goals: Goal[];
+  savings: BudgetSectionItemDto[];
 }
 
-export const GoalsCard: React.FC<GoalsCardProps> = ({ goals }) => {
-  const formatCurrency = (value: number) => {
+export const GoalsCard: React.FC<GoalsCardProps> = ({ savings }) => {
+  const formatCurrency = (value: number | undefined | null) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 2
-    }).format(value);
+    }).format(value || 0);
+  };
+
+  const getIcon = (iconName: string | null | undefined) => {
+    const prefix: IconPrefix = 'fas';
+    const icon = iconName ? findIconDefinition({ prefix, iconName: iconName as any }) : null;
+    return icon || ['fas', 'piggy-bank'] as [IconPrefix, IconName];
   };
 
   return (
@@ -25,22 +33,26 @@ export const GoalsCard: React.FC<GoalsCardProps> = ({ goals }) => {
       </div>
 
       <div className="goals-card__list">
-        {goals.map((goal) => {
-          const percentage = (goal.currentAmount / goal.targetAmount) * 100;
+        {savings.map((item) => {
+          const current = item.savedAmount || 0;
+          const target = item.goalAmount || 1; // Avoid division by zero
+          const percentage = (current / target) * 100;
+          const displayColor = item.color || '#cccccc';
+
           return (
             <div
-              key={goal.id}
+              key={item.id}
               className="goals-card__goal"
-              style={goal.wasAppliedThisMonth ? {
+              style={item.isApplied ? {
                 position: 'relative'
               } : undefined}
             >
-              {goal.wasAppliedThisMonth && (
+              {item.isApplied && (
                 <div style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'var(--gradient-green)',
-                  opacity: 0.2,
+                  backgroundColor: displayColor,
+                  opacity: 0.1,
                   borderRadius: 'inherit',
                   pointerEvents: 'none',
                   zIndex: 0
@@ -48,25 +60,27 @@ export const GoalsCard: React.FC<GoalsCardProps> = ({ goals }) => {
               )}
               <div className="goals-card__goal-header" style={{ position: 'relative', zIndex: 1 }}>
                 <div className="goals-card__goal-info">
-                  <span className="goals-card__goal-icon">{goal.icon}</span>
-                  <span className="goals-card__goal-name">{goal.name}</span>
+                  <span className="goals-card__goal-icon" style={{ color: displayColor }}>
+                    <FontAwesomeIcon icon={getIcon(item.icon)} />
+                  </span>
+                  <span className="goals-card__goal-name">{item.name}</span>
                 </div>
                 <span className="goals-card__goal-target">
-                  {formatCurrency(goal.targetAmount)}
+                  {formatCurrency(item.goalAmount)}
                 </span>
               </div>
 
               <div style={{ position: 'relative', zIndex: 1 }}>
-                <ProgressBar percentage={percentage} gradient={goal.gradient} />
+                <ProgressBar percentage={percentage} gradient={displayColor} />
               </div>
 
               <div className="goals-card__goal-footer" style={{ position: 'relative', zIndex: 1 }}>
                 <span className="goals-card__goal-current">
-                  {formatCurrency(goal.currentAmount)}
+                  {formatCurrency(item.savedAmount)}
                 </span>
-                {!goal.wasAppliedThisMonth && (
+                {!item.isApplied && (
                   <button className="goals-card__apply-btn">
-                    Ahorrar {formatCurrency(goal.amountPerMonth)}
+                    Ahorrar {formatCurrency(item.amountPerMonth)}
                   </button>
                 )}
               </div>

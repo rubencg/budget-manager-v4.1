@@ -2,13 +2,18 @@ import React from 'react';
 import './OverviewCard.css';
 import { Card } from '../ui/Card';
 import { Calendar } from '../ui/Calendar';
-import { OverviewMetrics } from '../../types';
+import { CalendarView } from '../../api-client';
 
 interface OverviewCardProps {
-  metrics: OverviewMetrics;
+  calendarView: CalendarView | undefined;
 }
 
-export const OverviewCard: React.FC<OverviewCardProps> = ({ metrics }) => {
+export const OverviewCard: React.FC<OverviewCardProps> = ({ calendarView }) => {
+  // Extract month and day from yearMonth if possible, or use current date as fallback
+  const now = new Date();
+  const currentDay = now.getDate();
+  const currentMonth = now.toLocaleString('default', { month: 'long' });
+
   return (
     <Card className="overview-card">
       <div className="overview-card__header">
@@ -16,22 +21,22 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({ metrics }) => {
       </div>
 
       <div className="overview-card__metrics">
-        <div className="overview-card__metric">
-          <div className="overview-card__metric-value">{metrics.totalTransactions}</div>
-          <div className="overview-card__metric-label">Transacciones</div>
+        <div className="overview-card__metric overview-card__metric--transfer">
+          <div className="overview-card__metric-value">{calendarView?.transfersCount || 0}</div>
+          <div className="overview-card__metric-label">Transferencias</div>
         </div>
         <div className="overview-card__metric overview-card__metric--income">
-          <div className="overview-card__metric-value">{metrics.incomeCount}</div>
+          <div className="overview-card__metric-value">{calendarView?.incomesCount || 0}</div>
           <div className="overview-card__metric-label">Ingresos</div>
         </div>
         <div className="overview-card__metric overview-card__metric--outcome">
-          <div className="overview-card__metric-value">{metrics.outcomeCount}</div>
+          <div className="overview-card__metric-value">{calendarView?.expensesCount || 0}</div>
           <div className="overview-card__metric-label">Gastos</div>
         </div>
       </div>
 
       <div className="overview-card__calendar">
-        <Calendar month={metrics.currentMonth} currentDay={metrics.currentDay} />
+        <Calendar month={currentMonth} currentDay={currentDay} />
       </div>
     </Card>
   );
