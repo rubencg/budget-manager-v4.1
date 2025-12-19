@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './GoalsCard.css';
 import { Card } from '../ui/Card';
 import { ProgressBar } from '../ui/ProgressBar';
@@ -29,7 +30,7 @@ export const GoalsCard: React.FC<GoalsCardProps> = ({ savings }) => {
     <Card className="goals-card">
       <div className="goals-card__header">
         <h3 className="card__title">Ahorros</h3>
-        <a href="#" className="goals-card__view-all">Ver todos</a>
+        <Link to="/budget" className="goals-card__view-all">Ver todos</Link>
       </div>
 
       <div className="goals-card__list">
