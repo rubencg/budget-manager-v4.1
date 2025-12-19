@@ -9,6 +9,7 @@ Name | Type
 `balance` | [DashboardBalance](DashboardBalance.md)
 `recentTransactions` | [Array&lt;Transaction&gt;](Transaction.md)
 `calendarView` | [CalendarView](CalendarView.md)
+`savings` | [Array&lt;BudgetSectionItemDto&gt;](BudgetSectionItemDto.md)
 
 ## Example
 
@@ -20,6 +21,7 @@ const example = {
   "balance": null,
   "recentTransactions": null,
   "calendarView": null,
+  "savings": null,
 } satisfies GetDashboardQueryResult
 
 console.log(example)

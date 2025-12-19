@@ -39,6 +39,24 @@ export interface CalendarView {
      * @memberof CalendarView
      */
     days?: Array<DayActivitySummary> | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof CalendarView
+     */
+    transfersCount?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CalendarView
+     */
+    expensesCount?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CalendarView
+     */
+    incomesCount?: number;
 }
 
 /**
@@ -60,6 +78,9 @@ export function CalendarViewFromJSONTyped(json: any, ignoreDiscriminator: boolea
         
         'yearMonth': json['yearMonth'] == null ? undefined : json['yearMonth'],
         'days': json['days'] == null ? undefined : ((json['days'] as Array<any>).map(DayActivitySummaryFromJSON)),
+        'transfersCount': json['transfersCount'] == null ? undefined : json['transfersCount'],
+        'expensesCount': json['expensesCount'] == null ? undefined : json['expensesCount'],
+        'incomesCount': json['incomesCount'] == null ? undefined : json['incomesCount'],
     };
 }
 
@@ -76,6 +97,9 @@ export function CalendarViewToJSONTyped(value?: CalendarView | null, ignoreDiscr
         
         'yearMonth': value['yearMonth'],
         'days': value['days'] == null ? undefined : ((value['days'] as Array<any>).map(DayActivitySummaryToJSON)),
+        'transfersCount': value['transfersCount'],
+        'expensesCount': value['expensesCount'],
+        'incomesCount': value['incomesCount'],
     };
 }
 
