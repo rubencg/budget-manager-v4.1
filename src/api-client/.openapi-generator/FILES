@@ -34,6 +34,7 @@ docs/IncomesAfterMonthlyExpensesData.md
 docs/MonthlyTransaction.md
 docs/MonthlyTransactionType.md
 docs/MonthlyTransactionsApi.md
+docs/OtherExpensesResponseDto.md
 docs/PlannedExpense.md
 docs/PlannedExpenseViewDto.md
 docs/PlannedExpensesApi.md
@@ -74,6 +75,7 @@ models/IncomeAfterFixedExpensesDto.ts
 models/IncomesAfterMonthlyExpensesData.ts
 models/MonthlyTransaction.ts
 models/MonthlyTransactionType.ts
+models/OtherExpensesResponseDto.ts
 models/PlannedExpense.ts
 models/PlannedExpenseViewDto.ts
 models/PlannedExpensesResponseDto.ts

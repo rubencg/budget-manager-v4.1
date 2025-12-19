@@ -22,6 +22,7 @@ export * from './IncomeAfterFixedExpensesDto';
 export * from './IncomesAfterMonthlyExpensesData';
 export * from './MonthlyTransaction';
 export * from './MonthlyTransactionType';
+export * from './OtherExpensesResponseDto';
 export * from './PlannedExpense';
 export * from './PlannedExpenseViewDto';
 export * from './PlannedExpensesResponseDto';
