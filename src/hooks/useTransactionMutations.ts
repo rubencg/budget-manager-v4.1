@@ -19,6 +19,15 @@ export const useTransactionMutations = () => {
     const { getAccessTokenSilently } = useAuth0();
     const queryClient = useQueryClient();
 
+    const invalidateBudget = () => {
+        queryClient.invalidateQueries({ queryKey: ['accounts'] });
+        queryClient.invalidateQueries({ queryKey: ['transactions'] });
+        queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+        queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
+        queryClient.invalidateQueries({ queryKey: ['budgetOtherExpenses'] });
+        queryClient.invalidateQueries({ queryKey: ['budget'] });
+    };
+
     const createTransfer = useMutation({
         mutationFn: async (command: CreateTransferCommand) => {
             const token = await getAccessTokenSilently();
@@ -39,13 +48,7 @@ export const useTransactionMutations = () => {
 
             return response.json();
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['accounts'] });
-            queryClient.invalidateQueries({ queryKey: ['transactions'] });
-            queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
-            queryClient.invalidateQueries({ queryKey: ['budgetOtherExpenses'] });
-            queryClient.invalidateQueries({ queryKey: ['budget'] });
-        }
+        onSuccess: invalidateBudget
     });
 
     const createTransaction = useMutation({
@@ -68,14 +71,7 @@ export const useTransactionMutations = () => {
 
             return response.json();
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['accounts'] });
-            queryClient.invalidateQueries({ queryKey: ['transactions'] });
-            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-            queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
-            queryClient.invalidateQueries({ queryKey: ['budgetOtherExpenses'] });
-            queryClient.invalidateQueries({ queryKey: ['budget'] });
-        }
+        onSuccess: invalidateBudget
     });
 
     const deleteTransaction = useMutation({
@@ -94,14 +90,7 @@ export const useTransactionMutations = () => {
                 throw new Error('Failed to delete transaction');
             }
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['accounts'] });
-            queryClient.invalidateQueries({ queryKey: ['transactions'] });
-            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-            queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
-            queryClient.invalidateQueries({ queryKey: ['budgetOtherExpenses'] });
-            queryClient.invalidateQueries({ queryKey: ['budget'] });
-        }
+        onSuccess: invalidateBudget
     });
 
     const updateTransaction = useMutation({
@@ -124,14 +113,7 @@ export const useTransactionMutations = () => {
 
             return response.json();
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['accounts'] });
-            queryClient.invalidateQueries({ queryKey: ['transactions'] });
-            queryClient.invalidateQueries({ queryKey: ['dashboard'] });
-            queryClient.invalidateQueries({ queryKey: ['budgetPlannedExpenses'] });
-            queryClient.invalidateQueries({ queryKey: ['budgetOtherExpenses'] });
-            queryClient.invalidateQueries({ queryKey: ['budget'] });
-        }
+        onSuccess: invalidateBudget
     });
 
     return {
