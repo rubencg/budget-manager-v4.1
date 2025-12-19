@@ -61,34 +61,43 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions
             </tr>
           </thead>
           <tbody>
-            {transactions.map((transaction) => (
-              <tr key={transaction.id} className="transactions-card__row">
-                <td>
-                  <div className="transactions-card__type">
-                    <span className="transactions-card__icon" style={{ backgroundColor: transaction.categoryColor || '#cccccc' }}>
-                      <FontAwesomeIcon icon={getIcon(transaction.categoryImage)} />
-                    </span>
-                    <div className="transactions-card__info">
-                      <div className="transactions-card__name">
-                        {transaction.categoryName}
-                        {transaction.subcategory ? `/${transaction.subcategory}` : ''}
+            {transactions.map((transaction) => {
+              const isTransfer = transaction.transactionType === TransactionType.NUMBER_2;
+              const iconColor = isTransfer ? '#1E90FF' : (transaction.categoryColor || '#cccccc');
+              const iconName = isTransfer ? 'right-left' : transaction.categoryImage;
+
+              const displayName = isTransfer
+                ? `${transaction.fromAccountName || 'Cuenta'} > ${transaction.toAccountName || 'Cuenta'}`
+                : `${transaction.categoryName || ''}${transaction.subcategory ? `/${transaction.subcategory}` : ''}`;
+
+              return (
+                <tr key={transaction.id} className="transactions-card__row">
+                  <td>
+                    <div className="transactions-card__type">
+                      <span className="transactions-card__icon" style={{ backgroundColor: iconColor }}>
+                        <FontAwesomeIcon icon={getIcon(iconName)} />
+                      </span>
+                      <div className="transactions-card__info">
+                        <div className="transactions-card__name">
+                          {displayName}
+                        </div>
+                        <div className="transactions-card__date">{transaction.date ? transaction.date.toLocaleDateString() : ''}</div>
                       </div>
-                      <div className="transactions-card__date">{transaction.date ? transaction.date.toLocaleDateString() : ''}</div>
                     </div>
-                  </div>
-                </td>
-                <td>
-                  <div className="transactions-card__amount" style={{ color: getTransactionColor(transaction.transactionType) }}>
-                    {formatAmount(transaction.amount)}
-                  </div>
-                </td>
-                <td>
-                  <div className="transactions-card__method">
-                    {transaction.accountName}
-                  </div>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  <td>
+                    <div className="transactions-card__amount" style={{ color: getTransactionColor(transaction.transactionType) }}>
+                      {formatAmount(transaction.amount)}
+                    </div>
+                  </td>
+                  <td>
+                    <div className="transactions-card__method">
+                      {transaction.accountName}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
