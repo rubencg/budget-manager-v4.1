@@ -18,6 +18,7 @@ import { MonthlyTransactionModal } from '../components/transactions/MonthlyTrans
 import { PlannedExpenseModal } from '../components/planned-expenses/PlannedExpenseModal';
 import { SavingsModal } from '../components/savings/SavingsModal';
 import { ConfirmationModal } from '../components/ui/ConfirmationModal';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Transaction, TransactionType } from '../api-client';
 import './Transactions.css';
 
@@ -27,6 +28,10 @@ const MONTHS = [
 ];
 
 export const Transactions: React.FC = () => {
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const dayParam = searchParams.get('day');
+
     const now = new Date();
     const [currentYear, setCurrentYear] = useState(now.getFullYear());
     const [currentMonth, setCurrentMonth] = useState(now.getMonth() + 1); // 1-based
@@ -104,6 +109,7 @@ export const Transactions: React.FC = () => {
             setCurrentMonth(currentMonth - 1);
         }
         setCurrentPage(1);
+        if (dayParam) navigate('/transactions');
     };
 
     const handleNextMonth = () => {
@@ -114,6 +120,7 @@ export const Transactions: React.FC = () => {
             setCurrentMonth(currentMonth + 1);
         }
         setCurrentPage(1);
+        if (dayParam) navigate('/transactions');
     };
 
     const getIcon = (iconName: string | null | undefined) => {
@@ -158,7 +165,14 @@ export const Transactions: React.FC = () => {
     };
 
     const filteredTransactions = useMemo(() => {
-        const transactions = data?.data || [];
+        let transactions = data?.data || [];
+
+        // Filter by day if param exists
+        if (dayParam) {
+            const dayNum = parseInt(dayParam);
+            transactions = transactions.filter(t => t.date && new Date(t.date).getDate() === dayNum);
+        }
+
         if (!searchTerm) {
             return transactions;
         }
@@ -182,7 +196,7 @@ export const Transactions: React.FC = () => {
                 return String(value).toLowerCase().includes(lowerCaseSearchTerm);
             });
         });
-    }, [data?.data, searchTerm]);
+    }, [data?.data, searchTerm, dayParam]);
 
     // Paginate transactions
     const paginatedTransactions = useMemo(() => {
@@ -207,6 +221,25 @@ export const Transactions: React.FC = () => {
         return transaction.accountName;
     };
 
+    const getHeaderDisplay = () => {
+        if (dayParam) {
+            const dayNum = parseInt(dayParam);
+            const d = new Date(currentYear, currentMonth - 1, dayNum);
+            const dayName = d.toLocaleDateString('es-ES', { weekday: 'long' });
+            const capitalizedDayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+            return (
+                <div className="transactions-page__month-display" style={{ fontSize: '1.5rem', fontWeight: '700' }}>
+                    {dayNum} {capitalizedDayName}, {MONTHS[currentMonth - 1]} {currentYear}
+                </div>
+            );
+        }
+        return (
+            <div className="transactions-page__month-display">
+                {MONTHS[currentMonth - 1]} {currentYear}
+            </div>
+        );
+    };
+
     if (error) {
         return (
             <div className="transactions-page">
@@ -221,23 +254,25 @@ export const Transactions: React.FC = () => {
         <div className="transactions-page">
             <div className="transactions-page__header">
                 <div className="transactions-page__month-nav">
-                    <button
-                        className="transactions-page__month-btn"
-                        onClick={handlePreviousMonth}
-                        title="Previous Month"
-                    >
-                        <FontAwesomeIcon icon={faChevronLeft} />
-                    </button>
-                    <div className="transactions-page__month-display">
-                        {MONTHS[currentMonth - 1]} {currentYear}
-                    </div>
-                    <button
-                        className="transactions-page__month-btn"
-                        onClick={handleNextMonth}
-                        title="Next Month"
-                    >
-                        <FontAwesomeIcon icon={faChevronRight} />
-                    </button>
+                    {!dayParam && (
+                        <button
+                            className="transactions-page__month-btn"
+                            onClick={handlePreviousMonth}
+                            title="Previous Month"
+                        >
+                            <FontAwesomeIcon icon={faChevronLeft} />
+                        </button>
+                    )}
+                    {getHeaderDisplay()}
+                    {!dayParam && (
+                        <button
+                            className="transactions-page__month-btn"
+                            onClick={handleNextMonth}
+                            title="Next Month"
+                        >
+                            <FontAwesomeIcon icon={faChevronRight} />
+                        </button>
+                    )}
                 </div>
 
                 <div className="transactions-page__actions">
@@ -329,6 +364,14 @@ export const Transactions: React.FC = () => {
                         <option value={100}>100</option>
                     </select>
                 </div>
+                {dayParam && (
+                    <button
+                        onClick={() => navigate('/transactions')}
+                        className="transactions-page__clear-filter"
+                    >
+                        Ver todo el mes
+                    </button>
+                )}
             </div>
 
             {isLoading ? (

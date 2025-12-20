@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './OverviewCard.css';
 import { Card } from '../ui/Card';
 import { Calendar } from '../ui/Calendar';
@@ -9,10 +10,15 @@ interface OverviewCardProps {
 }
 
 export const OverviewCard: React.FC<OverviewCardProps> = ({ calendarView }) => {
+  const navigate = useNavigate();
   // Extract month and day from yearMonth if possible, or use current date as fallback
   const now = new Date();
   const currentDay = now.getDate();
   const currentMonth = now.toLocaleString('default', { month: 'long' });
+
+  const handleDayClick = (day: number) => {
+    navigate(`/transactions?day=${day}`);
+  };
 
   return (
     <Card className="overview-card">
@@ -36,7 +42,11 @@ export const OverviewCard: React.FC<OverviewCardProps> = ({ calendarView }) => {
       </div>
 
       <div className="overview-card__calendar">
-        <Calendar month={currentMonth} currentDay={currentDay} />
+        <Calendar
+          month={currentMonth}
+          currentDay={currentDay}
+          onDayClick={handleDayClick}
+        />
       </div>
     </Card>
   );
