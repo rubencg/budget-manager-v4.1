@@ -4,9 +4,10 @@ import './Calendar.css';
 interface CalendarProps {
   month: string;
   currentDay: number;
+  onDayClick?: (day: number) => void;
 }
 
-export const Calendar: React.FC<CalendarProps> = ({ month, currentDay }) => {
+export const Calendar: React.FC<CalendarProps> = ({ month, currentDay, onDayClick }) => {
   // Generate calendar days for June 2024 (simplified)
   const daysInMonth = 30;
   const startDay = 6; // June 1, 2024 is a Saturday
@@ -48,9 +49,10 @@ export const Calendar: React.FC<CalendarProps> = ({ month, currentDay }) => {
             {week.map((day, dayIndex) => (
               <div
                 key={`${weekIndex}-${dayIndex}`}
-                className={`calendar__day ${
-                  day === currentDay ? 'calendar__day--current' : ''
-                } ${!day ? 'calendar__day--empty' : ''}`}
+                className={`calendar__day ${day === currentDay ? 'calendar__day--current' : ''
+                  } ${!day ? 'calendar__day--empty' : ''}`}
+                onClick={() => day && onDayClick?.(day)}
+                style={{ cursor: day ? 'pointer' : 'default' }}
               >
                 {day}
               </div>
