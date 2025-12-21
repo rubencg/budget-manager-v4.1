@@ -5,20 +5,27 @@ import { createTransactionsApi } from '../api-client/apiFactory';
 const fetchTransactions = async (
     getAccessTokenSilently: () => Promise<string>,
     year: number,
-    month: number
+    month: number,
+    pageNumber?: number,
+    pageSize?: number
 ) => {
     const token = await getAccessTokenSilently();
     const transactionsApi = createTransactionsApi(token);
-    const response = await transactionsApi.apiTransactionsMonthYearMonthGet({ year, month });
+    const response = await transactionsApi.apiTransactionsMonthYearMonthGet({
+        year,
+        month,
+        pageNumber,
+        pageSize
+    });
     return response;
 };
 
-export const useTransactionsQuery = (year: number, month: number) => {
+export const useTransactionsQuery = (year: number, month: number, pageNumber?: number, pageSize?: number) => {
     const { getAccessTokenSilently } = useAuth0();
 
     return useQuery({
-        queryKey: ['transactions', year, month],
-        queryFn: () => fetchTransactions(getAccessTokenSilently, year, month),
+        queryKey: ['transactions', year, month, pageNumber, pageSize],
+        queryFn: () => fetchTransactions(getAccessTokenSilently, year, month, pageNumber, pageSize),
         staleTime: 1000 * 60 * 5, // 5 minutes
         enabled: !!getAccessTokenSilently,
     });
