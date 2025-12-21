@@ -21,6 +21,7 @@ import { ConfirmationModal } from '../components/ui/ConfirmationModal';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Transaction, TransactionType } from '../api-client';
 import './Transactions.css';
+import { formatCurrency } from '../utils/currencyUtils';
 
 const MONTHS = [
     'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
@@ -147,11 +148,7 @@ export const Transactions: React.FC = () => {
     };
 
     const formatAmount = (amount: number | undefined) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2
-        }).format(amount || 0);
+        return formatCurrency(amount);
     };
 
     const formatDate = (date: Date | undefined) => {

@@ -2,6 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRedoAlt, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { PlannedExpenseViewDto } from '../../api-client';
+import { formatCurrency } from '../../utils/currencyUtils';
 
 interface PlannedExpenseCardProps {
     expense: PlannedExpenseViewDto;
@@ -18,13 +19,6 @@ export const PlannedExpenseCard: React.FC<PlannedExpenseCardProps> = ({
 }) => {
 
 
-    const formatCurrency = (amount: number | undefined) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2
-        }).format(amount || 0);
-    };
 
     // Calculate percentage for width, capped at 100 for width but keep logic for status
     const percentage = Math.min(Math.max(expense.percentageSpent || 0, 0), 100);

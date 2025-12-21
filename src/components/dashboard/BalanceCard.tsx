@@ -2,6 +2,7 @@ import React from 'react';
 import './BalanceCard.css';
 import { Card } from '../ui/Card';
 import { MetricDisplay } from '../ui/MetricDisplay';
+import { formatCurrency } from '../../utils/currencyUtils';
 import { BalanceData } from '../../types';
 
 interface BalanceCardProps {
@@ -9,11 +10,12 @@ interface BalanceCardProps {
 }
 
 export const BalanceCard: React.FC<BalanceCardProps> = ({ balance }) => {
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(value);
+  const formatValue = (value: number) => {
+    // MetricDisplay adds a $ prefix, so we only need the formatted number part
+    // but formatCurrency adds $ and commas.
+    // Let's strip the $ from formatCurrency if prefix is present, or just use it as is.
+    // Actually, it's better to pass the full string to MetricDisplay and empty prefix.
+    return formatCurrency(value);
   };
 
   return (
@@ -23,12 +25,12 @@ export const BalanceCard: React.FC<BalanceCardProps> = ({ balance }) => {
       </div>
 
       <MetricDisplay
-        value={formatCurrency(balance.balance)}
-        prefix="$"
+        value={formatValue(balance.balance)}
+        prefix=""
         size="large"
       />
 
-        {/* TODO: Get last month's balance and compare (probably better done in BE) */}
+      {/* TODO: Get last month's balance and compare (probably better done in BE) */}
       {/* <div className="balance-card__comparison">
         <span className={`balance-card__change ${balance.changePercent >= 0 ? 'balance-card__change--positive' : 'balance-card__change--negative'}`}>
           {balance.changePercent >= 0 ? '↑' : '↓'} {Math.abs(balance.changePercent)}%

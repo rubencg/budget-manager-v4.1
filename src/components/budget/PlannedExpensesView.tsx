@@ -17,6 +17,7 @@ import { usePlannedExpenseMutations } from '../../hooks/usePlannedExpenseMutatio
 import { useTransactionsQuery } from '../../hooks/useTransactionsQuery';
 import { useAccountsQuery } from '../../hooks/useAccountsQuery';
 import { TransactionType } from '../../api-client/models/TransactionType';
+import { formatCurrency } from '../../utils/currencyUtils';
 import './PlannedExpensesView.css';
 import '../../pages/Transactions.css'; // Reuse table styles
 
@@ -153,11 +154,7 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
     };
 
     const formatAmount = (amount: number | undefined) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2
-        }).format(amount || 0);
+        return formatCurrency(amount);
     };
 
     const formatDate = (date: Date | undefined) => {
