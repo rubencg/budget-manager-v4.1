@@ -50,7 +50,7 @@ export const Transactions: React.FC = () => {
     const [isSavingsModalOpen, setIsSavingsModalOpen] = useState(false);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
-    const { data, isLoading, error } = useTransactionsQuery(currentYear, currentMonth);
+    const { data, isLoading, error } = useTransactionsQuery(currentYear, currentMonth, currentPage, pageSize);
     const { data: accountGroups } = useAccountsQuery();
     const { deleteTransaction } = useTransactionMutations();
 
@@ -200,12 +200,10 @@ export const Transactions: React.FC = () => {
 
     // Paginate transactions
     const paginatedTransactions = useMemo(() => {
-        const startIndex = (currentPage - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
-        return filteredTransactions.slice(startIndex, endIndex);
-    }, [filteredTransactions, currentPage, pageSize]);
+        return filteredTransactions;
+    }, [filteredTransactions]);
 
-    const totalPages = Math.ceil((filteredTransactions.length || 0) / pageSize);
+    const totalPages = data?.totalPages || 0;
 
     const renderAccountInfo = (transaction: Transaction) => {
         if (transaction.transactionType === TransactionType.NUMBER_2) {
