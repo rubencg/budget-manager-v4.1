@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPenToSquare, faTrash, faCheckCircle, faWallet, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
 import { IncomeAfterFixedExpensesDto, BudgetSectionItemDto, Transaction } from '../../api-client';
+import { useAuth0 } from '@auth0/auth0-react';
+import { createTransactionsApi } from '../../api-client/apiFactory';
 import { useAccountsQuery } from '../../hooks/useAccountsQuery';
 import { useCategoriesQuery } from '../../hooks/useCategoriesQuery';
 import { useMonthlyTransactionMutations } from '../../hooks/useMonthlyTransactionMutations';
@@ -26,12 +28,13 @@ interface IncomeAfterExpensesProps {
 }
 
 export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, year, month }) => {
+    const { getAccessTokenSilently } = useAuth0();
     const { data: accountsData } = useAccountsQuery();
     const { data: expenseCategories } = useCategoriesQuery('expense');
     const { data: incomeCategories } = useCategoriesQuery('income');
     const { deleteMonthlyTransaction } = useMonthlyTransactionMutations();
     const { deleteSaving } = useSavingMutations();
-    const { data: transactionsData } = useTransactionsQuery(year, month);
+    const { data: transactionsData } = useTransactionsQuery(year, month, 1, 1000);
     const { deleteTransaction } = useTransactionMutations();
 
     const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
@@ -118,9 +121,23 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
         }
     };
 
-    const handleEditTransaction = (item: BudgetSectionItemDto, type: TransactionType) => {
-        if (item.isApplied && item.transactionId) {
-            const transaction = transactionsData?.data?.find((t: Transaction) => t.id === item.transactionId);
+    const handleEditTransaction = async (item: BudgetSectionItemDto, type: TransactionType) => {
+        if (item.isApplied) {
+            let transaction = transactionsData?.data?.find((t: Transaction) =>
+                (item.transactionId && t.id?.toLowerCase() === item.transactionId.toLowerCase()) ||
+                (item.id && t.monthlyKey?.toLowerCase() === item.id.toLowerCase())
+            );
+
+            if (!transaction && item.transactionId) {
+                try {
+                    const token = await getAccessTokenSilently();
+                    const transactionsApi = createTransactionsApi(token);
+                    transaction = await transactionsApi.apiTransactionsIdGet({ id: item.transactionId });
+                } catch (error) {
+                    console.error('Failed to fetch linked transaction:', error);
+                }
+            }
+
             if (transaction) {
                 setEditingAppliedTransaction(transaction);
                 setApplyDefaultValues({
@@ -128,27 +145,45 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                 });
                 setApplyTransactionType(type);
                 setIsApplyTransactionModalOpen(true);
+                return; // Exit early if found
             }
-        } else {
-            setEditingTransaction(item);
-            setIsTransactionModalOpen(true);
         }
+
+        // Fallback to editing the definition if not applied or transaction not found in current list
+        setEditingTransaction(item);
+        setIsTransactionModalOpen(true);
     };
 
-    const handleEditSaving = (item: BudgetSectionItemDto) => {
-        if (item.isApplied && item.transactionId) {
-            const transaction = transactionsData?.data?.find((t: Transaction) => t.id === item.transactionId);
+    const handleEditSaving = async (item: BudgetSectionItemDto) => {
+        if (item.isApplied) {
+            let transaction = transactionsData?.data?.find((t: Transaction) =>
+                (item.transactionId && t.id?.toLowerCase() === item.transactionId.toLowerCase()) ||
+                (item.id && t.savingKey?.toLowerCase() === item.id.toLowerCase())
+            );
+
+            if (!transaction && item.transactionId) {
+                try {
+                    const token = await getAccessTokenSilently();
+                    const transactionsApi = createTransactionsApi(token);
+                    transaction = await transactionsApi.apiTransactionsIdGet({ id: item.transactionId });
+                } catch (error) {
+                    console.error('Failed to fetch linked saving transaction:', error);
+                }
+            }
+
             if (transaction) {
                 setEditingAppliedTransaction(transaction);
                 setApplyDefaultValues({
                     savingKey: item.id
                 });
                 setIsApplyTransferModalOpen(true);
+                return; // Exit early if found
             }
-        } else {
-            setEditingSaving(item);
-            setIsSavingModalOpen(true);
         }
+
+        // Fallback to editing the definition
+        setEditingSaving(item);
+        setIsSavingModalOpen(true);
     };
 
     const handleApplyTransaction = (item: BudgetSectionItemDto, type: TransactionType) => {
