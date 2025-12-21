@@ -156,8 +156,10 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
         setEditingAppliedTransaction(null); // Ensure we are in create mode
         setApplyDefaultValues({
             amount: item.amount,
+            accountId: item.accountId,
             categoryId: item.categoryId,
             categoryName: item.categoryName || category?.name,
+            subcategory: item.subcategory,
             notes: item.notes,
             monthlyKey: item.id
         });

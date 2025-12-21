@@ -37,6 +37,7 @@ interface TransactionModalProps {
         savingKey?: string;
         notes?: string;
         subcategory?: string;
+        accountId?: string;
     };
 }
 
@@ -110,9 +111,22 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                 // Create Mode with optional default values
                 setAmount(defaultValues?.amount?.toString() || '');
                 setDate(new Date());
-                setAccountId('');
-                setAccountName('');
-                setAccountSearch('');
+                if (defaultValues?.accountId) {
+                    const foundAccount = accounts?.find(a => a.id === defaultValues.accountId);
+                    if (foundAccount) {
+                        setAccountId(foundAccount.id);
+                        setAccountName(foundAccount.name);
+                        setAccountSearch(foundAccount.name);
+                    } else {
+                        setAccountId('');
+                        setAccountName('');
+                        setAccountSearch('');
+                    }
+                } else {
+                    setAccountId('');
+                    setAccountName('');
+                    setAccountSearch('');
+                }
 
                 if (defaultValues?.categoryId) {
                     const foundCategory = categories?.find(c => c.id === defaultValues.categoryId);
