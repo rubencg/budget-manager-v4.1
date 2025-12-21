@@ -17,6 +17,7 @@ import { SavingsModal } from '../savings/SavingsModal';
 import { ConfirmationModal } from '../ui/ConfirmationModal';
 import { TransactionType } from '../../api-client/models/TransactionType';
 import './IncomeAfterExpenses.css';
+import { formatCurrency } from '../../utils/currencyUtils';
 
 interface IncomeAfterExpensesProps {
     data?: IncomeAfterFixedExpensesDto;
@@ -299,7 +300,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                             </td>
                                             <td className="income-after-expenses__td">
                                                 <span className={`income-after-expenses__amount ${item.isApplied ? 'income-after-expenses__amount--income-applied' : 'income-after-expenses__amount--income-not-applied'}`}>
-                                                    ${item.amount?.toFixed(2)}
+                                                    {formatCurrency(item.amount)}
                                                 </span>
                                             </td>
                                             <td className="income-after-expenses__td">
@@ -389,7 +390,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                             </td>
                                             <td className="income-after-expenses__td">
                                                 <span className={`income-after-expenses__amount ${item.isApplied ? 'income-after-expenses__amount--expense-applied' : 'income-after-expenses__amount--expense-not-applied'}`}>
-                                                    ${item.amount?.toFixed(2)}
+                                                    {formatCurrency(item.amount)}
                                                 </span>
                                             </td>
                                             <td className="income-after-expenses__td">
@@ -449,17 +450,17 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                             </td>
                                             <td className="income-after-expenses__td">
                                                 <span className="income-after-expenses__amount">
-                                                    ${item.amountPerMonth?.toFixed(2)}
+                                                    {formatCurrency(item.amountPerMonth)}
                                                 </span>
                                             </td>
                                             <td className="income-after-expenses__td">
-                                                <span>${item.savedAmount?.toFixed(2)}</span>
+                                                <span>{formatCurrency(item.savedAmount)}</span>
                                             </td>
                                             <td className="income-after-expenses__td">
-                                                <span>${item.goalAmount?.toFixed(2)}</span>
+                                                <span>{formatCurrency(item.goalAmount)}</span>
                                             </td>
                                             <td className="income-after-expenses__td">
-                                                <span>${remaining.toFixed(2)}</span>
+                                                <span>{formatCurrency(remaining)}</span>
                                             </td>
                                             <td className="income-after-expenses__td" style={{ textAlign: 'center' }}>
                                                 {renderApplied(item.isApplied || false)}

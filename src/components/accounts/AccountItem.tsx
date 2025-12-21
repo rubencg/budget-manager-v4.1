@@ -2,6 +2,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen, faBoxArchive, faMoneyCheck, faHandHoldingDollar, faWallet, faPiggyBank, faCreditCard, faSackDollar, faLandmark } from '@fortawesome/free-solid-svg-icons';
 import { Account } from '../../types';
+import { formatCurrency } from '../../utils/currencyUtils';
 import './Accounts.css';
 
 interface AccountItemProps {
@@ -25,10 +26,7 @@ export const AccountItem: React.FC<AccountItemProps> = ({ account, onEdit, onArc
     const icon = iconMap[account.image] || iconMap['default'];
 
     // Formatting currency
-    const formattedBalance = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-    }).format(account.currentBalance);
+    const formattedBalance = formatCurrency(account.currentBalance);
 
     const amountClass = account.currentBalance < 0
         ? 'account-item__amount--negative'

@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import './GoalsCard.css';
 import { Card } from '../ui/Card';
+import { formatCurrency } from '../../utils/currencyUtils';
 import { ProgressBar } from '../ui/ProgressBar';
 import { BudgetSectionItemDto } from '../../api-client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -26,13 +27,6 @@ export const GoalsCard: React.FC<GoalsCardProps> = ({ savings }) => {
   const handleAhorrarClick = (item: BudgetSectionItemDto) => {
     setSelectedSaving(item);
     setIsTransferModalOpen(true);
-  };
-  const formatCurrency = (value: number | undefined | null) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2
-    }).format(value || 0);
   };
 
   const getIcon = (iconName: string | null | undefined) => {

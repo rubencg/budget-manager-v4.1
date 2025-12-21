@@ -20,6 +20,7 @@ import {
     faSortDown
 } from '@fortawesome/free-solid-svg-icons';
 import './ArchivedAccounts.css';
+import { formatCurrency } from '../utils/currencyUtils';
 
 const iconMap: { [key: string]: any } = {
     'money-check': faMoneyCheck,
@@ -108,12 +109,6 @@ export const ArchivedAccounts: React.FC = () => {
         }
     };
 
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-        }).format(amount);
-    };
 
     if (error) {
         return <div className="archived-accounts-page__error">Error loading archived accounts: {error.message}</div>;

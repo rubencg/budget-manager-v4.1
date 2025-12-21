@@ -1,6 +1,7 @@
 import React from 'react';
 import { AccountGroup, Account } from '../../types';
 import { AccountItem } from './AccountItem';
+import { formatCurrency } from '../../utils/currencyUtils';
 import './Accounts.css';
 
 interface AccountGroupCardProps {
@@ -10,10 +11,7 @@ interface AccountGroupCardProps {
 }
 
 export const AccountGroupCard: React.FC<AccountGroupCardProps> = ({ group, onEdit, onArchive }) => {
-    const formattedTotal = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-    }).format(group.total);
+    const formattedTotal = formatCurrency(group.total);
 
     return (
         <div className="account-group-card">

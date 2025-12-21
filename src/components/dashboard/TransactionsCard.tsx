@@ -4,6 +4,7 @@ import './TransactionsCard.css';
 import '../../fontAwesome'; // Initialize the Font Awesome library
 import { Card } from '../ui/Card';
 import { Transaction, TransactionType } from '../../api-client';
+import { formatCurrency } from '../../utils/currencyUtils';
 import { FontAwesomeIcon, FontAwesomeIconProps } from '@fortawesome/react-fontawesome';
 import { IconProp, findIconDefinition, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 
@@ -13,11 +14,7 @@ interface TransactionsCardProps {
 
 export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions }) => {
   const formatAmount = (amount: number | undefined) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2
-    }).format(amount || 0);
+    return formatCurrency(amount);
   };
 
   const getTransactionColor = (type: TransactionType | undefined) => {

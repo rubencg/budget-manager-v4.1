@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { formatCurrency } from '../../utils/currencyUtils';
 import './BudgetSection.css';
 
 interface BudgetSectionProps {
@@ -18,14 +19,6 @@ export const BudgetSection: React.FC<BudgetSectionProps> = ({
     defaultOpen = true
 }) => {
     const [isOpen, setIsOpen] = useState(defaultOpen);
-
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2
-        }).format(amount);
-    };
 
     return (
         <div className="budget-section">

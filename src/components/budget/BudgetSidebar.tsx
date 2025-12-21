@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResponsivePie } from '@nivo/pie';
+import { formatCurrency } from '../../utils/currencyUtils';
 import './BudgetSidebar.css';
 
 interface BudgetSidebarProps {
@@ -22,14 +23,6 @@ export const BudgetSidebar: React.FC<BudgetSidebarProps> = ({
     onTabChange
 }) => {
 
-    // Helper to format currency
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2
-        }).format(amount);
-    };
 
     const chartData = [
         {
