@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Modal } from '../ui/Modal';
@@ -62,6 +62,7 @@ const getIcon = (iconName: string | null | undefined) => {
 };
 
 export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onClose, accounts, type, transaction, defaultValues }) => {
+    const amountInputRef = useRef<HTMLInputElement>(null);
     const { createTransaction, updateTransaction } = useTransactionMutations();
     const categoryType = type === TransactionType.NUMBER_0 ? 'expense' : 'income';
     const { data: categories } = useCategoriesQuery(categoryType);
@@ -155,6 +156,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                 setSubcategory(defaultValues?.subcategory || '');
                 setNotes(defaultValues?.notes || '');
             }
+
+            // Focus after form is populated, but avoid jumping scroll
+            setTimeout(() => {
+                amountInputRef.current?.focus({ preventScroll: true });
+            }, 100);
         }
     }, [isOpen, type, transaction, categories, defaultValues]);
 
@@ -236,6 +242,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                             pointerEvents: 'none'
                         }}>$</span>
                         <input
+                            ref={amountInputRef}
                             className="transaction-modal__input"
                             type="number"
                             step="any"
@@ -243,7 +250,6 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                             onChange={(e) => setAmount(e.target.value)}
                             placeholder="0.00"
                             style={{ paddingLeft: '2rem' }}
-                            autoFocus
                         />
                     </div>
                 </div>

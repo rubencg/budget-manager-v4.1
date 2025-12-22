@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Account } from '../../types';
@@ -49,6 +49,7 @@ const getIcon = (iconName: string | null | undefined) => {
 };
 
 export const MonthlyTransactionModal: React.FC<MonthlyTransactionModalProps> = ({ isOpen, onClose, accounts, entity }) => {
+    const amountInputRef = useRef<HTMLInputElement>(null);
     const { createMonthlyTransaction, updateMonthlyTransaction } = useMonthlyTransactionMutations();
 
     const [type, setType] = useState<MonthlyTransactionType>(MonthlyTransactionType.NUMBER_0);
@@ -108,6 +109,11 @@ export const MonthlyTransactionModal: React.FC<MonthlyTransactionModalProps> = (
                 setNotes('');
                 setType(MonthlyTransactionType.NUMBER_0);
             }
+
+            // Focus after modal is open, but prevent scroll jump
+            setTimeout(() => {
+                amountInputRef.current?.focus({ preventScroll: true });
+            }, 100);
         }
     }, [isOpen, entity]);
 
@@ -210,6 +216,7 @@ export const MonthlyTransactionModal: React.FC<MonthlyTransactionModalProps> = (
                             pointerEvents: 'none'
                         }}>$</span>
                         <input
+                            ref={amountInputRef}
                             className="monthly-transaction-modal__input"
                             type="number"
                             step="any"
@@ -217,7 +224,6 @@ export const MonthlyTransactionModal: React.FC<MonthlyTransactionModalProps> = (
                             onChange={(e) => setAmount(e.target.value)}
                             placeholder="0.00"
                             style={{ paddingLeft: '2rem' }}
-                            autoFocus
                         />
                     </div>
                 </div>

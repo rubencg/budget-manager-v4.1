@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { ExpenseCategoryIcons } from '../categories/expense-category-icons'; // User wanted expense icons
@@ -16,6 +16,7 @@ interface SavingsModalProps {
 }
 
 export const SavingsModal: React.FC<SavingsModalProps> = ({ isOpen, onClose, saving }) => {
+    const nameInputRef = useRef<HTMLInputElement>(null);
     const { createSaving, updateSaving } = useSavingMutations();
 
     const [name, setName] = useState('');
@@ -46,6 +47,11 @@ export const SavingsModal: React.FC<SavingsModalProps> = ({ isOpen, onClose, sav
                 setColor('#fff300');
             }
             setShowColorPicker(false);
+
+            // Focus after modal is open, but prevent scroll jump
+            setTimeout(() => {
+                nameInputRef.current?.focus({ preventScroll: true });
+            }, 100);
         }
     }, [isOpen, saving]);
 
@@ -93,12 +99,12 @@ export const SavingsModal: React.FC<SavingsModalProps> = ({ isOpen, onClose, sav
                 <div className="category-modal__field">
                     <label className="category-modal__label">Nombre</label>
                     <input
+                        ref={nameInputRef}
                         className="category-modal__input"
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Nombre del ahorro"
-                        autoFocus
                     />
                 </div>
 

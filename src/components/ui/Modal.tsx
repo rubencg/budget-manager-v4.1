@@ -12,6 +12,9 @@ interface ModalProps {
 export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
     const overlayRef = useRef<HTMLDivElement>(null);
 
+    const contentRef = useRef<HTMLDivElement>(null);
+    const previousFocus = useRef<HTMLElement | null>(null);
+
     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
             if (e.key === 'Escape') {
@@ -20,13 +23,18 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
         };
 
         if (isOpen) {
+            previousFocus.current = document.activeElement as HTMLElement;
             document.addEventListener('keydown', handleEscape);
-            document.body.style.overflow = 'hidden';
+
+            // Focus the modal content to trap focus, but prevent scrolling
+            setTimeout(() => {
+                contentRef.current?.focus({ preventScroll: true });
+            }, 0);
         }
 
         return () => {
             document.removeEventListener('keydown', handleEscape);
-            document.body.style.overflow = 'unset';
+            previousFocus.current?.focus({ preventScroll: true });
         };
     }, [isOpen, onClose]);
 
@@ -56,7 +64,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
             onMouseDown={handleOverlayMouseDown}
             onMouseUp={handleOverlayMouseUp}
         >
-            <div className="modal-content">
+            <div className="modal-content" ref={contentRef} tabIndex={-1} style={{ outline: 'none' }}>
                 <div className="modal-header">
                     <h2>{title}</h2>
                     <button className="modal-close" onClick={onClose}>
