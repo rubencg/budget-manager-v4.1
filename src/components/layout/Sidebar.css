@@ -18,6 +18,18 @@
   gap: var(--space-md);
 }
 
+.sidebar__brand-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  text-decoration: none;
+  flex: 1;
+}
+
+.sidebar__brand-link:hover .sidebar__brand-name {
+  color: var(--color-success);
+}
+
 .sidebar__logo {
   font-size: 28px;
   width: 40px;
