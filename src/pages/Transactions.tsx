@@ -39,6 +39,7 @@ export const Transactions: React.FC = () => {
     const [pageSize, setPageSize] = useState(50);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [isAddDropdownOpen, setIsAddDropdownOpen] = useState(false);
     const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
     const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
@@ -51,7 +52,7 @@ export const Transactions: React.FC = () => {
     const [isSavingsModalOpen, setIsSavingsModalOpen] = useState(false);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
-    const { data, isLoading, error } = useTransactionsQuery(currentYear, currentMonth, currentPage, pageSize);
+    const { data, isLoading, error } = useTransactionsQuery(currentYear, currentMonth, currentPage, pageSize, debouncedSearchTerm);
     const { data: accountGroups } = useAccountsQuery();
     const { deleteTransaction } = useTransactionMutations();
 
@@ -67,6 +68,14 @@ export const Transactions: React.FC = () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    React.useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm);
+        }, 1000);
+
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
 
     const handleOpenTransactionModal = (type: TransactionType) => {
         setEditingTransaction(null); // Ensure not editing
@@ -170,30 +179,8 @@ export const Transactions: React.FC = () => {
             transactions = transactions.filter(t => t.date && new Date(t.date).getDate() === dayNum);
         }
 
-        if (!searchTerm) {
-            return transactions;
-        }
-        const lowerCaseSearchTerm = searchTerm.toLowerCase();
-
-        return transactions.filter(transaction => {
-            const searchFields = [
-                transaction.amount,
-                transaction.toAccountName,
-                transaction.fromAccountName,
-                transaction.accountName,
-                transaction.categoryName,
-                transaction.subcategory,
-                transaction.notes
-            ];
-
-            return searchFields.some(value => {
-                if (value === null || typeof value === 'undefined') {
-                    return false;
-                }
-                return String(value).toLowerCase().includes(lowerCaseSearchTerm);
-            });
-        });
-    }, [data?.data, searchTerm, dayParam]);
+        return transactions;
+    }, [data?.data, dayParam]);
 
     // Paginate transactions
     const paginatedTransactions = useMemo(() => {
