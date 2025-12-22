@@ -4,15 +4,22 @@ import './Header.css';
 import { UserProfile } from '../../types';
 import { Avatar } from '../ui/Avatar';
 
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 interface HeaderProps {
   user: UserProfile;
+  onMenuClick: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ user }) => {
+export const Header: React.FC<HeaderProps> = ({ user, onMenuClick }) => {
   const { logout } = useAuth0();
 
   return (
     <header className="header">
+      <button className="header__menu-btn" onClick={onMenuClick}>
+        <FontAwesomeIcon icon={faBars} />
+      </button>
       <div className="header__actions">
         <div className="header__user">
           <Avatar src={user.avatar} alt={user.name} size="large" />

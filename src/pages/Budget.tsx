@@ -207,6 +207,83 @@ export const Budget: React.FC = () => {
                     onTabChange={setActiveTab}
                 />
 
+
+                {/* Mobile Controls (Date + Add) - Visible only on mobile */}
+                <div className="budget-page__mobile-controls">
+                    <div className="budget-page__mobile-month-nav">
+                        <button
+                            className="budget-page__month-btn"
+                            onClick={handlePreviousMonth}
+                            title="Previous Month"
+                        >
+                            <FontAwesomeIcon icon={faChevronLeft} />
+                        </button>
+                        <span className="capitalize">{MONTHS[currentMonth - 1]} {currentYear}</span>
+                        <button
+                            className="budget-page__month-btn"
+                            onClick={handleNextMonth}
+                            title="Next Month"
+                        >
+                            <FontAwesomeIcon icon={faChevronRight} />
+                        </button>
+                    </div>
+
+                    <div className="budget-page__add-container" ref={dropdownRef}>
+                        <button
+                            className="budget-page__action-btn"
+                            title="Add"
+                            onClick={() => setIsAddDropdownOpen(!isAddDropdownOpen)}
+                        >
+                            <FontAwesomeIcon icon={faPlus} />
+                            Agregar
+                        </button>
+                        {isAddDropdownOpen && (
+                            <div className="budget-page__add-dropdown">
+                                <button
+                                    className="budget-page__add-option budget-page__add-option--divider"
+                                    onClick={() => handleOpenTransactionModal(TransactionType.NUMBER_1)}
+                                >
+                                    Agregar ingreso
+                                </button>
+                                <button
+                                    className="budget-page__add-option"
+                                    onClick={() => handleOpenTransactionModal(TransactionType.NUMBER_0)}
+                                >
+                                    Agregar gasto
+                                </button>
+                                <button
+                                    className="budget-page__add-option"
+                                    onClick={() => {
+                                        setEditingTransaction(null);
+                                        setIsAddDropdownOpen(false);
+                                        setIsTransferModalOpen(true);
+                                    }}
+                                >
+                                    Agregar transferencia
+                                </button>
+                                <button className="budget-page__add-option" onClick={() => {
+                                    setIsAddDropdownOpen(false);
+                                    setIsMonthlyTransactionModalOpen(true);
+                                }}>
+                                    Agregar transacción mensual
+                                </button>
+                                <button className="budget-page__add-option" onClick={() => {
+                                    setIsAddDropdownOpen(false);
+                                    setIsPlannedExpenseModalOpen(true);
+                                }}>
+                                    Agregar gasto planeado
+                                </button>
+                                <button className="budget-page__add-option" onClick={() => {
+                                    setIsAddDropdownOpen(false);
+                                    setIsSavingsModalOpen(true);
+                                }}>
+                                    Agregar ahorro
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
                 {/* Main Content */}
                 <div className="budget-page__main">
                     {activeTab === 'incomeAfterExpenses' && (

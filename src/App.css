@@ -18,6 +18,17 @@
   overflow-y: auto;
 }
 
+.app__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+}
+
 @media (max-width: 1024px) {
   .app__main {
     margin-left: 200px;
@@ -27,5 +38,9 @@
 @media (max-width: 768px) {
   .app__main {
     margin-left: 0;
+  }
+
+  .app__content {
+    padding: var(--space-md);
   }
 }

@@ -211,3 +211,17 @@
 
 /* Reusing basic table structure from global or defining specific if needed */
 /* Assuming we can reuse .transactions-table classes if we render generic HTML or import styles */
+
+@media (max-width: 768px) {
+    .planned-expenses-view__grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .planned-expense-card {
+        padding: var(--space-md);
+    }
+
+    .planned-expenses-view {
+        gap: var(--space-lg);
+    }
+}

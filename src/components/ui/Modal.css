@@ -56,4 +56,17 @@
 .modal-close:hover {
     background-color: var(--bg-background);
     color: var(--text-primary);
+
+}
+
+@media (max-width: 600px) {
+    .modal-content {
+        max-width: 95%;
+        padding: 1.25rem;
+        border-radius: 8px;
+    }
+
+    .modal-header h2 {
+        font-size: 1.1rem;
+    }
 }

@@ -149,4 +149,22 @@
   .sidebar.sidebar--open {
     transform: translateX(0);
   }
+
+  .sidebar__brand {
+    justify-content: space-between;
+  }
+
+  .sidebar__close-btn {
+    display: block;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 32px;
+    line-height: 1;
+    cursor: pointer;
+  }
+}
+
+.sidebar__close-btn {
+  display: none;
 }

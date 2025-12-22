@@ -63,4 +63,35 @@
 .categories-page__pagination-info {
     color: var(--text-secondary);
     font-size: 14px;
+
+}
+
+@media (max-width: 768px) {
+    .categories-page {
+        padding: var(--space-md);
+        gap: var(--space-lg);
+    }
+
+    .categories-page__title-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-md);
+    }
+
+    .categories-page__title-row h1 {
+        text-align: center;
+        margin: 0;
+    }
+
+    .categories-page__tabs {
+        overflow-x: auto;
+        padding-bottom: var(--space-sm);
+        gap: var(--space-sm);
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .categories-page__tab {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
 }

@@ -70,4 +70,70 @@
     border: 1px dashed rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-md);
     font-size: 12px;
+
+}
+
+@media (max-width: 768px) {
+    .budget-sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        background: transparent;
+    }
+
+    .budget-sidebar__nav-list {
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 0 var(--space-md);
+        gap: var(--space-lg);
+        -webkit-overflow-scrolling: touch;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .budget-sidebar__nav-item {
+        margin-bottom: 0;
+        padding: var(--space-md) 0;
+        white-space: nowrap;
+        border-left: none;
+        border-bottom: 2px solid transparent;
+        border-radius: 0;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.6;
+    }
+
+    .budget-sidebar__nav-item:hover {
+        background-color: transparent;
+        opacity: 0.8;
+    }
+
+    .budget-sidebar__nav-item.active {
+        border-bottom-color: var(--color-primary);
+        background-color: transparent;
+        opacity: 1;
+    }
+
+    /* Hide large amount in tabs on mobile */
+    .budget-sidebar__amount {
+        display: none;
+    }
+
+    /* Style sub-amount as the main tab label on mobile */
+    .budget-sidebar__sub-amount {
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary) !important;
+        /* Force color override */
+        opacity: 1 !important;
+    }
+
+    /* Hide summary and chart section on mobile */
+    .budget-sidebar__summary,
+    .budget-sidebar__chart {
+        display: none;
+    }
 }

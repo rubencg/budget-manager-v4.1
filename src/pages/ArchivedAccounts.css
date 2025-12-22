@@ -201,4 +201,67 @@
     text-align: center;
     padding: var(--space-3xl);
     color: var(--text-secondary);
+
+}
+
+@media (max-width: 768px) {
+    .archived-accounts-page {
+        padding: var(--space-base);
+    }
+
+    .archived-accounts-page__header {
+        margin-bottom: var(--space-lg);
+    }
+
+    .archived-accounts-page__title {
+        font-size: 24px;
+        margin-bottom: var(--space-md);
+    }
+
+    .archived-accounts-page__controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-md);
+    }
+
+    .archived-accounts-table__header {
+        display: none;
+    }
+
+    .archived-accounts-table__row {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+        padding: var(--space-md);
+        position: relative;
+    }
+
+    .archived-accounts-table__cell--name {
+        font-weight: 600;
+        font-size: 16px;
+        margin-bottom: var(--space-xs);
+    }
+
+    .archived-accounts-table__cell--type {
+        font-size: 12px;
+    }
+
+    .archived-accounts-table__cell--balance {
+        font-size: 18px;
+        color: var(--text-primary);
+        margin-top: var(--space-xs);
+    }
+
+    .archived-accounts-table__cell--actions {
+        position: absolute;
+        top: var(--space-md);
+        right: var(--space-md);
+    }
+
+    .archived-accounts-page__pagination {
+        gap: var(--space-sm);
+    }
+
+    .archived-accounts-page__pagination-info {
+        font-size: 12px;
+    }
 }

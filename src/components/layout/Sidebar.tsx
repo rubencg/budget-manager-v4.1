@@ -7,11 +7,13 @@ import calculatorIcon from '../../assets/images/calculator.png';
 interface SidebarProps {
   navigation: NavItem[];
   supportNav: NavItem[];
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ navigation, supportNav }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ navigation, supportNav, isOpen, onClose }) => {
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? 'sidebar--open' : ''}`}>
       <div className="sidebar__brand">
         <div className="sidebar__logo">
           <img src={calculatorIcon} alt="Calculator" style={{ width: '24px', height: '24px' }} />
@@ -20,6 +22,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ navigation, supportNav }) => {
           <div className="sidebar__brand-name">Tiki</div>
           <div className="sidebar__brand-subtitle">Budget Manager</div>
         </div>
+        <button className="sidebar__close-btn" onClick={onClose}>×</button>
       </div>
 
       <nav className="sidebar__nav">
@@ -28,6 +31,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ navigation, supportNav }) => {
             <li key={item.id}>
               <NavLink
                 to={item.path}
+                onClick={onClose}
                 className={({ isActive }) =>
                   `sidebar__nav-item ${isActive ? 'sidebar__nav-item--active' : ''}`
                 }
@@ -46,6 +50,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ navigation, supportNav }) => {
             <li key={item.id}>
               <NavLink
                 to={item.path}
+                onClick={onClose}
                 className={({ isActive }) =>
                   `sidebar__nav-item ${isActive ? 'sidebar__nav-item--active' : ''}`
                 }

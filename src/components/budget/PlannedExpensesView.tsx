@@ -85,10 +85,8 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
         if (!data?.plannedExpenses) return [];
 
         console.group('PlannedExpensesFilter');
-        console.log('ShowCompleted:', showCompleted);
 
         if (showCompleted) {
-            console.log('Returning all:', data.plannedExpenses.length);
             console.groupEnd();
             return data.plannedExpenses;
         }
@@ -105,11 +103,9 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
 
             const isCompleted = isCompletedProp || calculatedCompleted;
 
-            console.log(`Expense: ${pe.name}, left: ${pe.amountLeft}, isCompletedProp: ${pe.isCompleted}, calculated: ${calculatedCompleted}, FINAL: ${isCompleted} -> KEEP: ${!isCompleted}`);
             return !isCompleted;
         });
 
-        console.log('Filtered count:', filtered.length);
         console.groupEnd();
         return filtered;
     }, [data?.plannedExpenses, showCompleted]);
