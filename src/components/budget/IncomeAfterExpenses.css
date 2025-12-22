@@ -233,3 +233,144 @@
     color: #f87171;
     /* red-400 */
 }
+
+@media (max-width: 768px) {
+    .income-after-expenses__table thead {
+        display: none;
+    }
+
+    .income-after-expenses__table,
+    .income-after-expenses__table tbody,
+    .income-after-expenses__tr,
+    .income-after-expenses__td {
+        display: block;
+        width: 100%;
+    }
+
+    .income-after-expenses__tr {
+        display: grid;
+        background-color: transparent;
+        /* Changed from dark card color */
+        border: none;
+        /* Removed full border */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0;
+        margin-bottom: 0;
+        padding: var(--space-lg) var(--space-md);
+        gap: var(--space-sm, 8px);
+    }
+
+    .income-after-expenses__tr:last-child {
+        border-bottom: none;
+    }
+
+    .income-after-expenses__td {
+        padding: 0;
+        border: none;
+        margin-bottom: 0;
+    }
+
+    /* Standard Row (Income/Expense) Grid */
+    .income-after-expenses__tr--standard {
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "date amount"
+            "category category"
+            "account actions";
+    }
+
+    .income-after-expenses__td--date {
+        grid-area: date;
+    }
+
+    .income-after-expenses__td--amount {
+        grid-area: amount;
+        text-align: right;
+        font-size: 16px;
+        font-weight: 600;
+        align-self: flex-start;
+    }
+
+    .income-after-expenses__td--category {
+        grid-area: category;
+        padding: 4px 0;
+    }
+
+    .income-after-expenses__td--account {
+        grid-area: account;
+        color: var(--text-secondary);
+        font-size: 0.85em;
+        align-self: center;
+    }
+
+    .income-after-expenses__td--actions {
+        grid-area: actions;
+        text-align: right;
+        align-self: center;
+    }
+
+    .income-after-expenses__td--notes,
+    .income-after-expenses__td--applied {
+        display: none;
+    }
+
+    /* Savings Row Grid - Fixed overlap */
+    .income-after-expenses__tr--savings {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+            "name amount"
+            "saved goal"
+            "remaining actions";
+    }
+
+    .income-after-expenses__td--name {
+        grid-area: name;
+    }
+
+    .income-after-expenses__td--amount {
+        grid-area: amount;
+        text-align: right;
+    }
+
+    .income-after-expenses__td--saved {
+        grid-area: saved;
+        font-size: 0.9em;
+        color: var(--text-secondary);
+    }
+
+    .income-after-expenses__td--saved::before {
+        content: "Ahorrado: ";
+        opacity: 0.7;
+    }
+
+    .income-after-expenses__td--goal {
+        grid-area: goal;
+        text-align: right;
+        font-size: 0.9em;
+        color: var(--text-secondary);
+        padding-top: 2px;
+    }
+
+    .income-after-expenses__td--goal::before {
+        content: "Meta: ";
+        opacity: 0.7;
+    }
+
+    .income-after-expenses__td--remaining {
+        grid-area: remaining;
+        font-size: 0.9em;
+        color: var(--text-secondary);
+    }
+
+    .income-after-expenses__td--remaining::before {
+        content: "Falta: ";
+        opacity: 0.7;
+    }
+
+    .income-after-expenses__td--actions {
+        grid-area: actions;
+        text-align: right;
+        display: flex;
+        justify-content: flex-end;
+    }
+}

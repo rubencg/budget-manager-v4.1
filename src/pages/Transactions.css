@@ -389,3 +389,105 @@
     margin-bottom: var(--space-xs);
     padding-bottom: var(--space-md);
 }
+
+@media (max-width: 768px) {
+    .transactions-page {
+        padding: var(--space-md);
+        padding-bottom: 80px;
+    }
+
+    .transactions-page__header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-lg);
+    }
+
+    .transactions-page__month-nav {
+        justify-content: center;
+    }
+
+    .transactions-page__month-display {
+        font-size: 18px;
+        min-width: 150px;
+    }
+
+    .transactions-page__actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .transactions-page__search-container {
+        width: 100%;
+    }
+
+    .transactions-page__search-input {
+        width: 100%;
+    }
+
+    .transactions-page__add-container,
+    .transactions-page__action-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .transactions-page__add-dropdown {
+        left: 0;
+        right: 0;
+        width: 100%;
+    }
+
+    /* Table to Cards */
+    .transactions-table__header {
+        display: none;
+    }
+
+    .transactions-table__row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "date amount"
+            "category category"
+            "account actions";
+        gap: var(--space-sm);
+        padding: var(--space-lg);
+        height: auto;
+    }
+
+    .transactions-table__cell--date {
+        grid-area: date;
+        width: auto;
+        color: var(--text-tertiary);
+    }
+
+    .transactions-table__cell--amount {
+        grid-area: amount;
+        font-size: 16px;
+        justify-content: flex-end;
+    }
+
+    .transactions-table__cell--category {
+        grid-area: category;
+        padding: var(--space-xs) 0;
+    }
+
+    .transactions-table__cell--account {
+        grid-area: account;
+        color: var(--text-secondary);
+        font-size: 12px;
+    }
+
+    .transactions-table__cell--actions {
+        grid-area: actions;
+    }
+
+    .transactions-table__cell--notes {
+        display: none;
+        /* Hide notes on mobile to save space */
+    }
+
+    .transactions-page__controls {
+        flex-direction: column;
+        gap: var(--space-md);
+        align-items: stretch;
+    }
+}

@@ -92,13 +92,40 @@
 }
 
 @media (max-width: 768px) {
-  .transactions-card__table {
-    font-size: 12px;
+  .transactions-card__table thead {
+    display: none;
+  }
+
+  .transactions-card__table tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-sm);
+    padding: var(--space-md) 0;
+    align-items: center;
+  }
+
+  .transactions-card__table td {
+    padding: 0;
+  }
+
+  /* Hide method column on mobile dashboard to save space */
+  .transactions-card__table td:last-child {
+    display: none;
   }
 
   .transactions-card__icon {
     width: 32px;
     height: 32px;
-    font-size: 16px;
+    font-size: 14px;
+    border-radius: var(--radius-sm);
+  }
+
+  .transactions-card__name {
+    font-size: 13px;
+  }
+
+  .transactions-card__amount {
+    font-size: 13px;
+    text-align: right;
   }
 }

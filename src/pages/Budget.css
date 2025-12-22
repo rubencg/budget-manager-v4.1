@@ -151,4 +151,57 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     margin-bottom: 4px;
     padding-bottom: 12px;
+
+}
+
+.budget-page__mobile-controls {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .budget-page {
+        padding: var(--space-md);
+        height: auto;
+    }
+
+    /* Hide Desktop Header on mobile */
+    .budget-page__header {
+        display: none;
+    }
+
+    /* Mobile Controls Section */
+    .budget-page__mobile-controls {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-md);
+        margin-bottom: var(--space-lg);
+    }
+
+    .budget-page__mobile-month-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-lg);
+        width: 100%;
+        color: var(--text-primary);
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .budget-page__content {
+        flex-direction: column;
+        overflow: visible;
+        gap: var(--space-md);
+    }
+
+    .budget-page__main {
+        overflow: visible;
+    }
+
+    /* Override any Add Button specifics for mobile if needed */
+    .budget-page__add-container,
+    .budget-page__action-btn {
+        width: 100%;
+        justify-content: center;
+    }
 }

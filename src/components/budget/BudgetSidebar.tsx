@@ -59,7 +59,7 @@ export const BudgetSidebar: React.FC<BudgetSidebarProps> = ({
                 >
                     <div className="budget-sidebar__amount">{formatCurrency(totalAvailable)}</div>
                     <div className="budget-sidebar__sub-amount" style={{ color: '#4ade80' }}>
-                        Ingresos despues de gastos mensuales
+                        Ingresos
                     </div>
                 </div>
 

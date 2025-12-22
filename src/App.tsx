@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import './App.css';
@@ -16,6 +17,7 @@ import { mockNavigation, mockSupportNav, mockUserProfile } from './data/mockData
 
 function App() {
   const { user } = useAuth0();
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
   // Merge Auth0 user data with mock profile if available
   const userProfile = user ? {
@@ -23,6 +25,9 @@ function App() {
     avatar: user.picture || mockUserProfile.avatar,
     greeting: `Hola, ${user.given_name || user.name || 'User'}!`
   } : mockUserProfile;
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const closeSidebar = () => setIsSidebarOpen(false);
 
   return (
     <BrowserRouter>
@@ -33,9 +38,17 @@ function App() {
           element={
             <ProtectedRoute>
               <div className="app">
-                <Sidebar navigation={mockNavigation} supportNav={mockSupportNav} />
+                <Sidebar
+                  navigation={mockNavigation}
+                  supportNav={mockSupportNav}
+                  isOpen={isSidebarOpen}
+                  onClose={closeSidebar}
+                />
+                {isSidebarOpen && (
+                  <div className="app__overlay" onClick={closeSidebar}></div>
+                )}
                 <div className="app__main">
-                  <Header user={userProfile} />
+                  <Header user={userProfile} onMenuClick={toggleSidebar} />
                   <main className="app__content">
                     <Routes>
                       <Route path="/" element={<Dashboard />} />

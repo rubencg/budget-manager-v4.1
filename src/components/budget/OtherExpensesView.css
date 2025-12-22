@@ -77,4 +77,33 @@
     font-size: var(--font-size-sm);
     color: var(--text-secondary);
     font-weight: 500;
+
+}
+
+@media (max-width: 768px) {
+    .other-expenses-view__header {
+        justify-content: center;
+        padding: var(--space-md);
+    }
+
+    .other-expenses-view__value {
+        font-size: var(--font-size-lg);
+    }
+
+    .other-expenses-view__chart-container {
+        padding: var(--space-md);
+    }
+
+    .other-expenses-view__chart {
+        height: 300px;
+    }
+
+    .other-expenses-view__legend {
+        gap: var(--space-sm) var(--space-md);
+    }
+
+    .other-expenses-view__legend-color {
+        width: 20px;
+        height: 10px;
+    }
 }

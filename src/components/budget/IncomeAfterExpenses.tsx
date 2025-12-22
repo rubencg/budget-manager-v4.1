@@ -294,8 +294,8 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                     const account = flattenedAccounts.find(a => a.id === item.accountId);
 
                                     return (
-                                        <tr key={index} className="income-after-expenses__tr">
-                                            <td className="income-after-expenses__td">
+                                        <tr key={index} className="income-after-expenses__tr income-after-expenses__tr--standard">
+                                            <td className="income-after-expenses__td income-after-expenses__td--date">
                                                 <div className="income-after-expenses__date">
                                                     <span className="income-after-expenses__day-name">
                                                         {item.dayOfMonth ? `Día ${item.dayOfMonth}` : 'N/A'}
@@ -305,7 +305,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td className="income-after-expenses__td">
+                                            <td className="income-after-expenses__td income-after-expenses__td--category">
                                                 <div className="income-after-expenses__category">
                                                     <div
                                                         className="income-after-expenses__icon"
@@ -321,7 +321,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="income-after-expenses__td">
+                                            <td className="income-after-expenses__td income-after-expenses__td--account">
                                                 <div className="income-after-expenses__account">
                                                     <div
                                                         className="income-after-expenses__icon"
@@ -335,20 +335,20 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                                     <span>{item.accountName}</span>
                                                 </div>
                                             </td>
-                                            <td className="income-after-expenses__td">
+                                            <td className="income-after-expenses__td income-after-expenses__td--amount">
                                                 <span className={`income-after-expenses__amount ${item.isApplied ? 'income-after-expenses__amount--income-applied' : 'income-after-expenses__amount--income-not-applied'}`}>
                                                     {formatCurrency(item.amount)}
                                                 </span>
                                             </td>
-                                            <td className="income-after-expenses__td">
+                                            <td className="income-after-expenses__td income-after-expenses__td--notes">
                                                 <div className="income-after-expenses__notes" title={item.notes || ''}>
                                                     {item.notes}
                                                 </div>
                                             </td>
-                                            <td className="income-after-expenses__td" style={{ textAlign: 'center' }}>
+                                            <td className="income-after-expenses__td income-after-expenses__td--applied" style={{ textAlign: 'center' }}>
                                                 {renderApplied(item.isApplied || false)}
                                             </td>
-                                            <td className="income-after-expenses__td" style={{ textAlign: 'right' }}>
+                                            <td className="income-after-expenses__td income-after-expenses__td--actions" style={{ textAlign: 'right' }}>
                                                 {renderActions(item, 'transaction', TransactionType.NUMBER_1)}
                                             </td>
                                         </tr>
@@ -384,8 +384,8 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                     const account = flattenedAccounts.find(a => a.id === item.accountId);
 
                                     return (
-                                        <tr key={index} className="income-after-expenses__tr">
-                                            <td className="income-after-expenses__td">
+                                        <tr key={index} className="income-after-expenses__tr income-after-expenses__tr--standard">
+                                            <td className="income-after-expenses__td income-after-expenses__td--date">
                                                 <div className="income-after-expenses__date">
                                                     <span className="income-after-expenses__day-name">
                                                         {item.dayOfMonth ? `Día ${item.dayOfMonth}` : 'N/A'}
@@ -395,7 +395,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td className="income-after-expenses__td">
+                                            <td className="income-after-expenses__td income-after-expenses__td--category">
                                                 <div className="income-after-expenses__category">
                                                     <div
                                                         className="income-after-expenses__icon"
@@ -411,7 +411,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="income-after-expenses__td">
+                                            <td className="income-after-expenses__td income-after-expenses__td--account">
                                                 <div className="income-after-expenses__account">
                                                     <div
                                                         className="income-after-expenses__icon"
@@ -425,20 +425,20 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                                     <span>{item.accountName}</span>
                                                 </div>
                                             </td>
-                                            <td className="income-after-expenses__td">
+                                            <td className="income-after-expenses__td income-after-expenses__td--amount">
                                                 <span className={`income-after-expenses__amount ${item.isApplied ? 'income-after-expenses__amount--expense-applied' : 'income-after-expenses__amount--expense-not-applied'}`}>
                                                     {formatCurrency(item.amount)}
                                                 </span>
                                             </td>
-                                            <td className="income-after-expenses__td">
+                                            <td className="income-after-expenses__td income-after-expenses__td--notes">
                                                 <div className="income-after-expenses__notes" title={item.notes || ''}>
                                                     {item.notes}
                                                 </div>
                                             </td>
-                                            <td className="income-after-expenses__td" style={{ textAlign: 'center' }}>
+                                            <td className="income-after-expenses__td income-after-expenses__td--applied" style={{ textAlign: 'center' }}>
                                                 {renderApplied(item.isApplied || false)}
                                             </td>
-                                            <td className="income-after-expenses__td" style={{ textAlign: 'right' }}>
+                                            <td className="income-after-expenses__td income-after-expenses__td--actions" style={{ textAlign: 'right' }}>
                                                 {renderActions(item, 'transaction', TransactionType.NUMBER_0)}
                                             </td>
                                         </tr>
@@ -473,8 +473,8 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                     const remaining = (item.goalAmount || 0) - (item.savedAmount || 0);
 
                                     return (
-                                        <tr key={index} className="income-after-expenses__tr">
-                                            <td className="income-after-expenses__td">
+                                        <tr key={index} className="income-after-expenses__tr income-after-expenses__tr--savings">
+                                            <td className="income-after-expenses__td income-after-expenses__td--name">
                                                 <div className="income-after-expenses__category">
                                                     <div
                                                         className="income-after-expenses__icon"
@@ -485,24 +485,24 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                                     <span className="income-after-expenses__category-name">{item.name}</span>
                                                 </div>
                                             </td>
-                                            <td className="income-after-expenses__td">
+                                            <td className="income-after-expenses__td income-after-expenses__td--amount">
                                                 <span className="income-after-expenses__amount">
                                                     {formatCurrency(item.amountPerMonth)}
                                                 </span>
                                             </td>
-                                            <td className="income-after-expenses__td">
+                                            <td className="income-after-expenses__td income-after-expenses__td--saved">
                                                 <span>{formatCurrency(item.savedAmount)}</span>
                                             </td>
-                                            <td className="income-after-expenses__td">
+                                            <td className="income-after-expenses__td income-after-expenses__td--goal">
                                                 <span>{formatCurrency(item.goalAmount)}</span>
                                             </td>
-                                            <td className="income-after-expenses__td">
+                                            <td className="income-after-expenses__td income-after-expenses__td--remaining">
                                                 <span>{formatCurrency(remaining)}</span>
                                             </td>
-                                            <td className="income-after-expenses__td" style={{ textAlign: 'center' }}>
+                                            <td className="income-after-expenses__td income-after-expenses__td--applied" style={{ textAlign: 'center' }}>
                                                 {renderApplied(item.isApplied || false)}
                                             </td>
-                                            <td className="income-after-expenses__td" style={{ textAlign: 'right' }}>
+                                            <td className="income-after-expenses__td income-after-expenses__td--actions" style={{ textAlign: 'right' }}>
                                                 {renderActions(item, 'saving')}
                                             </td>
                                         </tr>
