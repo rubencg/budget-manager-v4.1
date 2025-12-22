@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Modal } from '../ui/Modal';
@@ -19,6 +19,7 @@ interface PlannedExpenseModalProps {
 }
 
 export const PlannedExpenseModal: React.FC<PlannedExpenseModalProps> = ({ isOpen, onClose, plannedExpense }) => {
+    const amountInputRef = useRef<HTMLInputElement>(null);
     const { createPlannedExpense, updatePlannedExpense } = usePlannedExpenseMutations();
     const { data: categories } = useCategoriesQuery('expense');
 
@@ -79,6 +80,11 @@ export const PlannedExpenseModal: React.FC<PlannedExpenseModalProps> = ({ isOpen
                 setSelectedCategory(null);
                 setSubcategory('');
             }
+
+            // Focus after modal is open, but prevent scroll jump
+            setTimeout(() => {
+                amountInputRef.current?.focus({ preventScroll: true });
+            }, 100);
         }
     }, [isOpen, plannedExpense, categories]);
 
@@ -155,6 +161,7 @@ export const PlannedExpenseModal: React.FC<PlannedExpenseModalProps> = ({ isOpen
                                 pointerEvents: 'none'
                             }}>$</span>
                             <input
+                                ref={amountInputRef}
                                 className="planned-expense-modal__input"
                                 type="number"
                                 step="any"
@@ -162,7 +169,6 @@ export const PlannedExpenseModal: React.FC<PlannedExpenseModalProps> = ({ isOpen
                                 onChange={(e) => setAmount(e.target.value)}
                                 placeholder="0.00"
                                 style={{ paddingLeft: '2rem' }}
-                                autoFocus
                             />
                         </div>
                     </div>

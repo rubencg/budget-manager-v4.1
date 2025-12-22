@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Modal } from '../ui/Modal';
@@ -49,6 +49,7 @@ const iconMap: { [key: string]: any } = {
 };
 
 export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, accounts, transaction, defaultValues }) => {
+    const amountInputRef = useRef<HTMLInputElement>(null);
     const { createTransfer, updateTransaction } = useTransactionMutations();
 
     const [amount, setAmount] = useState('');
@@ -114,6 +115,11 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
 
                 setNotes(defaultValues?.notes || '');
             }
+
+            // Focus after modal is open, but prevent scroll jump
+            setTimeout(() => {
+                amountInputRef.current?.focus({ preventScroll: true });
+            }, 100);
         }
     }, [isOpen, transaction, defaultValues, accounts]);
 
@@ -185,6 +191,7 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
                             pointerEvents: 'none'
                         }}>$</span>
                         <input
+                            ref={amountInputRef}
                             className="transfer-modal__input"
                             type="number"
                             step="any"
@@ -192,7 +199,6 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
                             onChange={(e) => setAmount(e.target.value)}
                             placeholder="0.00"
                             style={{ paddingLeft: '2rem' }}
-                            autoFocus
                         />
                     </div>
                 </div>

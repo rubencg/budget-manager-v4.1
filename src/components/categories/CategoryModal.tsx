@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Category } from '../../api-client';
@@ -23,6 +23,7 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
     category,
     type
 }) => {
+    const nameInputRef = useRef<HTMLInputElement>(null);
     const isEditing = !!category;
     const { createCategory, updateCategory } = useCategoryMutations();
 
@@ -52,6 +53,11 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
             }
             setSubcategoryInput('');
             setShowColorPicker(false);
+
+            // Focus after modal is open, but prevent scroll jump
+            setTimeout(() => {
+                nameInputRef.current?.focus({ preventScroll: true });
+            }, 100);
         }
     }, [isOpen, category]);
 
@@ -115,12 +121,12 @@ export const CategoryModal: React.FC<CategoryModalProps> = ({
                 <div className="category-modal__field">
                     <label className="category-modal__label">Nombre</label>
                     <input
+                        ref={nameInputRef}
                         className="category-modal__input"
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Ej. Comida, Transporte..."
-                        autoFocus
                     />
                 </div>
 
