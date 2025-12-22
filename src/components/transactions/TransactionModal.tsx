@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import { DatePicker } from '../ui/DatePicker';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Account } from '../../types';
@@ -261,8 +260,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                         <DatePicker
                             selected={date}
                             onChange={(date: Date | null) => date && setDate(date)}
-                            dateFormat="dd/MM/yyyy"
-                            className="transaction-modal__input"
+                            label=""
                         />
                     </div>
                 </div>

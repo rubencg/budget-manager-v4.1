@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import { DatePicker } from '../ui/DatePicker';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Autocomplete } from '../ui/Autocomplete';
@@ -227,8 +226,7 @@ export const PlannedExpenseModal: React.FC<PlannedExpenseModalProps> = ({ isOpen
                             <DatePicker
                                 selected={date}
                                 onChange={(date: Date | null) => setDate(date)}
-                                dateFormat="dd/MM/yyyy"
-                                className="planned-expense-modal__input"
+                                label=""
                                 placeholderText="Seleccionar fecha"
                             />
                         </div>
