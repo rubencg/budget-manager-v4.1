@@ -55,6 +55,7 @@ export interface ApiTransactionsMonthYearMonthGetRequest {
     month: number;
     type?: TransactionType;
     categoryId?: string;
+    searchText?: string;
     pageNumber?: number;
     pageSize?: number;
     sortBy?: string;
@@ -226,6 +227,10 @@ export class TransactionsApi extends runtime.BaseAPI {
 
         if (requestParameters['categoryId'] != null) {
             queryParameters['categoryId'] = requestParameters['categoryId'];
+        }
+
+        if (requestParameters['searchText'] != null) {
+            queryParameters['searchText'] = requestParameters['searchText'];
         }
 
         if (requestParameters['pageNumber'] != null) {

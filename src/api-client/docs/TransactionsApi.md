@@ -228,7 +228,7 @@ example().catch(console.error);
 
 ## apiTransactionsMonthYearMonthGet
 
-> TransactionPagedResult apiTransactionsMonthYearMonthGet(year, month, type, categoryId, pageNumber, pageSize, sortBy, sortDirection)
+> TransactionPagedResult apiTransactionsMonthYearMonthGet(year, month, type, categoryId, searchText, pageNumber, pageSize, sortBy, sortDirection)
 
 
 
@@ -258,6 +258,8 @@ async function example() {
     type: ...,
     // string (optional)
     categoryId: categoryId_example,
+    // string (optional)
+    searchText: searchText_example,
     // number (optional)
     pageNumber: 56,
     // number (optional)
@@ -289,6 +291,7 @@ example().catch(console.error);
 | **month** | `number` |  | [Defaults to `undefined`] |
 | **type** | `TransactionType` |  | [Optional] [Defaults to `undefined`] [Enum: 0, 1, 2, 3, 4] |
 | **categoryId** | `string` |  | [Optional] [Defaults to `undefined`] |
+| **searchText** | `string` |  | [Optional] [Defaults to `undefined`] |
 | **pageNumber** | `number` |  | [Optional] [Defaults to `1`] |
 | **pageSize** | `number` |  | [Optional] [Defaults to `20`] |
 | **sortBy** | `string` |  | [Optional] [Defaults to `&#39;date&#39;`] |
