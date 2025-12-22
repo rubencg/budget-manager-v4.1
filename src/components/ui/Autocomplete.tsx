@@ -105,10 +105,9 @@ export function Autocomplete<T>({
         } else if (e.key === 'Escape') {
             setIsOpen(false);
         } else if (e.key === 'Tab') {
-            if (isOpen && filteredOptions.length > 0) {
-                // Select on Tab (same logic as Enter but no preventDefault)
-                const index = highlightedIndex >= 0 ? highlightedIndex : 0;
-                const selected = filteredOptions[index];
+            if (isOpen && filteredOptions.length > 0 && highlightedIndex >= 0) {
+                // Select on Tab only if an item is actively highlighted
+                const selected = filteredOptions[highlightedIndex];
                 onSelect(selected);
                 onChange(getLabel(selected));
                 setIsOpen(false);
