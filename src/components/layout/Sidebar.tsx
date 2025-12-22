@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import './Sidebar.css';
 import { NavItem } from '../../types';
 import calculatorIcon from '../../assets/images/calculator.png';
@@ -15,13 +15,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ navigation, supportNav, isOpen
   return (
     <aside className={`sidebar ${isOpen ? 'sidebar--open' : ''}`}>
       <div className="sidebar__brand">
-        <div className="sidebar__logo">
-          <img src={calculatorIcon} alt="Calculator" style={{ width: '24px', height: '24px' }} />
-        </div>
-        <div className="sidebar__brand-text">
-          <div className="sidebar__brand-name">Tiki</div>
-          <div className="sidebar__brand-subtitle">Budget Manager</div>
-        </div>
+        <Link to="/" className="sidebar__brand-link" onClick={onClose}>
+          <div className="sidebar__logo">
+            <img src={calculatorIcon} alt="Calculator" style={{ width: '24px', height: '24px' }} />
+          </div>
+          <div className="sidebar__brand-text">
+            <div className="sidebar__brand-name">Tiki</div>
+            <div className="sidebar__brand-subtitle">Budget Manager</div>
+          </div>
+        </Link>
         <button className="sidebar__close-btn" onClick={onClose}>×</button>
       </div>
 
