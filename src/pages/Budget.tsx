@@ -38,7 +38,8 @@ export const Budget: React.FC = () => {
     const [isSavingsModalOpen, setIsSavingsModalOpen] = useState(false);
     const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
 
-    const dropdownRef = useRef<HTMLDivElement>(null);
+    const desktopDropdownRef = useRef<HTMLDivElement>(null);
+    const mobileDropdownRef = useRef<HTMLDivElement>(null);
 
     const { data, isLoading, error } = useBudgetQuery(currentYear, currentMonth);
     const {
@@ -57,7 +58,11 @@ export const Budget: React.FC = () => {
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            const target = event.target as Node;
+            const isOutsideDesktop = !desktopDropdownRef.current || !desktopDropdownRef.current.contains(target);
+            const isOutsideMobile = !mobileDropdownRef.current || !mobileDropdownRef.current.contains(target);
+
+            if (isOutsideDesktop && isOutsideMobile) {
                 setIsAddDropdownOpen(false);
             }
         };
@@ -138,7 +143,7 @@ export const Budget: React.FC = () => {
                 </div>
 
                 <div className="budget-page__actions">
-                    <div className="budget-page__add-container" ref={dropdownRef}>
+                    <div className="budget-page__add-container" ref={desktopDropdownRef}>
                         <button
                             className="budget-page__action-btn"
                             title="Add"
@@ -228,7 +233,7 @@ export const Budget: React.FC = () => {
                         </button>
                     </div>
 
-                    <div className="budget-page__add-container" ref={dropdownRef}>
+                    <div className="budget-page__add-container" ref={mobileDropdownRef}>
                         <button
                             className="budget-page__action-btn"
                             title="Add"
