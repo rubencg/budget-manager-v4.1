@@ -191,7 +191,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                 categoryName,
                 categoryImage,
                 categoryColor,
-                subcategory: type === TransactionType.NUMBER_0 ? subcategory : undefined,
+                subcategory: subcategory,
                 notes: notes || '',
                 isApplied: true,
                 monthlyKey: transaction?.monthlyKey || defaultValues?.monthlyKey,
@@ -329,8 +329,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                     />
                 </div>
 
-                {/* Subcategory (Only for Expense) */}
-                {type === TransactionType.NUMBER_0 && (
+                {/* Subcategory */}
+                {(type === TransactionType.NUMBER_0 || type === TransactionType.NUMBER_1) && (
                     <div className="transaction-modal__field">
                         <label className="transaction-modal__label">Subcategoría (Opcional)</label>
                         <Autocomplete<string>
