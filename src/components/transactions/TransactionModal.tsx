@@ -83,6 +83,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
     const [subcategory, setSubcategory] = useState('');
+    const [removeFromSpendingPlan, setRemoveFromSpendingPlan] = useState(false);
     const [notes, setNotes] = useState('');
 
     useEffect(() => {
@@ -107,6 +108,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
 
                 setSubcategory(transaction.subcategory || '');
                 setNotes(transaction.notes || '');
+                setRemoveFromSpendingPlan(transaction.removeFromSpendingPlan || false);
             } else {
                 // Create Mode with optional default values
                 setAmount(defaultValues?.amount?.toString() || '');
@@ -154,6 +156,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
 
                 setSubcategory(defaultValues?.subcategory || '');
                 setNotes(defaultValues?.notes || '');
+                setRemoveFromSpendingPlan(false);
             }
 
             // Focus after form is populated, but avoid jumping scroll
@@ -195,6 +198,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                 notes: notes || '',
                 isApplied: true,
                 monthlyKey: transaction?.monthlyKey || defaultValues?.monthlyKey,
+                removeFromSpendingPlan,
                 savingKey: transaction?.savingKey || defaultValues?.savingKey
             };
 
@@ -354,6 +358,23 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                         placeholder="Notas opcionales..."
                     />
                 </div>
+
+                {type === TransactionType.NUMBER_0 && !transaction?.isMonthly && (
+                    <div className="transaction-modal__field">
+                        <label className="transaction-modal__toggle-label">
+                            <input
+                                type="checkbox"
+                                className="transaction-modal__toggle-input"
+                                checked={removeFromSpendingPlan}
+                                onChange={(e) => setRemoveFromSpendingPlan(e.target.checked)}
+                            />
+                            <div className="transaction-modal__toggle-switch">
+                                <div className="transaction-modal__toggle-handle" />
+                            </div>
+                            <span>Excluir del plan de gastos</span>
+                        </label>
+                    </div>
+                )}
 
                 <div className="category-modal__actions" style={{ display: 'flex', flexDirection: 'row-reverse', justifyContent: 'flex-start', gap: '1rem' }}>
                     <Button
