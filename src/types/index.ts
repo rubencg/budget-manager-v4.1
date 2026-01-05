@@ -94,6 +94,7 @@ export interface Account {
   type: string;
   sumsToMonthlyBudget: boolean;
   remainingCredit?: number;
+  availableCredit?: number | null;
 }
 
 export interface AccountGroup {

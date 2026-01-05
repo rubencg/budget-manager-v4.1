@@ -26,6 +26,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, acc
     const [color, setColor] = useState('#fff300');
     const [showColorPicker, setShowColorPicker] = useState(false);
     const [sumsToBudget, setSumsToBudget] = useState(false);
+    const [availableCredit, setAvailableCredit] = useState('');
 
     useEffect(() => {
         if (isOpen) {
@@ -37,6 +38,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, acc
                 setAccountType(account.accountType?.name || '');
                 setColor(account.color || '#fff300');
                 setSumsToBudget(account.sumsToMonthlyBudget || false);
+                setAvailableCredit(account.availableCredit?.toString() || '');
             } else {
                 // Reset form for new account
                 setName('');
@@ -45,6 +47,7 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, acc
                 setAccountType('');
                 setColor('#fff300');
                 setSumsToBudget(false);
+                setAvailableCredit('');
             }
             setShowColorPicker(false);
         }
@@ -59,7 +62,8 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, acc
                 color,
                 isArchived: false,
                 image: selectedIcon,
-                sumsToMonthlyBudget: sumsToBudget
+                sumsToMonthlyBudget: sumsToBudget,
+                availableCredit: availableCredit === '' ? null : parseFloat(availableCredit)
             };
 
             if (isEditing && account?.id) {
@@ -112,6 +116,19 @@ export const AccountModal: React.FC<AccountModalProps> = ({ isOpen, onClose, acc
                         value={balance}
                         onChange={(e) => setBalance(e.target.value)}
                         placeholder="0.00"
+                    />
+                </div>
+
+                {/* Available Credit */}
+                <div className="category-modal__field">
+                    <label className="category-modal__label">Crédito disponible</label>
+                    <input
+                        className="category-modal__input"
+                        type="number"
+                        step="0.01"
+                        value={availableCredit}
+                        onChange={(e) => setAvailableCredit(e.target.value)}
+                        placeholder="Dejar vacío si no aplica"
                     />
                 </div>
 
