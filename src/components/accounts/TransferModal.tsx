@@ -15,8 +15,8 @@ import {
     faCreditCard,
     faSackDollar
 } from '@fortawesome/free-solid-svg-icons';
-import { Autocomplete } from '../ui/Autocomplete';
 import './TransferModal.css';
+import Select, { StylesConfig, components, OptionProps } from 'react-select';
 
 interface TransferModalProps {
     isOpen: boolean;
@@ -47,6 +47,123 @@ const iconMap: { [key: string]: any } = {
     'default': faWallet
 };
 
+// React Select Custom Styles
+const customSelectStyles: StylesConfig<any, false> = {
+    control: (provided, state) => ({
+        ...provided,
+        backgroundColor: '#262626',
+        borderColor: state.isFocused ? '#00CED1' : 'rgba(255, 255, 255, 0.1)',
+        color: '#FFFFFF',
+        boxShadow: 'none',
+        minHeight: '42px',
+        '&:hover': {
+            borderColor: 'rgba(255, 255, 255, 0.2)'
+        }
+    }),
+    menu: (provided) => ({
+        ...provided,
+        backgroundColor: '#1f1f1f',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        zIndex: 999999,
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)'
+    }),
+    menuList: (provided) => ({
+        ...provided,
+        padding: 0
+    }),
+    option: (provided, state) => ({
+        ...provided,
+        backgroundColor: state.isSelected ? 'rgba(0, 206, 209, 0.2)' : state.isFocused ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
+        color: '#FFFFFF',
+        cursor: 'pointer',
+        padding: '10px 12px',
+        ':active': {
+            backgroundColor: 'rgba(0, 206, 209, 0.3)'
+        }
+    }),
+    singleValue: (provided) => ({
+        ...provided,
+        color: '#FFFFFF'
+    }),
+    input: (provided) => ({
+        ...provided,
+        color: '#FFFFFF'
+    }),
+    placeholder: (provided) => ({
+        ...provided,
+        color: '#6B6B6B'
+    }),
+    indicatorSeparator: () => ({
+        display: 'none'
+    }),
+    dropdownIndicator: (provided) => ({
+        ...provided,
+        color: '#6B6B6B',
+        '&:hover': {
+            color: '#A0A0A0'
+        }
+    }),
+    menuPortal: (base) => ({
+        ...base,
+        zIndex: 999999
+    })
+};
+
+const AccountOption = (props: OptionProps<any>) => {
+    const { data } = props;
+    const icon = data.rawAccount.image ? iconMap[data.rawAccount.image] || iconMap['default'] : iconMap['default'];
+    return (
+        <components.Option {...props}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{
+                    backgroundColor: data.rawAccount.color || '#374151',
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '14px',
+                    color: 'white',
+                    flexShrink: 0
+                }}>
+                    <FontAwesomeIcon icon={icon} />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <span style={{ fontSize: '14px', fontWeight: 600 }}>{data.label}</span>
+                    <span style={{ fontSize: '11px', color: '#A0A0A0' }}>{data.rawAccount.accountType?.name}</span>
+                </div>
+            </div>
+        </components.Option>
+    );
+};
+
+const AccountSingleValue = (props: any) => {
+    const { data } = props;
+    const icon = data.rawAccount.image ? iconMap[data.rawAccount.image] || iconMap['default'] : iconMap['default'];
+    return (
+        <components.SingleValue {...props}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{
+                    backgroundColor: data.rawAccount.color || '#374151',
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '10px',
+                    color: 'white',
+                    flexShrink: 0
+                }}>
+                    <FontAwesomeIcon icon={icon} />
+                </div>
+                <span>{data.label}</span>
+            </div>
+        </components.SingleValue>
+    );
+};
+
 export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, accounts, transaction, defaultValues }) => {
     const amountInputRef = useRef<HTMLInputElement>(null);
     const { createTransfer, updateTransaction } = useTransactionMutations();
@@ -55,11 +172,9 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
     const [date, setDate] = useState<Date>(new Date());
     const [fromAccountId, setFromAccountId] = useState('');
     const [fromAccountName, setFromAccountName] = useState('');
-    const [fromAccountSearch, setFromAccountSearch] = useState('');
 
     const [toAccountId, setToAccountId] = useState('');
     const [toAccountName, setToAccountName] = useState('');
-    const [toAccountSearch, setToAccountSearch] = useState('');
 
     const [notes, setNotes] = useState('');
 
@@ -72,11 +187,9 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
 
                 setFromAccountId(transaction.fromAccountId || '');
                 setFromAccountName(transaction.fromAccountName || '');
-                setFromAccountSearch(transaction.fromAccountName || '');
 
                 setToAccountId(transaction.toAccountId || '');
                 setToAccountName(transaction.toAccountName || '');
-                setToAccountSearch(transaction.toAccountName || '');
 
                 setNotes(transaction.notes || '');
             } else {
@@ -90,12 +203,10 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
                     if (fromAcc) {
                         setFromAccountId(fromAcc.id);
                         setFromAccountName(fromAcc.name);
-                        setFromAccountSearch(fromAcc.name);
                     }
                 } else {
                     setFromAccountId('');
                     setFromAccountName('');
-                    setFromAccountSearch('');
                 }
 
                 // Handle default toAccount
@@ -104,12 +215,10 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
                     if (toAcc) {
                         setToAccountId(toAcc.id);
                         setToAccountName(toAcc.name);
-                        setToAccountSearch(toAcc.name);
                     }
                 } else {
                     setToAccountId('');
                     setToAccountName('');
-                    setToAccountSearch('');
                 }
 
                 setNotes(defaultValues?.notes || '');
@@ -125,13 +234,11 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
     const handleFromAccountSelect = (account: Account) => {
         setFromAccountId(account.id);
         setFromAccountName(account.name);
-        setFromAccountSearch(account.name);
     };
 
     const handleToAccountSelect = (account: Account) => {
         setToAccountId(account.id);
         setToAccountName(account.name);
-        setToAccountSearch(account.name);
     };
 
     const handleSubmit = async () => {
@@ -217,80 +324,72 @@ export const TransferModal: React.FC<TransferModalProps> = ({ isOpen, onClose, a
                 {/* From Account */}
                 <div className="transfer-modal__field">
                     <label className="transfer-modal__label">Cuenta Origen</label>
-                    <Autocomplete<Account>
-                        options={accounts}
-                        value={fromAccountSearch}
-                        onChange={setFromAccountSearch}
-                        onSelect={handleFromAccountSelect}
-                        getLabel={(acc) => acc.name}
-                        icon={faLandmark}
-                        placeholder="Buscar cuenta..."
-                        filterFunction={(item, search) =>
-                            item.id !== toAccountId &&
-                            (item.name.toLowerCase().includes(search.toLowerCase()) ||
-                                item.accountType.name.toLowerCase().includes(search.toLowerCase()))
-                        }
-                        renderOption={(account) => {
-                            const icon = iconMap[account.image] || iconMap['default'];
-                            return (
-                                <div className="transfer-modal__autocomplete-option" style={{ padding: 0 }}>
-                                    <div
-                                        className="transfer-modal__autocomplete-option-icon"
-                                        style={{ backgroundColor: account.color }}
-                                    >
-                                        <FontAwesomeIcon icon={icon} />
-                                    </div>
-                                    <div className="transfer-modal__autocomplete-option-text">
-                                        <span className="transfer-modal__autocomplete-option-name">
-                                            {account.name}
-                                        </span>
-                                        <span className="transfer-modal__autocomplete-option-type">
-                                            {account.accountType.name}
-                                        </span>
-                                    </div>
-                                </div>
-                            );
+                    <Select
+                        styles={customSelectStyles}
+                        options={accounts
+                            .filter(acc => acc.id !== toAccountId)
+                            .map(acc => ({
+                                value: acc.id,
+                                label: acc.name,
+                                rawAccount: acc
+                            }))}
+                        value={fromAccountId ? {
+                            value: fromAccountId,
+                            label: fromAccountName,
+                            rawAccount: accounts.find(a => a.id === fromAccountId)
+                        } : null}
+                        onChange={(selected: any) => {
+                            if (selected) {
+                                handleFromAccountSelect(selected.rawAccount);
+                            } else {
+                                setFromAccountId('');
+                                setFromAccountName('');
+                            }
                         }}
+                        placeholder="Buscar cuenta..."
+                        components={{
+                            Option: AccountOption,
+                            SingleValue: AccountSingleValue
+                        }}
+                        isClearable
+                        menuPortalTarget={document.body}
+                        menuPosition="fixed"
                     />
                 </div>
 
                 {/* To Account */}
                 <div className="transfer-modal__field">
                     <label className="transfer-modal__label">Cuenta Destino</label>
-                    <Autocomplete<Account>
-                        options={accounts}
-                        value={toAccountSearch}
-                        onChange={setToAccountSearch}
-                        onSelect={handleToAccountSelect}
-                        getLabel={(acc) => acc.name}
-                        icon={faLandmark}
-                        placeholder="Buscar cuenta..."
-                        filterFunction={(item, search) =>
-                            item.id !== fromAccountId &&
-                            (item.name.toLowerCase().includes(search.toLowerCase()) ||
-                                item.accountType.name.toLowerCase().includes(search.toLowerCase()))
-                        }
-                        renderOption={(account) => {
-                            const icon = iconMap[account.image] || iconMap['default'];
-                            return (
-                                <div className="transfer-modal__autocomplete-option" style={{ padding: 0 }}>
-                                    <div
-                                        className="transfer-modal__autocomplete-option-icon"
-                                        style={{ backgroundColor: account.color }}
-                                    >
-                                        <FontAwesomeIcon icon={icon} />
-                                    </div>
-                                    <div className="transfer-modal__autocomplete-option-text">
-                                        <span className="transfer-modal__autocomplete-option-name">
-                                            {account.name}
-                                        </span>
-                                        <span className="transfer-modal__autocomplete-option-type">
-                                            {account.accountType.name}
-                                        </span>
-                                    </div>
-                                </div>
-                            );
+                    <Select
+                        styles={customSelectStyles}
+                        options={accounts
+                            .filter(acc => acc.id !== fromAccountId)
+                            .map(acc => ({
+                                value: acc.id,
+                                label: acc.name,
+                                rawAccount: acc
+                            }))}
+                        value={toAccountId ? {
+                            value: toAccountId,
+                            label: toAccountName,
+                            rawAccount: accounts.find(a => a.id === toAccountId)
+                        } : null}
+                        onChange={(selected: any) => {
+                            if (selected) {
+                                handleToAccountSelect(selected.rawAccount);
+                            } else {
+                                setToAccountId('');
+                                setToAccountName('');
+                            }
                         }}
+                        placeholder="Buscar cuenta..."
+                        components={{
+                            Option: AccountOption,
+                            SingleValue: AccountSingleValue
+                        }}
+                        isClearable
+                        menuPortalTarget={document.body}
+                        menuPosition="fixed"
                     />
                 </div>
 

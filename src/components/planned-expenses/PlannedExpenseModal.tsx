@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { DatePicker } from '../ui/DatePicker';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
-import { Autocomplete } from '../ui/Autocomplete';
 import { useCategoriesQuery } from '../../hooks/useCategoriesQuery';
 import { usePlannedExpenseMutations } from '../../hooks/usePlannedExpenseMutations';
 import { PlannedExpense, Category } from '../../api-client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconName } from '@fortawesome/fontawesome-svg-core';
+import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
 import { faTag, faBuildingColumns } from '@fortawesome/free-solid-svg-icons';
+import Select, { StylesConfig, components, OptionProps } from 'react-select';
 import './PlannedExpenseModal.css';
 
 interface PlannedExpenseModalProps {
@@ -16,6 +16,126 @@ interface PlannedExpenseModalProps {
     onClose: () => void;
     plannedExpense?: PlannedExpense | null;
 }
+
+const getIcon = (iconName: string | null | undefined) => {
+    const prefix: IconPrefix = 'fas';
+    const icon = iconName ? findIconDefinition({ prefix, iconName: iconName as any }) : null;
+    return icon || ['fas', 'question-circle'] as [IconPrefix, IconName];
+};
+
+// React Select Custom Styles (Same as TransactionModal)
+const customSelectStyles: StylesConfig<any, false> = {
+    control: (provided, state) => ({
+        ...provided,
+        backgroundColor: '#262626',
+        borderColor: state.isFocused ? '#00CED1' : 'rgba(255, 255, 255, 0.1)',
+        color: '#FFFFFF',
+        boxShadow: 'none',
+        minHeight: '42px',
+        '&:hover': {
+            borderColor: 'rgba(255, 255, 255, 0.2)'
+        }
+    }),
+    menu: (provided) => ({
+        ...provided,
+        backgroundColor: '#1f1f1f',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        zIndex: 999999,
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.5)'
+    }),
+    menuList: (provided) => ({
+        ...provided,
+        padding: 0
+    }),
+    option: (provided, state) => ({
+        ...provided,
+        backgroundColor: state.isSelected ? 'rgba(0, 206, 209, 0.2)' : state.isFocused ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
+        color: '#FFFFFF',
+        cursor: 'pointer',
+        padding: '10px 12px',
+        ':active': {
+            backgroundColor: 'rgba(0, 206, 209, 0.3)'
+        }
+    }),
+    singleValue: (provided) => ({
+        ...provided,
+        color: '#FFFFFF'
+    }),
+    input: (provided) => ({
+        ...provided,
+        color: '#FFFFFF'
+    }),
+    placeholder: (provided) => ({
+        ...provided,
+        color: '#6B6B6B'
+    }),
+    indicatorSeparator: () => ({
+        display: 'none'
+    }),
+    dropdownIndicator: (provided) => ({
+        ...provided,
+        color: '#6B6B6B',
+        '&:hover': {
+            color: '#A0A0A0'
+        }
+    }),
+    menuPortal: (base) => ({
+        ...base,
+        zIndex: 999999
+    })
+};
+
+// Custom Option Component for Categories with Icons
+const CategoryOption = (props: OptionProps<any>) => {
+    const { data } = props;
+    return (
+        <components.Option {...props}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{
+                    backgroundColor: data.color || '#374151',
+                    width: '28px',
+                    height: '28px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '12px',
+                    color: 'white',
+                    flexShrink: 0
+                }}>
+                    <FontAwesomeIcon icon={getIcon(data.image)} />
+                </div>
+                <span style={{ fontSize: '14px' }}>{data.label}</span>
+            </div>
+        </components.Option>
+    );
+};
+
+// Custom SingleValue Component for Categories
+const CategorySingleValue = (props: any) => {
+    const { data } = props;
+    return (
+        <components.SingleValue {...props}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{
+                    backgroundColor: data.color || '#374151',
+                    width: '20px',
+                    height: '20px',
+                    borderRadius: '50%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '10px',
+                    color: 'white',
+                    flexShrink: 0
+                }}>
+                    <FontAwesomeIcon icon={getIcon(data.image)} />
+                </div>
+                <span>{data.label}</span>
+            </div>
+        </components.SingleValue>
+    );
+};
 
 export const PlannedExpenseModal: React.FC<PlannedExpenseModalProps> = ({ isOpen, onClose, plannedExpense }) => {
     const amountInputRef = useRef<HTMLInputElement>(null);
@@ -30,7 +150,6 @@ export const PlannedExpenseModal: React.FC<PlannedExpenseModalProps> = ({ isOpen
 
     const [categoryId, setCategoryId] = useState('');
     const [categoryName, setCategoryName] = useState('');
-    const [categorySearch, setCategorySearch] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
     const [subcategory, setSubcategory] = useState('');
@@ -57,7 +176,6 @@ export const PlannedExpenseModal: React.FC<PlannedExpenseModalProps> = ({ isOpen
 
                 setCategoryId(plannedExpense.categoryId || '');
                 setCategoryName(plannedExpense.categoryName || '');
-                setCategorySearch(plannedExpense.categoryName || '');
                 setSubcategory(plannedExpense.subCategory || '');
 
                 // Find and set selected category object to enable subcategories
@@ -75,7 +193,6 @@ export const PlannedExpenseModal: React.FC<PlannedExpenseModalProps> = ({ isOpen
                 setDayOfMonth(1);
                 setCategoryId('');
                 setCategoryName('');
-                setCategorySearch('');
                 setSelectedCategory(null);
                 setSubcategory('');
             }
@@ -90,7 +207,7 @@ export const PlannedExpenseModal: React.FC<PlannedExpenseModalProps> = ({ isOpen
     const handleCategorySelect = (category: Category) => {
         setCategoryId(category.id || '');
         setCategoryName(category.name || '');
-        setCategorySearch(category.name || '');
+        setCategoryName(category.name || '');
         setSelectedCategory(category);
         setSubcategory(''); // Reset subcategory when category changes
     };
@@ -236,48 +353,58 @@ export const PlannedExpenseModal: React.FC<PlannedExpenseModalProps> = ({ isOpen
                 {/* Category */}
                 <div className="planned-expense-modal__field">
                     <label className="planned-expense-modal__label">Categoría</label>
-                    <Autocomplete<Category>
-                        options={categories || []}
-                        value={categorySearch}
-                        onChange={setCategorySearch}
-                        onSelect={handleCategorySelect}
-                        getLabel={(cat) => cat.name || ''}
-                        icon={faTag}
+                    <Select
+                        styles={customSelectStyles}
+                        options={categories?.map(c => ({
+                            value: c.id,
+                            label: c.name,
+                            image: c.image,
+                            color: c.color,
+                            ...c
+                        })) || []}
+                        value={categoryId ? {
+                            value: categoryId,
+                            label: categoryName,
+                            image: categories?.find(c => c.id === categoryId)?.image || '',
+                            color: categories?.find(c => c.id === categoryId)?.color || ''
+                        } : null}
+                        onChange={(selected: any) => {
+                            if (selected) {
+                                handleCategorySelect(selected);
+                            } else {
+                                setCategoryId('');
+                                setCategoryName('');
+                                setSelectedCategory(null);
+                            }
+                        }}
                         placeholder="Buscar categoría..."
-                        renderOption={(category) => (
-                            <div className="planned-expense-modal__autocomplete-option" style={{ padding: 0 }}>
-                                <div
-                                    className="planned-expense-modal__autocomplete-option-icon"
-                                    style={{ backgroundColor: category.color || '#ccc' }}
-                                >
-                                    <FontAwesomeIcon icon={['fas', (category.image as IconName) || 'tag']} />
-                                </div>
-                                <div className="planned-expense-modal__autocomplete-option-text">
-                                    <span className="planned-expense-modal__autocomplete-option-name">
-                                        {category.name}
-                                    </span>
-                                </div>
-                            </div>
-                        )}
+                        components={{
+                            Option: CategoryOption,
+                            SingleValue: CategorySingleValue
+                        }}
+                        isClearable
+                        menuPortalTarget={document.body}
+                        menuPosition="fixed"
                     />
                 </div>
 
                 {/* Subcategory */}
-                {selectedCategory && selectedCategory.subcategories && selectedCategory.subcategories.length > 0 && (
-                    <div className="planned-expense-modal__field">
-                        <label className="planned-expense-modal__label">Subcategoría</label>
-                        <select
-                            className="planned-expense-modal__select"
-                            value={subcategory}
-                            onChange={(e) => setSubcategory(e.target.value)}
-                        >
-                            <option value="">Seleccionar subcategoría</option>
-                            {selectedCategory.subcategories.map((sub, index) => (
-                                <option key={index} value={sub}>{sub}</option>
-                            ))}
-                        </select>
-                    </div>
-                )}
+                <div className="planned-expense-modal__field">
+                    <label className="planned-expense-modal__label">Subcategoría (Opcional)</label>
+                    <Select
+                        styles={customSelectStyles}
+                        options={selectedCategory?.subcategories?.map(sub => ({
+                            value: sub,
+                            label: sub
+                        })) || []}
+                        value={subcategory ? { value: subcategory, label: subcategory } : null}
+                        onChange={(selected: any) => setSubcategory(selected ? selected.value : '')}
+                        placeholder="Ej. Internet, Comida..."
+                        isClearable
+                        menuPortalTarget={document.body}
+                        menuPosition="fixed"
+                    />
+                </div>
 
                 {/* Actions */}
                 <div className="planned-expense-modal__actions">
