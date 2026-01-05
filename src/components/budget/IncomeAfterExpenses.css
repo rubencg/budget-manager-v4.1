@@ -148,6 +148,20 @@
     gap: var(--space-xs);
 }
 
+.income-after-expenses__account-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.income-after-expenses__notes-mobile {
+    display: none;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-style: italic;
+}
+
+
 .income-after-expenses__account-dot {
     width: 24px;
     height: 16px;
@@ -313,6 +327,11 @@
     .income-after-expenses__td--applied {
         display: none;
     }
+
+    .income-after-expenses__notes-mobile {
+        display: block;
+    }
+
 
     /* Savings Row Grid - Fixed overlap */
     .income-after-expenses__tr--savings {

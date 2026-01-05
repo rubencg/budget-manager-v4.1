@@ -322,17 +322,24 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                                 </div>
                                             </td>
                                             <td className="income-after-expenses__td income-after-expenses__td--account">
-                                                <div className="income-after-expenses__account">
-                                                    <div
-                                                        className="income-after-expenses__icon"
-                                                        style={{
-                                                            backgroundColor: account?.color || '#374151',
-                                                            width: '24px', height: '24px', fontSize: '10px'
-                                                        }}
-                                                    >
-                                                        <FontAwesomeIcon icon={getIcon(account?.image)} />
+                                                <div className="income-after-expenses__account-wrapper">
+                                                    <div className="income-after-expenses__account">
+                                                        <div
+                                                            className="income-after-expenses__icon"
+                                                            style={{
+                                                                backgroundColor: account?.color || '#374151',
+                                                                width: '24px', height: '24px', fontSize: '10px'
+                                                            }}
+                                                        >
+                                                            <FontAwesomeIcon icon={getIcon(account?.image)} />
+                                                        </div>
+                                                        <span>{item.accountName}</span>
                                                     </div>
-                                                    <span>{item.accountName}</span>
+                                                    {item.notes && (
+                                                        <div className="income-after-expenses__notes-mobile">
+                                                            {item.notes}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </td>
                                             <td className="income-after-expenses__td income-after-expenses__td--amount">
@@ -412,17 +419,24 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                                 </div>
                                             </td>
                                             <td className="income-after-expenses__td income-after-expenses__td--account">
-                                                <div className="income-after-expenses__account">
-                                                    <div
-                                                        className="income-after-expenses__icon"
-                                                        style={{
-                                                            backgroundColor: account?.color || '#374151',
-                                                            width: '24px', height: '24px', fontSize: '10px'
-                                                        }}
-                                                    >
-                                                        <FontAwesomeIcon icon={getIcon(account?.image)} />
+                                                <div className="income-after-expenses__account-wrapper">
+                                                    <div className="income-after-expenses__account">
+                                                        <div
+                                                            className="income-after-expenses__icon"
+                                                            style={{
+                                                                backgroundColor: account?.color || '#374151',
+                                                                width: '24px', height: '24px', fontSize: '10px'
+                                                            }}
+                                                        >
+                                                            <FontAwesomeIcon icon={getIcon(account?.image)} />
+                                                        </div>
+                                                        <span>{item.accountName}</span>
                                                     </div>
-                                                    <span>{item.accountName}</span>
+                                                    {item.notes && (
+                                                        <div className="income-after-expenses__notes-mobile">
+                                                            {item.notes}
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </td>
                                             <td className="income-after-expenses__td income-after-expenses__td--amount">

@@ -89,7 +89,16 @@ export const TransactionsCard: React.FC<TransactionsCardProps> = ({ transactions
                   </td>
                   <td>
                     <div className="transactions-card__method">
-                      {transaction.accountName}
+                      <div className="transactions-card__account-wrapper">
+                        <div className="transactions-card__account-name">
+                          {transaction.accountName}
+                        </div>
+                        {transaction.notes && (
+                          <div className="transactions-card__notes-mobile">
+                            {transaction.notes}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </td>
                 </tr>

@@ -409,7 +409,16 @@ export const Transactions: React.FC = () => {
                                             )}
                                         </div>
                                         <div className="transactions-table__cell transactions-table__cell--account">
-                                            {renderAccountInfo(transaction)}
+                                            <div className="transactions-table__account-wrapper">
+                                                <div className="transactions-table__account-name">
+                                                    {renderAccountInfo(transaction)}
+                                                </div>
+                                                {transaction.notes && (
+                                                    <div className="transactions-table__notes-mobile">
+                                                        {transaction.notes}
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                         <div
                                             className="transactions-table__cell transactions-table__cell--amount"

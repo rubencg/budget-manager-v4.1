@@ -91,6 +91,20 @@
   color: var(--text-secondary);
 }
 
+.transactions-card__account-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.transactions-card__notes-mobile {
+  display: none;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+
 @media (max-width: 768px) {
   .transactions-card__table thead {
     display: none;
@@ -108,10 +122,16 @@
     padding: 0;
   }
 
-  /* Hide method column on mobile dashboard to save space */
   .transactions-card__table td:last-child {
-    display: none;
+    display: block;
+    grid-column: 1 / -1;
+    margin-top: -4px;
   }
+
+  .transactions-card__notes-mobile {
+    display: block;
+  }
+
 
   .transactions-card__icon {
     width: 32px;

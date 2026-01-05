@@ -230,6 +230,20 @@
     font-size: 13px;
 }
 
+.transactions-table__account-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.transactions-table__notes-mobile {
+    display: none;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-style: italic;
+}
+
+
 .transactions-table__transfer {
     display: flex;
     align-items: center;
@@ -482,8 +496,16 @@
 
     .transactions-table__cell--notes {
         display: none;
-        /* Hide notes on mobile to save space */
     }
+
+    .transactions-table__notes-mobile {
+        display: block;
+    }
+
+    .transactions-table__account-wrapper {
+        gap: 0;
+    }
+
 
     .transactions-page__controls {
         flex-direction: column;

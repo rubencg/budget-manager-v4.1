@@ -369,7 +369,16 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
                                     </div>
                                 </div>
                                 <div className="transactions-table__cell transactions-table__cell--account">
-                                    {item.accountName}
+                                    <div className="transactions-table__account-wrapper">
+                                        <div className="transactions-table__account-name">
+                                            {item.accountName}
+                                        </div>
+                                        {item.notes && (
+                                            <div className="transactions-table__notes-mobile">
+                                                {item.notes}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                                 <div
                                     className="transactions-table__cell transactions-table__cell--amount"
