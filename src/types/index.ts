@@ -93,6 +93,7 @@ export interface Account {
   metadata?: AccountMetadata;
   type: string;
   sumsToMonthlyBudget: boolean;
+  remainingCredit?: number;
 }
 
 export interface AccountGroup {

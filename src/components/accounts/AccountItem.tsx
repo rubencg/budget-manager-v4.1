@@ -45,6 +45,11 @@ export const AccountItem: React.FC<AccountItemProps> = ({ account, onEdit, onArc
                 <div className="account-item__info">
                     <span className="account-item__name">{account.name}</span>
                     <span className={`account-item__amount ${amountClass}`}>{formattedBalance}</span>
+                    {account.remainingCredit !== undefined && account.remainingCredit !== null && (
+                        <span className="account-item__available">
+                            Disponible: {formatCurrency(account.remainingCredit)}
+                        </span>
+                    )}
                 </div>
             </div>
 

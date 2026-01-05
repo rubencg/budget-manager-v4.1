@@ -116,7 +116,7 @@ export interface Account {
      * @type {number}
      * @memberof Account
      */
-    readonly remainingCredit?: number;
+    readonly remainingCredit?: number | null;
 }
 
 /**
