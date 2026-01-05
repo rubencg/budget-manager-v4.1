@@ -12,6 +12,7 @@ Name | Type
 `color` | string
 `image` | string
 `isArchived` | boolean
+`availableCredit` | number
 `accountId` | string
 
 ## Example
@@ -27,6 +28,7 @@ const example = {
   "color": null,
   "image": null,
   "isArchived": null,
+  "availableCredit": null,
   "accountId": null,
 } satisfies UpdateAccountCommand
 

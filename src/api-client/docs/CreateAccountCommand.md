@@ -12,6 +12,7 @@ Name | Type
 `color` | string
 `image` | string
 `isArchived` | boolean
+`availableCredit` | number
 
 ## Example
 
@@ -26,6 +27,7 @@ const example = {
   "color": null,
   "image": null,
   "isArchived": null,
+  "availableCredit": null,
 } satisfies CreateAccountCommand
 
 console.log(example)

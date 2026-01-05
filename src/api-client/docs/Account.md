@@ -19,6 +19,8 @@ Name | Type
 `metadata` | { [key: string]: any; }
 `type` | string
 `sumsToMonthlyBudget` | boolean
+`availableCredit` | number
+`remainingCredit` | number
 
 ## Example
 
@@ -40,6 +42,8 @@ const example = {
   "metadata": null,
   "type": null,
   "sumsToMonthlyBudget": null,
+  "availableCredit": null,
+  "remainingCredit": null,
 } satisfies Account
 
 console.log(example)

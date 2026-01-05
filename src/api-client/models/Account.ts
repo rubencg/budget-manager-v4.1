@@ -105,6 +105,18 @@ export interface Account {
      * @memberof Account
      */
     sumsToMonthlyBudget?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof Account
+     */
+    availableCredit?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof Account
+     */
+    readonly remainingCredit?: number;
 }
 
 /**
@@ -137,6 +149,8 @@ export function AccountFromJSONTyped(json: any, ignoreDiscriminator: boolean): A
         'metadata': json['metadata'] == null ? undefined : json['metadata'],
         'type': json['type'] == null ? undefined : json['type'],
         'sumsToMonthlyBudget': json['sumsToMonthlyBudget'] == null ? undefined : json['sumsToMonthlyBudget'],
+        'availableCredit': json['availableCredit'] == null ? undefined : json['availableCredit'],
+        'remainingCredit': json['remainingCredit'] == null ? undefined : json['remainingCredit'],
     };
 }
 
@@ -144,7 +158,7 @@ export function AccountToJSON(json: any): Account {
     return AccountToJSONTyped(json, false);
 }
 
-export function AccountToJSONTyped(value?: Account | null, ignoreDiscriminator: boolean = false): any {
+export function AccountToJSONTyped(value?: Omit<Account, 'remainingCredit'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -164,6 +178,7 @@ export function AccountToJSONTyped(value?: Account | null, ignoreDiscriminator: 
         'metadata': value['metadata'],
         'type': value['type'],
         'sumsToMonthlyBudget': value['sumsToMonthlyBudget'],
+        'availableCredit': value['availableCredit'],
     };
 }
 

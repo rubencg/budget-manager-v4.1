@@ -63,6 +63,12 @@ export interface CreateAccountCommand {
      * @memberof CreateAccountCommand
      */
     isArchived?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateAccountCommand
+     */
+    availableCredit?: number | null;
 }
 
 /**
@@ -88,6 +94,7 @@ export function CreateAccountCommandFromJSONTyped(json: any, ignoreDiscriminator
         'color': json['color'] == null ? undefined : json['color'],
         'image': json['image'] == null ? undefined : json['image'],
         'isArchived': json['isArchived'] == null ? undefined : json['isArchived'],
+        'availableCredit': json['availableCredit'] == null ? undefined : json['availableCredit'],
     };
 }
 
@@ -108,6 +115,7 @@ export function CreateAccountCommandToJSONTyped(value?: CreateAccountCommand | n
         'color': value['color'],
         'image': value['image'],
         'isArchived': value['isArchived'],
+        'availableCredit': value['availableCredit'],
     };
 }
 

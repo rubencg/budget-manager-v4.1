@@ -65,6 +65,12 @@ export interface UpdateAccountCommand {
     isArchived?: boolean;
     /**
      * 
+     * @type {number}
+     * @memberof UpdateAccountCommand
+     */
+    availableCredit?: number | null;
+    /**
+     * 
      * @type {string}
      * @memberof UpdateAccountCommand
      */
@@ -94,6 +100,7 @@ export function UpdateAccountCommandFromJSONTyped(json: any, ignoreDiscriminator
         'color': json['color'] == null ? undefined : json['color'],
         'image': json['image'] == null ? undefined : json['image'],
         'isArchived': json['isArchived'] == null ? undefined : json['isArchived'],
+        'availableCredit': json['availableCredit'] == null ? undefined : json['availableCredit'],
         'accountId': json['accountId'] == null ? undefined : json['accountId'],
     };
 }
@@ -115,6 +122,7 @@ export function UpdateAccountCommandToJSONTyped(value?: UpdateAccountCommand | n
         'color': value['color'],
         'image': value['image'],
         'isArchived': value['isArchived'],
+        'availableCredit': value['availableCredit'],
         'accountId': value['accountId'],
     };
 }
