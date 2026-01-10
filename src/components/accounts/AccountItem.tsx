@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPen, faBoxArchive, faMoneyCheck, faHandHoldingDollar, faWallet, faPiggyBank, faCreditCard, faSackDollar, faLandmark } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faBoxArchive, faRightLeft, faMoneyCheck, faHandHoldingDollar, faWallet, faPiggyBank, faCreditCard, faSackDollar, faLandmark } from '@fortawesome/free-solid-svg-icons';
 import { Account } from '../../types';
 import { formatCurrency } from '../../utils/currencyUtils';
 import './Accounts.css';
@@ -9,6 +9,7 @@ interface AccountItemProps {
     account: Account;
     onEdit: (account: Account) => void;
     onArchive: (account: Account) => void;
+    onTransfer: (account: Account) => void;
 }
 
 const iconMap: { [key: string]: any } = {
@@ -22,7 +23,7 @@ const iconMap: { [key: string]: any } = {
     'default': faWallet
 };
 
-export const AccountItem: React.FC<AccountItemProps> = ({ account, onEdit, onArchive }) => {
+export const AccountItem: React.FC<AccountItemProps> = ({ account, onEdit, onArchive, onTransfer }) => {
     const icon = iconMap[account.image] || iconMap['default'];
 
     // Formatting currency
@@ -56,6 +57,9 @@ export const AccountItem: React.FC<AccountItemProps> = ({ account, onEdit, onArc
             <div className="account-item__actions">
                 <button className="account-item__action-btn" title="Edit" onClick={() => onEdit(account)}>
                     <FontAwesomeIcon icon={faPen} size="sm" />
+                </button>
+                <button className="account-item__action-btn" title="Transferir" onClick={() => onTransfer(account)}>
+                    <FontAwesomeIcon icon={faRightLeft} size="sm" />
                 </button>
                 <button className="account-item__action-btn" title="Archive" onClick={() => onArchive(account)}>
                     <FontAwesomeIcon icon={faBoxArchive} size="sm" />

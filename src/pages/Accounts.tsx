@@ -21,6 +21,7 @@ export const Accounts: React.FC = () => {
     const [archivingAccount, setArchivingAccount] = useState<Account | null>(null);
     const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
     const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+    const [transferDefaultValues, setTransferDefaultValues] = useState<{ toAccountId?: string; amount?: number } | undefined>(undefined);
 
     const handleEdit = (account: Account) => {
         setEditingAccount(account);
@@ -40,6 +41,14 @@ export const Accounts: React.FC = () => {
     const handleArchive = (account: Account) => {
         setArchivingAccount(account);
         setIsArchiveModalOpen(true);
+    };
+
+    const handleTransfer = (account: Account) => {
+        setTransferDefaultValues({
+            toAccountId: account.id,
+            amount: account.currentBalance < 0 ? Math.abs(account.currentBalance) : undefined
+        });
+        setIsTransferModalOpen(true);
     };
 
     const confirmArchive = async () => {
@@ -100,6 +109,7 @@ export const Accounts: React.FC = () => {
                             group={group}
                             onEdit={handleEdit}
                             onArchive={handleArchive}
+                            onTransfer={handleTransfer}
                         />
                     ))}
                 </div>
@@ -143,8 +153,12 @@ export const Accounts: React.FC = () => {
             {/* Transfer Modal */}
             <TransferModal
                 isOpen={isTransferModalOpen}
-                onClose={() => setIsTransferModalOpen(false)}
+                onClose={() => {
+                    setIsTransferModalOpen(false);
+                    setTransferDefaultValues(undefined);
+                }}
                 accounts={accountGroups?.flatMap(group => group.accounts) || []}
+                defaultValues={transferDefaultValues}
             />
         </div>
     );

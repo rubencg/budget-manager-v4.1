@@ -8,9 +8,10 @@ interface AccountGroupCardProps {
     group: AccountGroup;
     onEdit: (account: Account) => void;
     onArchive: (account: Account) => void;
+    onTransfer: (account: Account) => void;
 }
 
-export const AccountGroupCard: React.FC<AccountGroupCardProps> = ({ group, onEdit, onArchive }) => {
+export const AccountGroupCard: React.FC<AccountGroupCardProps> = ({ group, onEdit, onArchive, onTransfer }) => {
     const formattedTotal = formatCurrency(group.total);
 
     return (
@@ -22,7 +23,7 @@ export const AccountGroupCard: React.FC<AccountGroupCardProps> = ({ group, onEdi
 
             <div className="account-group-card__list">
                 {group.accounts.map(account => (
-                    <AccountItem key={account.id} account={account} onEdit={onEdit} onArchive={onArchive} />
+                    <AccountItem key={account.id} account={account} onEdit={onEdit} onArchive={onArchive} onTransfer={onTransfer} />
                 ))}
             </div>
         </div>
