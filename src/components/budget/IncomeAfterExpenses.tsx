@@ -66,6 +66,26 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
         return [...expenses, ...incomes];
     }, [expenseCategories, incomeCategories]);
 
+    const allIncomes = useMemo(() => {
+        const monthly = (data?.incomesAfterMonthlyExpenses?.monthlyIncomes?.items || [])
+            .map(i => ({ ...i, _isMonthly: true }));
+        const normal = (data?.incomesAfterMonthlyExpenses?.incomes?.items || [])
+            .map(i => ({ ...i, _isMonthly: false }));
+        return [...monthly, ...normal];
+    }, [data]);
+
+    const allMonthlyExpenses = useMemo(() => {
+        return (data?.incomesAfterMonthlyExpenses?.monthlyExpenses?.items || [])
+            .map(i => ({ ...i, _isMonthly: true }));
+    }, [data]);
+
+    const allSavings = useMemo(() => {
+        return (data?.incomesAfterMonthlyExpenses?.savings?.items || [])
+            .map(i => ({ ...i, _isMonthly: true }));
+    }, [data]);
+
+    const incomesTotal = (data?.incomesAfterMonthlyExpenses?.monthlyIncomes?.total || 0) + (data?.incomesAfterMonthlyExpenses?.incomes?.total || 0);
+
     const getCategoryDetails = (categoryId: string | null | undefined) => {
         if (!categoryId) return null;
         return allCategories.find(c => c.id === categoryId);
@@ -141,7 +161,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
             if (transaction) {
                 setEditingAppliedTransaction(transaction);
                 setApplyDefaultValues({
-                    monthlyKey: item.id
+                    monthlyKey: (item as any)._isMonthly ? item.id : null
                 });
                 setApplyTransactionType(type);
                 setIsApplyTransactionModalOpen(true);
@@ -174,7 +194,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
             if (transaction) {
                 setEditingAppliedTransaction(transaction);
                 setApplyDefaultValues({
-                    savingKey: item.id
+                    savingKey: (item as any)._isMonthly ? item.id : null
                 });
                 setIsApplyTransferModalOpen(true);
                 return; // Exit early if found
@@ -196,7 +216,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
             categoryName: item.categoryName || category?.name,
             subcategory: item.subcategory,
             notes: item.notes,
-            monthlyKey: item.id
+            monthlyKey: (item as any)._isMonthly ? item.id : null
         });
         setApplyTransactionType(type);
         setIsApplyTransactionModalOpen(true);
@@ -207,7 +227,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
         setApplyDefaultValues({
             amount: item.amountPerMonth,
             toAccountId: item.accountId,
-            savingKey: item.id,
+            savingKey: (item as any)._isMonthly ? item.id : null,
             notes: `Ahorro mensual: ${item.name}`
         });
         setIsApplyTransferModalOpen(true);
@@ -270,9 +290,9 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
 
     return (
         <div className="income-after-expenses">
-            {/* Monthly Incomes Section */}
-            <BudgetSection title="Ingresos" total={data.incomesAfterMonthlyExpenses?.monthlyIncomes?.total || 0}>
-                {!data.incomesAfterMonthlyExpenses?.monthlyIncomes?.items?.length ? (
+            {/* Incomes Section */}
+            <BudgetSection title="Ingresos" total={incomesTotal}>
+                {!allIncomes.length ? (
                     <div className="income-after-expenses__no-data">No hay ingresos registrados</div>
                 ) : (
                     <div className="income-after-expenses__table-container">
@@ -289,7 +309,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.incomesAfterMonthlyExpenses.monthlyIncomes.items.map((item, index) => {
+                                {allIncomes.map((item, index) => {
                                     const category = getCategoryDetails(item.categoryId);
                                     const account = flattenedAccounts.find(a => a.id === item.accountId);
 
@@ -386,7 +406,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.incomesAfterMonthlyExpenses.monthlyExpenses.items.map((item, index) => {
+                                {allMonthlyExpenses.map((item, index) => {
                                     const category = getCategoryDetails(item.categoryId);
                                     const account = flattenedAccounts.find(a => a.id === item.accountId);
 
@@ -483,7 +503,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.incomesAfterMonthlyExpenses.savings.items.map((item, index) => {
+                                {allSavings.map((item, index) => {
                                     const remaining = (item.goalAmount || 0) - (item.savedAmount || 0);
 
                                     return (
