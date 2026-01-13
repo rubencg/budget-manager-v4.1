@@ -103,8 +103,10 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
 
     const handleDeleteTransaction = (item: BudgetSectionItemDto) => {
         if (!item.id) return;
-        if (item.isApplied && item.transactionId) {
-            setItemToDelete({ id: item.transactionId, type: 'applied-transaction' });
+        const isMonthlyTemplate = (item as any)._isMonthly;
+
+        if (item.isApplied || !isMonthlyTemplate) {
+            setItemToDelete({ id: (item.transactionId || item.id)!, type: 'applied-transaction' });
         } else {
             setItemToDelete({ id: item.id, type: 'transaction' });
         }
@@ -113,8 +115,10 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
 
     const handleDeleteSaving = (item: BudgetSectionItemDto) => {
         if (!item.id) return;
-        if (item.isApplied && item.transactionId) {
-            setItemToDelete({ id: item.transactionId, type: 'applied-transaction' });
+        const isMonthlyTemplate = (item as any)._isMonthly;
+
+        if (item.isApplied || !isMonthlyTemplate) {
+            setItemToDelete({ id: (item.transactionId || item.id)!, type: 'applied-transaction' });
         } else {
             setItemToDelete({ id: item.id, type: 'saving' });
         }
@@ -142,17 +146,20 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
     };
 
     const handleEditTransaction = async (item: BudgetSectionItemDto, type: TransactionType) => {
-        if (item.isApplied) {
+        const isMonthlyTemplate = (item as any)._isMonthly;
+
+        if (item.isApplied || !isMonthlyTemplate) {
             let transaction = transactionsData?.data?.find((t: Transaction) =>
                 (item.transactionId && t.id?.toLowerCase() === item.transactionId.toLowerCase()) ||
-                (item.id && t.monthlyKey?.toLowerCase() === item.id.toLowerCase())
+                (!isMonthlyTemplate && item.id && t.id?.toLowerCase() === item.id.toLowerCase()) ||
+                (isMonthlyTemplate && item.id && t.monthlyKey?.toLowerCase() === item.id.toLowerCase())
             );
 
-            if (!transaction && item.transactionId) {
+            if (!transaction && (item.transactionId || (!isMonthlyTemplate && item.id))) {
                 try {
                     const token = await getAccessTokenSilently();
                     const transactionsApi = createTransactionsApi(token);
-                    transaction = await transactionsApi.apiTransactionsIdGet({ id: item.transactionId });
+                    transaction = await transactionsApi.apiTransactionsIdGet({ id: (item.transactionId || item.id)! });
                 } catch (error) {
                     console.error('Failed to fetch linked transaction:', error);
                 }
@@ -161,7 +168,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
             if (transaction) {
                 setEditingAppliedTransaction(transaction);
                 setApplyDefaultValues({
-                    monthlyKey: (item as any)._isMonthly ? item.id : null
+                    monthlyKey: isMonthlyTemplate ? item.id : null
                 });
                 setApplyTransactionType(type);
                 setIsApplyTransactionModalOpen(true);
@@ -169,7 +176,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
             }
         }
 
-        // Fallback to editing the definition if not applied or transaction not found in current list
+        // Fallback to editing the definition if it IS a template and not applied (or transaction not found)
         setEditingTransaction(item);
         setIsTransactionModalOpen(true);
     };

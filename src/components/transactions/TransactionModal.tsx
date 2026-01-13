@@ -255,6 +255,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
 
     const [subcategory, setSubcategory] = useState('');
     const [removeFromSpendingPlan, setRemoveFromSpendingPlan] = useState(false);
+    const [isApplied, setIsApplied] = useState(true);
     const [notes, setNotes] = useState('');
 
     useEffect(() => {
@@ -280,6 +281,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                 setSubcategory(transaction.subcategory || '');
                 setNotes(transaction.notes || '');
                 setRemoveFromSpendingPlan(transaction.removeFromSpendingPlan || false);
+                setIsApplied(transaction.isApplied ?? true);
             } else {
                 // Create Mode with optional default values
                 setAmount(defaultValues?.amount?.toString() || '');
@@ -328,6 +330,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                 setSubcategory(defaultValues?.subcategory || '');
                 setNotes(defaultValues?.notes || '');
                 setRemoveFromSpendingPlan(false);
+                setIsApplied(true);
             }
 
             // Focus after form is populated, but avoid jumping scroll
@@ -367,7 +370,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                 categoryColor,
                 subcategory: subcategory,
                 notes: notes || '',
-                isApplied: true,
+                isApplied,
                 monthlyKey: transaction?.monthlyKey || defaultValues?.monthlyKey,
                 removeFromSpendingPlan,
                 savingKey: transaction?.savingKey || defaultValues?.savingKey
@@ -427,6 +430,25 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
                         />
                     </div>
                 </div>
+
+                {/* Applied Toggle (Income only) */}
+                {type === TransactionType.NUMBER_1 && (!transaction || !transaction.isApplied) && (
+                    <div className="transaction-modal__field">
+                        <label className="transaction-modal__toggle-label" style={{ opacity: transaction ? 0.7 : 1 }}>
+                            <input
+                                type="checkbox"
+                                className="transaction-modal__toggle-input"
+                                checked={isApplied}
+                                onChange={(e) => setIsApplied(e.target.checked)}
+                                disabled={!!transaction}
+                            />
+                            <div className="transaction-modal__toggle-switch">
+                                <div className="transaction-modal__toggle-handle" />
+                            </div>
+                            <span>{isApplied ? 'Recibido' : 'No Recibido'}</span>
+                        </label>
+                    </div>
+                )}
 
                 {/* Date */}
                 <div className="transaction-modal__field">
