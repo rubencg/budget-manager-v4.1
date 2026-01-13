@@ -50,6 +50,12 @@ export interface IncomesAfterMonthlyExpensesData {
      * @type {BudgetSectionDto}
      * @memberof IncomesAfterMonthlyExpensesData
      */
+    incomes?: BudgetSectionDto;
+    /**
+     * 
+     * @type {BudgetSectionDto}
+     * @memberof IncomesAfterMonthlyExpensesData
+     */
     savings?: BudgetSectionDto;
 }
 
@@ -73,6 +79,7 @@ export function IncomesAfterMonthlyExpensesDataFromJSONTyped(json: any, ignoreDi
         'total': json['total'] == null ? undefined : json['total'],
         'monthlyIncomes': json['monthlyIncomes'] == null ? undefined : BudgetSectionDtoFromJSON(json['monthlyIncomes']),
         'monthlyExpenses': json['monthlyExpenses'] == null ? undefined : BudgetSectionDtoFromJSON(json['monthlyExpenses']),
+        'incomes': json['incomes'] == null ? undefined : BudgetSectionDtoFromJSON(json['incomes']),
         'savings': json['savings'] == null ? undefined : BudgetSectionDtoFromJSON(json['savings']),
     };
 }
@@ -91,6 +98,7 @@ export function IncomesAfterMonthlyExpensesDataToJSONTyped(value?: IncomesAfterM
         'total': value['total'],
         'monthlyIncomes': BudgetSectionDtoToJSON(value['monthlyIncomes']),
         'monthlyExpenses': BudgetSectionDtoToJSON(value['monthlyExpenses']),
+        'incomes': BudgetSectionDtoToJSON(value['incomes']),
         'savings': BudgetSectionDtoToJSON(value['savings']),
     };
 }

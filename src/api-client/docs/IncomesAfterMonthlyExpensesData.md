@@ -9,6 +9,7 @@ Name | Type
 `total` | number
 `monthlyIncomes` | [BudgetSectionDto](BudgetSectionDto.md)
 `monthlyExpenses` | [BudgetSectionDto](BudgetSectionDto.md)
+`incomes` | [BudgetSectionDto](BudgetSectionDto.md)
 `savings` | [BudgetSectionDto](BudgetSectionDto.md)
 
 ## Example
@@ -21,6 +22,7 @@ const example = {
   "total": null,
   "monthlyIncomes": null,
   "monthlyExpenses": null,
+  "incomes": null,
   "savings": null,
 } satisfies IncomesAfterMonthlyExpensesData
 
