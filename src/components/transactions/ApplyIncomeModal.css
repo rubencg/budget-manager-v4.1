@@ -1,0 +1,116 @@
+.apply-income-modal__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 0.5rem;
+}
+
+.apply-income-modal__card {
+    background-color: #262c45;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Fix nested DatePicker styling */
+.apply-income-modal__card .custom-date-picker {
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.apply-income-modal__card .custom-date-picker__input {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    min-height: auto !important;
+}
+
+.apply-income-modal__card .custom-date-picker__value {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.apply-income-modal__card .custom-date-picker__icon {
+    display: none;
+    /* Already have an icon in the card-content */
+}
+
+.apply-income-modal__card-label {
+    color: #8fa1b3;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.apply-income-modal__card-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.apply-income-modal__icon {
+    color: #8fa1b3;
+    font-size: 1.1rem;
+    width: 20px;
+}
+
+.apply-income-modal__currency {
+    color: #8fa1b3;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.apply-income-modal__amount-input {
+    background: transparent;
+    border: none;
+    color: #00e676;
+    /* Vibrant green from screenshot */
+    font-size: 1.5rem;
+    font-weight: 700;
+    width: 100%;
+    outline: none;
+    padding: 0;
+}
+
+.apply-income-modal__amount-input::-webkit-inner-spin-button,
+.apply-income-modal__amount-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.apply-income-modal__date-btn {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+}
+
+.apply-income-modal__actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+    gap: 1rem;
+}
+
+.apply-income-modal__actions button {
+    flex: 1;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.apply-income-modal__btn--apply {
+    background-color: #00c853 !important;
+    border-color: #00c853 !important;
+}
+
+.apply-income-modal__btn--apply:hover {
+    background-color: #00a042 !important;
+}

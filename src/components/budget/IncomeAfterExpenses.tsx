@@ -14,6 +14,7 @@ import { useTransactionsQuery } from '../../hooks/useTransactionsQuery';
 import { useTransactionMutations } from '../../hooks/useTransactionMutations';
 import { MonthlyTransactionModal } from '../transactions/MonthlyTransactionModal';
 import { TransactionModal } from '../transactions/TransactionModal';
+import { ApplyIncomeModal } from '../transactions/ApplyIncomeModal';
 import { TransferModal } from '../accounts/TransferModal';
 import { SavingsModal } from '../savings/SavingsModal';
 import { ConfirmationModal } from '../ui/ConfirmationModal';
@@ -47,6 +48,8 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
 
     // Apply Modal State
     const [isApplyTransactionModalOpen, setIsApplyTransactionModalOpen] = useState(false);
+    const [isApplyIncomeModalOpen, setIsApplyIncomeModalOpen] = useState(false);
+    const [applyIncomeTransaction, setApplyIncomeTransaction] = useState<Transaction | null>(null);
     const [isApplyTransferModalOpen, setIsApplyTransferModalOpen] = useState(false);
     const [applyDefaultValues, setApplyDefaultValues] = useState<any>(null);
     const [applyTransactionType, setApplyTransactionType] = useState<TransactionType>(TransactionType.NUMBER_0);
@@ -213,7 +216,33 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
         setIsSavingModalOpen(true);
     };
 
-    const handleApplyTransaction = (item: BudgetSectionItemDto, type: TransactionType) => {
+    const handleApplyTransaction = async (item: BudgetSectionItemDto, type: TransactionType) => {
+        const isMonthlyTemplate = (item as any)._isMonthly;
+
+        if (!isMonthlyTemplate) {
+            // It's a normal transaction, find it and open the simple ApplyIncomeModal
+            let transaction = transactionsData?.data?.find((t: Transaction) =>
+                (item.transactionId && t.id?.toLowerCase() === item.transactionId.toLowerCase()) ||
+                (item.id && t.id?.toLowerCase() === item.id.toLowerCase())
+            );
+
+            if (!transaction && (item.transactionId || item.id)) {
+                try {
+                    const token = await getAccessTokenSilently();
+                    const transactionsApi = createTransactionsApi(token);
+                    transaction = await transactionsApi.apiTransactionsIdGet({ id: (item.transactionId || item.id)! });
+                } catch (error) {
+                    console.error('Failed to fetch transaction for apply:', error);
+                }
+            }
+
+            if (transaction) {
+                setApplyIncomeTransaction(transaction);
+                setIsApplyIncomeModalOpen(true);
+                return;
+            }
+        }
+
         const category = getCategoryDetails(item.categoryId);
         setEditingAppliedTransaction(null); // Ensure we are in create mode
         setApplyDefaultValues({
@@ -223,7 +252,7 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
             categoryName: item.categoryName || category?.name,
             subcategory: item.subcategory,
             notes: item.notes,
-            monthlyKey: (item as any)._isMonthly ? item.id : null
+            monthlyKey: isMonthlyTemplate ? item.id : null
         });
         setApplyTransactionType(type);
         setIsApplyTransactionModalOpen(true);
@@ -579,6 +608,16 @@ export const IncomeAfterExpenses: React.FC<IncomeAfterExpensesProps> = ({ data, 
                 type={applyTransactionType}
                 defaultValues={applyDefaultValues}
                 transaction={editingAppliedTransaction}
+            />
+
+            <ApplyIncomeModal
+                isOpen={isApplyIncomeModalOpen}
+                onClose={() => {
+                    setIsApplyIncomeModalOpen(false);
+                    setApplyIncomeTransaction(null);
+                }}
+                accounts={flattenedAccounts}
+                transaction={applyIncomeTransaction}
             />
 
             <TransferModal
