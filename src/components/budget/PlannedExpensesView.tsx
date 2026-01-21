@@ -4,7 +4,9 @@ import {
     faChevronLeft,
     faChevronRight,
     faPenToSquare,
-    faTrash
+    faTrash,
+    faWallet,
+    faQuestionCircle
 } from '@fortawesome/free-solid-svg-icons';
 import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
 import { PlannedExpensesResponseDto, BudgetSectionItemDto, Transaction, PlannedExpenseViewDto } from '../../api-client';
@@ -142,11 +144,13 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
 
     const totalPages = Math.ceil(totalItems / pageSize);
 
-    // Helper for icons (copied from Transactions.tsx)
     const getIcon = (iconName: string | null | undefined) => {
         const prefix: IconPrefix = 'fas';
+        if (!iconName || iconName === 'default') {
+            return faWallet;
+        }
         const icon = iconName ? findIconDefinition({ prefix, iconName: iconName as any }) : null;
-        return icon || ['fas', 'question-circle'] as [IconPrefix, IconName];
+        return icon || faQuestionCircle;
     };
 
     const formatAmount = (amount: number | undefined) => {
@@ -370,8 +374,23 @@ export const PlannedExpensesView: React.FC<PlannedExpensesViewProps> = ({
                                 </div>
                                 <div className="transactions-table__cell transactions-table__cell--account">
                                     <div className="transactions-table__account-wrapper">
-                                        <div className="transactions-table__account-name">
-                                            {item.accountName}
+                                        <div className="transactions-table__account-item">
+                                            {(() => {
+                                                const account = flattenedAccounts.find(a => a.id === item.accountId || a.name === item.accountName);
+                                                return (
+                                                    <>
+                                                        <div
+                                                            className="transactions-table__account-icon"
+                                                            style={{ backgroundColor: account?.color || '#374151' }}
+                                                        >
+                                                            <FontAwesomeIcon icon={getIcon(account?.image)} />
+                                                        </div>
+                                                        <div className="transactions-table__account-name">
+                                                            {item.accountName}
+                                                        </div>
+                                                    </>
+                                                );
+                                            })()}
                                         </div>
                                         {item.notes && (
                                             <div className="transactions-table__notes-mobile">

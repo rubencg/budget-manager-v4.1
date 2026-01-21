@@ -6,7 +6,9 @@ import {
     faPlus,
     faSearch,
     faPenToSquare,
-    faTrash
+    faTrash,
+    faWallet,
+    faQuestionCircle
 } from '@fortawesome/free-solid-svg-icons';
 import { findIconDefinition, IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
 import { useTransactionsQuery } from '../hooks/useTransactionsQuery';
@@ -135,8 +137,11 @@ export const Transactions: React.FC = () => {
 
     const getIcon = (iconName: string | null | undefined) => {
         const prefix: IconPrefix = 'fas';
+        if (!iconName || iconName === 'default') {
+            return faWallet;
+        }
         const icon = iconName ? findIconDefinition({ prefix, iconName: iconName as any }) : null;
-        return icon || ['fas', 'question-circle'] as [IconPrefix, IconName];
+        return icon || faQuestionCircle;
     };
 
     const getTransactionColor = (type: TransactionType | undefined) => {
@@ -182,6 +187,10 @@ export const Transactions: React.FC = () => {
         return transactions;
     }, [data?.data, dayParam]);
 
+    const flattenedAccounts = useMemo(() => {
+        return accountGroups?.flatMap(group => group.accounts) || [];
+    }, [accountGroups]);
+
     // Paginate transactions
     const paginatedTransactions = useMemo(() => {
         return filteredTransactions;
@@ -192,15 +201,47 @@ export const Transactions: React.FC = () => {
     const renderAccountInfo = (transaction: Transaction) => {
         if (transaction.transactionType === TransactionType.NUMBER_2) {
             // Transfer
+            const fromAccount = flattenedAccounts.find(a => a.id === transaction.fromAccountId || a.name === transaction.fromAccountName);
+            const toAccount = flattenedAccounts.find(a => a.id === transaction.toAccountId || a.name === transaction.toAccountName);
+
             return (
                 <div className="transactions-table__transfer">
-                    <span>{transaction.fromAccountName}</span>
+                    <div className="transactions-table__account-item">
+                        <div
+                            className="transactions-table__account-icon"
+                            style={{ backgroundColor: fromAccount?.color || '#374151' }}
+                        >
+                            <FontAwesomeIcon icon={getIcon(fromAccount?.image)} />
+                        </div>
+                        <span>{transaction.fromAccountName}</span>
+                    </div>
                     <FontAwesomeIcon icon={faChevronRight} className="transactions-table__transfer-arrow" />
-                    <span>{transaction.toAccountName}</span>
+                    <div className="transactions-table__account-item">
+                        <div
+                            className="transactions-table__account-icon"
+                            style={{ backgroundColor: toAccount?.color || '#374151' }}
+                        >
+                            <FontAwesomeIcon icon={getIcon(toAccount?.image)} />
+                        </div>
+                        <span>{transaction.toAccountName}</span>
+                    </div>
                 </div>
             );
         }
-        return transaction.accountName;
+
+        const account = flattenedAccounts.find(a => a.id === transaction.accountId || a.name === transaction.accountName);
+
+        return (
+            <div className="transactions-table__account-item">
+                <div
+                    className="transactions-table__account-icon"
+                    style={{ backgroundColor: account?.color || '#374151' }}
+                >
+                    <FontAwesomeIcon icon={getIcon(account?.image)} />
+                </div>
+                <span>{transaction.accountName}</span>
+            </div>
+        );
     };
 
     const getHeaderDisplay = () => {
