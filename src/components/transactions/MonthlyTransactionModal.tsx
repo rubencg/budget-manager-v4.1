@@ -333,7 +333,7 @@ export const MonthlyTransactionModal: React.FC<MonthlyTransactionModalProps> = (
 
     const isValid = amount.trim().length > 0 &&
         !isNaN(parseFloat(amount)) &&
-        parseFloat(amount) > 0 &&
+        parseFloat(amount) >= 0 &&
         dayOfMonth >= 1 && dayOfMonth <= 28 &&
         accountId.length > 0 &&
         categoryId.length > 0;

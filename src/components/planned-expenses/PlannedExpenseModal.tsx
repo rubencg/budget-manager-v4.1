@@ -245,7 +245,7 @@ export const PlannedExpenseModal: React.FC<PlannedExpenseModalProps> = ({ isOpen
 
     const isValid = amount.trim().length > 0 &&
         !isNaN(parseFloat(amount)) &&
-        parseFloat(amount) > 0 &&
+        parseFloat(amount) >= 0 &&
         name.trim().length > 0 &&
         categoryId.length > 0 &&
         (!isRecurring ? !!date : true); // Date required if not recurring

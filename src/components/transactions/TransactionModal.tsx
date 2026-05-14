@@ -389,7 +389,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({ isOpen, onCl
 
     const isValid = amount.trim().length > 0 &&
         !isNaN(parseFloat(amount)) &&
-        parseFloat(amount) > 0 &&
+        parseFloat(amount) >= 0 &&
         accountId.length > 0 &&
         categoryId.length > 0;
 
